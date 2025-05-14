@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>טופס פשוט</title>
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            margin: 40px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>טופס שליחת פוסט</h1>
+
+    <form id="postForm">
+        <label for="email">מייל:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="content">תוכן פוסט:</label>
+        <textarea id="content" name="content" rows="5" required></textarea>
+
+        <label for="links">לינקים:</label>
+        <input type="text" id="links" name="links" placeholder="לינק אחד או יותר">
+
+        <button type="submit">שלח</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $('#postForm').on('submit', function (e) {
+                e.preventDefault(); // Prevent actual form submission
+
+                // Collect values
+                const email = $('#email').val();
+                const content = $('#content').val();
+                const links = $('#links').val();
+
+                // Display them in console (for testing)
+                console.log("Email:", email);
+                console.log("Post Content:", content);
+                console.log("Links:", links);
+
+                alert("הטופס נשלח בהצלחה!");
+            });
+        });
+    </script>
+
+</body>
+</html>
