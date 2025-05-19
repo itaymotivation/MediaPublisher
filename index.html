@@ -36,14 +36,14 @@
     <h1>טופס שליחת פוסט</h1>
 
     <form id="postForm">
-        <label for="email">מייל:</label>
-        <input type="email" id="email" name="email" required>
+        <label for="password">קוד משתמש:</label>
+        <input type="password" id="password" name="password" required>
 
         <label for="content">תוכן פוסט:</label>
         <textarea id="content" name="content" rows="5" required></textarea>
 
-        <label for="links">לינקים:</label>
-        <input type="text" id="links" name="links" placeholder="לינק אחד או יותר">
+        <label for="media">קובץ תמונה או וידאו:</label>
+        <input type="file" id="media" name="media" accept="image/*,video/*">
 
         <button type="submit">שלח</button>
     </form>
