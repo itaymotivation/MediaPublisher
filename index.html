@@ -43,7 +43,7 @@
         <textarea id="content" name="content" rows="5" required></textarea>
 
         <label for="media">קובץ תמונה או וידאו:</label>
-        <input type="file" id="media" name="media" accept="image/*,video/*">
+        <input type="file" id="media" name="media" accept="image/*,video/*" multiple>
 
         <button type="submit">שלח</button>
     </form>
@@ -78,16 +78,63 @@
                 // Collect values
                 const email = $('#email').val();
                 const content = $('#content').val();
-                const links = $('#links').val();
 
                 // Display them in console (for testing)
                 console.log("Email:", email);
                 console.log("Post Content:", content);
-                console.log("Links:", links);
+                const postObject = {
+                email,
+                content,
+                files: Array.from(files).map(f => f.name),
+                date: new Date().toISOString()
+            };
+             await uploadToGitHub({
+        owner, repo, path: `posts/${Date.now()}-post.json`, token, content: JSON.stringify(postObject), message: 'New post'
+    });
 
+    // 2. Upload each file
+    for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const base64Content = arrayBufferToBase64(arrayBuffer);
+        const mediaPath = `media/${Date.now()}-${file.name}`;
+
+        await uploadToGitHub({
+            owner, repo, path: mediaPath, token, content: base64Content, message: `Upload ${file.name}`
+        });}
+
+                
                 alert("הטופס נשלח בהצלחה!");
             });
         });
+
+        async function uploadToGitHub({ owner, repo, path, token, content, message }) {
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+    const res = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `token ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({
+            message,
+            content
+        })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+        console.error('GitHub error:', data);
+        throw new Error(data.message || 'Upload failed');
+    }
+    console.log('Uploaded:', path);
+}
+
+// Convert ArrayBuffer to Base64
+function arrayBufferToBase64(buffer) {
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    return btoa(binary);
+}
     </script>
 
 </body>
