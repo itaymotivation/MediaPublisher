@@ -48,7 +48,49 @@
         <button type="submit">שלח</button>
     </form>
 
-    <script>
+    <script type="module">
+document.getElementById('postForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    async function handleSubmit() {
+        const email = document.getElementById('email').value;
+        const content = document.getElementById('content').value;
+        const files = document.getElementById('media').files;
+
+         const owner = 'itaymotivation';
+        const repo = 'MediaPublisher';
+        const path = 'Agents.json';
+        const token = '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';
+
+        const postObject = {
+                email,
+                content,
+                files: Array.from(files).map(f => f.name),
+                date: new Date().toISOString()
+            };
+
+        await uploadToGitHub({
+            owner, repo, path: `posts/${Date.now()}-post.json`, token, content: JSON.stringify(postObject), message: 'New post'
+        });
+
+        for (const file of files) {
+            const arrayBuffer = await file.arrayBuffer();
+            const base64Content = arrayBufferToBase64(arrayBuffer);
+            const mediaPath = `media/${Date.now()}-${file.name}`;
+
+            await uploadToGitHub({
+                owner, repo, path: mediaPath, token, content: base64Content, message: `Upload ${file.name}`
+            });
+        }
+
+        alert('Upload complete!');
+    }
+
+    handleSubmit(); // call the async function
+});
+
+
+        
         $(document).ready(function () {
             const owner = 'itaymotivation';
             const repo = 'MediaPublisher';
@@ -71,41 +113,8 @@
                   console.error('No content found in response:', data);
                 }
               })
-              .catch(error => console.error('Error fetching file:', error));
-            $('#postForm').on('submit', function (e) {
-                e.preventDefault(); // Prevent actual form submission
-
-                // Collect values
-                const email = $('#email').val();
-                const content = $('#content').val();
-
-                // Display them in console (for testing)
-                console.log("Email:", email);
-                console.log("Post Content:", content);
-                const postObject = {
-                email,
-                content,
-                files: Array.from(files).map(f => f.name),
-                date: new Date().toISOString()
-            };
-             await uploadToGitHub({
-        owner, repo, path: `posts/${Date.now()}-post.json`, token, content: JSON.stringify(postObject), message: 'New post'
-    });
-
-    // 2. Upload each file
-    for (const file of files) {
-        const arrayBuffer = await file.arrayBuffer();
-        const base64Content = arrayBufferToBase64(arrayBuffer);
-        const mediaPath = `media/${Date.now()}-${file.name}`;
-
-        await uploadToGitHub({
-            owner, repo, path: mediaPath, token, content: base64Content, message: `Upload ${file.name}`
-        });}
-
-                
-                alert("הטופס נשלח בהצלחה!");
+              .catch(error => console.error('Error fetching file:', error));          
             });
-        });
 
         async function uploadToGitHub({ owner, repo, path, token, content, message }) {
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
