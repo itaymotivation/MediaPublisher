@@ -1,150 +1,270 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס פשוט</title>
-    <!-- jQuery CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>טופס שליחת פוסט</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            direction: rtl;
-            margin: 40px;
-        }
+  <!-- jQuery + Font Awesome -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-        label {
-            display: block;
-            margin-top: 10px;
-        }
+  <style>
+    body {
+      font-family: "Heebo", sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      direction: rtl;
+    }
 
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 30px 40px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
 
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
-        }
-    </style>
+    h1 {
+      text-align: center;
+      color: #0d47a1;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border 0.3s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #4a90e2;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .button:hover {
+      background: #357ab8;
+    }
+
+    .social-buttons {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .social-buttons a {
+      display: inline-block;
+      margin: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .social-buttons a:hover {
+      transform: scale(1.05);
+    }
+
+    .facebook { background-color: #1877f2; }
+    .instagram { background: linear-gradient(45deg, #feda75, #d62976, #962fbf); }
+    .twitter { background-color: #000000; }
+    .telegram { background-color: #0088cc; }
+
+    .social-buttons i {
+      margin-left: 6px;
+    }
+
+    /* Modal */
+    #previewModal {
+      display: none;
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    #previewModalContent {
+      background: white;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: crimson;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .preview-card {
+      margin-bottom: 30px;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+    }
+
+    .preview-card .platform {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      color: #333;
+    }
+
+    .preview-card .platform i {
+      margin-left: 10px;
+    }
+
+    .preview-media img,
+    .preview-media video {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
 
+  <div class="container">
     <h1>טופס שליחת פוסט</h1>
-
     <form id="postForm">
-        <label for="password">קוד משתמש:</label>
-        <input type="password" id="password" name="password" required>
+      <label for="email">אימייל:</label>
+      <input type="text" id="email" name="email" required />
 
-        <label for="content">תוכן פוסט:</label>
-        <textarea id="content" name="content" rows="5" required></textarea>
+      <label for="password">קוד משתמש:</label>
+      <input type="password" id="password" name="password" required />
 
-        <label for="media">קובץ תמונה או וידאו:</label>
-        <input type="file" id="media" name="media" accept="image/*,video/*" multiple>
+      <label for="content">תוכן פוסט:</label>
+      <textarea id="content" name="content" required></textarea>
 
-        <button type="submit">שלח</button>
+      <label for="media">קובץ תמונה או וידאו:</label>
+      <input type="file" id="media" name="media" accept="image/*,video/*" multiple />
+
+      <button type="submit" class="button">שלח</button>
+      <button type="button" class="button" onclick="showPreview()">תצוגה מקדימה</button>
     </form>
 
-    <script type="module">
-document.getElementById('postForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+    <div class="social-buttons">
+      <a href="#" class="facebook"><i class="fab fa-facebook-f"></i> פייסבוק</a>
+      <a href="#" class="instagram"><i class="fab fa-instagram"></i> אינסטגרם</a>
+      <a href="#" class="twitter"><i class="fab fa-x-twitter"></i> טוויטר X</a>
+      <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i> טלגרם</a>
+    </div>
+  </div>
 
-    async function handleSubmit() {
-        const email = document.getElementById('email').value;
-        const content = document.getElementById('content').value;
-        const files = document.getElementById('media').files;
+  <!-- תצוגה מקדימה (Modal) -->
+  <div id="previewModal">
+    <div id="previewModalContent">
+      <button class="close-btn" onclick="document.getElementById('previewModal').style.display='none'">סגור</button>
+      <h2 style="text-align:center;">תצוגה מקדימה של הפוסט</h2>
+      <div id="previewContent"></div>
+    </div>
+  </div>
 
-         const owner = 'itaymotivation';
-        const repo = 'MediaPublisher';
-        const path = 'Agents.json';
-        const token = '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';
+  <script>
+    function showPreview() {
+      const content = document.getElementById('content').value;
+      const email = document.getElementById('email').value;
+      const files = document.getElementById('media').files;
 
-        const postObject = {
-                email,
-                content,
-                files: Array.from(files).map(f => f.name),
-                date: new Date().toISOString()
-            };
+      const platforms = [
+        { name: "פייסבוק", icon: "fab fa-facebook-f", color: "#1877f2" },
+        { name: "אינסטגרם", icon: "fab fa-instagram", color: "#e1306c" },
+        { name: "X (טוויטר)", icon: "fab fa-x-twitter", color: "#000000" },
+        { name: "טלגרם", icon: "fab fa-telegram-plane", color: "#0088cc" }
+      ];
 
-        await uploadToGitHub({
-            owner, repo, path: `posts/${Date.now()}-post.json`, token, content: JSON.stringify(postObject), message: 'New post'
+      const fileReaders = Array.from(files).map(file => {
+        return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = e => resolve({ url: e.target.result, type: file.type });
+          reader.readAsDataURL(file);
         });
+      });
 
-        for (const file of files) {
-            const arrayBuffer = await file.arrayBuffer();
-            const base64Content = arrayBufferToBase64(arrayBuffer);
-            const mediaPath = `media/${Date.now()}-${file.name}`;
+      Promise.all(fileReaders).then(results => {
+        const cardsHTML = platforms.map(p => {
+          const mediaHTML = results.map(media => {
+            if (media.type.startsWith("image/")) {
+              return `<img src="${media.url}" alt="תמונה מצורפת" />`;
+            } else if (media.type.startsWith("video/")) {
+              return `<video controls src="${media.url}"></video>`;
+            }
+            return '';
+          }).join('');
 
-            await uploadToGitHub({
-                owner, repo, path: mediaPath, token, content: base64Content, message: `Upload ${file.name}`
-            });
-        }
+          return `
+            <div class="preview-card">
+              <div class="platform" style="color:${p.color};">
+                <i class="${p.icon}"></i> ${p.name}
+              </div>
+              <div><strong>מאת:</strong> ${email || 'אנונימי'}</div>
+              <div style="margin-top:10px;">${content || 'תוכן הפוסט יוצג כאן...'}</div>
+              <div class="preview-media">${mediaHTML}</div>
+            </div>
+          `;
+        }).join('');
 
-        alert('Upload complete!');
+        document.getElementById("previewContent").innerHTML = cardsHTML;
+        document.getElementById("previewModal").style.display = "block";
+      });
     }
-
-    handleSubmit(); // call the async function
-});
-
-
-        
-        $(document).ready(function () {
-            const owner = 'itaymotivation';
-            const repo = 'MediaPublisher';
-            const path = 'Agents.json';
-            const token = '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';
-            fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
-              method: 'GET',
-              headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-              },
-            })
-              .then(response => response.json())
-              .then(data => {
-                if (data && data.content) {
-                  // Decode Base64 content
-                  const fileContent = atob(data.content);
-                  console.log('File content:', fileContent);
-                } else {
-                  console.error('No content found in response:', data);
-                }
-              })
-              .catch(error => console.error('Error fetching file:', error));          
-            });
-
-        async function uploadToGitHub({ owner, repo, path, token, content, message }) {
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-
-    const res = await fetch(apiUrl, {
-        method: 'PUT',
-        headers: {
-            'Authorization': `token ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-        },
-        body: JSON.stringify({
-            message,
-            content
-        })
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-        console.error('GitHub error:', data);
-        throw new Error(data.message || 'Upload failed');
-    }
-    console.log('Uploaded:', path);
-}
-
-// Convert ArrayBuffer to Base64
-function arrayBufferToBase64(buffer) {
-    const binary = String.fromCharCode(...new Uint8Array(buffer));
-    return btoa(binary);
-}
-    </script>
+  </script>
 
 </body>
 </html>
