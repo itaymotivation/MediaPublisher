@@ -111,7 +111,6 @@
       margin-left: 6px;
     }
 
-    /* Modal */
     #previewModal {
       display: none;
       position: fixed;
@@ -151,24 +150,108 @@
       background: #f9f9f9;
     }
 
-    .preview-card .platform {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      color: #333;
-    }
-
-    .preview-card .platform i {
-      margin-left: 10px;
-    }
-
     .preview-media img,
     .preview-media video {
       max-width: 100%;
       border-radius: 8px;
       margin-top: 10px;
+    }
+
+    /* Facebook */
+    .fb-post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .fb-post-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-left: 10px;
+    }
+
+    .fb-post-userinfo {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+    }
+
+    .fb-post-userinfo .name {
+      font-weight: bold;
+      color: #050505;
+    }
+
+    .fb-post-userinfo .meta {
+      color: #65676b;
+      font-size: 12px;
+    }
+
+    /* Instagram */
+    .ig-header {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .ig-header img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-left: 10px;
+    }
+
+    .ig-username {
+      font-weight: bold;
+    }
+
+    .ig-caption {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    /* Twitter */
+    .tw-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .tw-header img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-left: 10px;
+    }
+
+    .tw-userinfo {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tw-userinfo .name {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .tw-userinfo .handle {
+      color: #657786;
+      font-size: 12px;
+    }
+
+    .tw-timestamp {
+      font-size: 12px;
+      color: #657786;
+      margin-top: 4px;
+    }
+
+    /* Telegram */
+    .tg-header {
+      font-weight: bold;
+      font-size: 16px;
+      color: #0088cc;
+      margin-bottom: 10px;
     }
 
     @media (max-width: 600px) {
@@ -207,7 +290,6 @@
     </div>
   </div>
 
-  <!-- תצוגה מקדימה (Modal) -->
   <div id="previewModal">
     <div id="previewModalContent">
       <button class="close-btn" onclick="document.getElementById('previewModal').style.display='none'">סגור</button>
@@ -248,16 +330,63 @@
             return '';
           }).join('');
 
-          return `
-            <div class="preview-card">
-              <div class="platform" style="color:${p.color};">
-                <i class="${p.icon}"></i> ${p.name}
+          if (p.name === "פייסבוק") {
+            return `
+              <div class="preview-card">
+                <div class="fb-post-header">
+                  <img src="https://via.placeholder.com/40" />
+                  <div class="fb-post-userinfo">
+                    <span class="name">${email || 'משתמש פייסבוק'}</span>
+                    <span class="meta">עכשיו · <i class="fas fa-globe"></i></span>
+                  </div>
+                </div>
+                <div>${content || 'תוכן הפוסט יוצג כאן...'}</div>
+                <div class="preview-media">${mediaHTML}</div>
               </div>
-              <div><strong>מאת:</strong> ${email || 'אנונימי'}</div>
-              <div style="margin-top:10px;">${content || 'תוכן הפוסט יוצג כאן...'}</div>
-              <div class="preview-media">${mediaHTML}</div>
-            </div>
-          `;
+            `;
+          }
+
+          if (p.name === "אינסטגרם") {
+            return `
+              <div class="preview-card">
+                <div class="ig-header">
+                  <img src="https://via.placeholder.com/32" />
+                  <span class="ig-username">${email || 'insta_user'}</span>
+                </div>
+                <div class="preview-media">${mediaHTML}</div>
+                <div class="ig-caption"><strong>${email || 'insta_user'}</strong> ${content}</div>
+              </div>
+            `;
+          }
+
+          if (p.name === "X (טוויטר)") {
+            return `
+              <div class="preview-card">
+                <div class="tw-header">
+                  <img src="https://via.placeholder.com/36" />
+                  <div class="tw-userinfo">
+                    <span class="name">${email || 'Twitter User'}</span>
+                    <span class="handle">@${(email || 'anonymous').split('@')[0]}</span>
+                  </div>
+                </div>
+                <div>${content || 'תוכן הפוסט יוצג כאן...'}</div>
+                <div class="preview-media">${mediaHTML}</div>
+                <div class="tw-timestamp">עכשיו · X</div>
+              </div>
+            `;
+          }
+
+          if (p.name === "טלגרם") {
+            return `
+              <div class="preview-card">
+                <div class="tg-header"><i class="${p.icon}"></i> ${email || 'ערוץ טלגרם'}</div>
+                <div>${content || 'תוכן הפוסט יוצג כאן...'}</div>
+                <div class="preview-media">${mediaHTML}</div>
+              </div>
+            `;
+          }
+
+          return '';
         }).join('');
 
         document.getElementById("previewContent").innerHTML = cardsHTML;
