@@ -260,6 +260,83 @@
       }
     }
   </style>
+
+   <script>
+    $(document).ready(function(){
+      document.getElementById('postForm').addEventListener('submit', async function(event) {
+      event.preventDefault(); 
+      const id = $("#password").val();
+      const content = $("#content").val();
+
+      const fileInput = document.getElementById('media');
+      const files = fileInput.files;
+      const uploadedUrls = [];
+
+      if (files.length === 0) {
+          console.log('No files selected.');
+          return;
+      }
+
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('https://tmpfiles.org/api/v1/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                let downloadLink = data.data.url;
+                downloadLink = downloadLink.replace("https://tmpfiles.org/", "https://tmpfiles.org/dl/");
+                uploadedUrls.push(downloadLink);
+            } else {
+                console.error(`Failed to upload ${file.name}:`, data);
+            }
+        } catch (error) {
+            console.error(`Error uploading ${file.name}:`, error);
+        }
+      }
+
+      const jsonToSend = {
+      id: id,
+      postContent: content,
+      files: uploadedUrls
+      };
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonToSend)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log("Server response:", result);
+            alert("העלאה הצליחה!");
+        } else {
+            console.error("Server error:", result);
+            alert("שגיאה בעת שליחת הנתונים לשרת.");
+        }
+    } catch (error) {
+        console.error("Request failed:", error);
+        alert("שגיאה כללית בשליחה לשרת.");
+    }
+
+
+
+
+    });
+      });
+   </script>
+
 </head>
 <body>
 
@@ -279,8 +356,7 @@
       <input type="file" id="media" name="media" accept="image/*,video/*" multiple />
 
       <button type="submit" class="button">שלח</button>
-      <button type="button" class="button" onclick="showPreview()">תצוגה מקדימה</button>
-    </form>
+      </form>
 
     <div class="social-buttons">
       <a href="#" class="facebook"><i class="fab fa-facebook-f"></i> פייסבוק</a>
@@ -289,111 +365,5 @@
       <a href="#" class="telegram"><i class="fab fa-telegram-plane"></i> טלגרם</a>
     </div>
   </div>
-
-  <div id="previewModal">
-    <div id="previewModalContent">
-      <button class="close-btn" onclick="document.getElementById('previewModal').style.display='none'">סגור</button>
-      <h2 style="text-align:center;">תצוגה מקדימה של הפוסט</h2>
-      <div id="previewContent"></div>
-    </div>
-  </div>
-
-  <script>
-    function showPreview() {
-      const content = document.getElementById('content').value;
-      const email = document.getElementById('email').value;
-      const files = document.getElementById('media').files;
-
-      const platforms = [
-        { name: "פייסבוק", icon: "fab fa-facebook-f", color: "#1877f2" },
-        { name: "אינסטגרם", icon: "fab fa-instagram", color: "#e1306c" },
-        { name: "X (טוויטר)", icon: "fab fa-x-twitter", color: "#000000" },
-        { name: "טלגרם", icon: "fab fa-telegram-plane", color: "#0088cc" }
-      ];
-
-      const fileReaders = Array.from(files).map(file => {
-        return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = e => resolve({ url: e.target.result, type: file.type });
-          reader.readAsDataURL(file);
-        });
-      });
-
-      Promise.all(fileReaders).then(results => {
-        const cardsHTML = platforms.map(p => {
-          const mediaHTML = results.map(media => {
-            if (media.type.startsWith("image/")) {
-              return `<img src="${media.url}" alt="תמונה מצורפת" />`;
-            } else if (media.type.startsWith("video/")) {
-              return `<video controls src="${media.url}"></video>`;
-            }
-            return '';
-          }).join('');
-
-          if (p.name === "פייסבוק") {
-            return `
-              <div class="preview-card">
-                <div class="fb-post-header">
-                  <img src="https://via.placeholder.com/40" />
-                  <div class="fb-post-userinfo">
-                    <span class="name">${email || 'משתמש פייסבוק'}</span>
-                    <span class="meta">עכשיו · <i class="fas fa-globe"></i></span>
-                  </div>
-                </div>
-                <div>${content || 'תוכן הפוסט יוצג כאן...'}</div>
-                <div class="preview-media">${mediaHTML}</div>
-              </div>
-            `;
-          }
-
-          if (p.name === "אינסטגרם") {
-            return `
-              <div class="preview-card">
-                <div class="ig-header">
-                  <img src="https://via.placeholder.com/32" />
-                  <span class="ig-username">${email || 'insta_user'}</span>
-                </div>
-                <div class="preview-media">${mediaHTML}</div>
-                <div class="ig-caption"><strong>${email || 'insta_user'}</strong> ${content}</div>
-              </div>
-            `;
-          }
-
-          if (p.name === "X (טוויטר)") {
-            return `
-              <div class="preview-card">
-                <div class="tw-header">
-                  <img src="https://via.placeholder.com/36" />
-                  <div class="tw-userinfo">
-                    <span class="name">${email || 'Twitter User'}</span>
-                    <span class="handle">@${(email || 'anonymous').split('@')[0]}</span>
-                  </div>
-                </div>
-                <div>${content || 'תוכן הפוסט יוצג כאן...'}</div>
-                <div class="preview-media">${mediaHTML}</div>
-                <div class="tw-timestamp">עכשיו · X</div>
-              </div>
-            `;
-          }
-
-          if (p.name === "טלגרם") {
-            return `
-              <div class="preview-card">
-                <div class="tg-header"><i class="${p.icon}"></i> ${email || 'ערוץ טלגרם'}</div>
-                <div>${content || 'תוכן הפוסט יוצג כאן...'}</div>
-                <div class="preview-media">${mediaHTML}</div>
-              </div>
-            `;
-          }
-
-          return '';
-        }).join('');
-
-        document.getElementById("previewContent").innerHTML = cardsHTML;
-        document.getElementById("previewModal").style.display = "block";
-      });
-    }
-  </script>
-
 </body>
 </html>
