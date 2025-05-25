@@ -263,78 +263,93 @@
 
    <script>
     $(document).ready(function(){
-      document.getElementById('postForm').addEventListener('submit', async function(event) {
-      event.preventDefault(); 
-      const id = $("#password").val();
-      const content = $("#content").val();
+        document.getElementById('postForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+        const id = $("#password").val();
+        const content = $("#content").val();
 
-      const fileInput = document.getElementById('media');
-      const files = fileInput.files;
-      const uploadedUrls = [];
+        const fileInput = document.getElementById('media');
+        const files = fileInput.files;
+        const uploadedUrls = [];
 
-      if (files.length === 0) {
-          console.log('No files selected.');
-          return;
+        if (files.length === 0) {
+            console.log('No files selected.');
+            return;
+        }
+
+        for (const file of files) {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          try {
+              const response = await fetch('https://tmpfiles.org/api/v1/upload', {
+                  method: 'POST',
+                  body: formData
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                  let downloadLink = data.data.url;
+                  downloadLink = downloadLink.replace("https://tmpfiles.org/", "https://tmpfiles.org/dl/");
+                  uploadedUrls.push(downloadLink);
+              } else {
+                  console.error(`Failed to upload ${file.name}:`, data);
+              }
+          } catch (error) {
+              console.error(`Error uploading ${file.name}:`, error);
+          }
+        }
+
+        const jsonToSend = {
+        id: id,
+        postContent: content,
+        files: uploadedUrls
+        };
+
+      try {
+          const response = fetch('http://127.0.0.1:5000/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(jsonToSend)
+          }).then(()=>{
+
+              const result = response.json();
+          
+          if (response.ok) {
+              clearInterval(statusInterval);
+              console.log("Server response:", result);
+              alert("העלאה הצליחה!");
+          } else {
+              console.error("Server error:", result);
+              alert("שגיאה בעת שליחת הנתונים לשרת.");
+          }
+          });
+
+          
+      } catch (error) {
+          console.error("Request failed:", error);
+          alert("שגיאה כללית בשליחה לשרת.");
       }
 
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        try {
-            const response = await fetch('https://tmpfiles.org/api/v1/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                let downloadLink = data.data.url;
-                downloadLink = downloadLink.replace("https://tmpfiles.org/", "https://tmpfiles.org/dl/");
-                uploadedUrls.push(downloadLink);
-            } else {
-                console.error(`Failed to upload ${file.name}:`, data);
-            }
-        } catch (error) {
-            console.error(`Error uploading ${file.name}:`, error);
-        }
-      }
-
-      const jsonToSend = {
-      id: id,
-      postContent: content,
-      files: uploadedUrls
-      };
-
-    try {
-        const response = await fetch('http://127.0.0.1:5000/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(jsonToSend)
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            console.log("Server response:", result);
-            alert("העלאה הצליחה!");
-        } else {
-            console.error("Server error:", result);
-            alert("שגיאה בעת שליחת הנתונים לשרת.");
-        }
-    } catch (error) {
-        console.error("Request failed:", error);
-        alert("שגיאה כללית בשליחה לשרת.");
-    }
 
 
-
-
-    });
+      const intervalID = setInterval(() => {
+      fetch('http://127.0.0.1:5000/')
+          .then(response => response.json())
+          .then(data => {
+              document.getElementById('statusBox').innerText = `Status: ${data.status}`;
+          })
+          .catch(error => {
+              console.error("Error fetching status:", error);
+              document.getElementById('statusBox').innerText = "Status: Error";
+          });
+      }, 500);
+    
       });
+    });
    </script>
 
 </head>
