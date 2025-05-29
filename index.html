@@ -7,6 +7,8 @@
 
   <!-- jQuery + Font Awesome -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
@@ -53,7 +55,12 @@
       font-size: 16px;
       transition: border 0.3s ease;
     }
-
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    input[type="file"],label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     input:focus,
     textarea:focus {
       border-color: #4a90e2;
@@ -263,14 +270,63 @@
 
    <script>
     $(document).ready(function(){
+
         document.getElementById('postForm').addEventListener('submit', async function(event) {
         event.preventDefault(); 
-        const id = $("#password").val();
+        const publisherId = $("#password").val();
         const content = $("#content").val();
 
         const fileInput = document.getElementById('media');
         const files = fileInput.files;
         const uploadedUrls = [];
+        result = {};
+
+        const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        const allowedVideoTypes = ['video/mp4'];
+
+        let hasImage = false;
+        let hasVideo = false;
+        let videoCount = 0;
+        let invalidFiles = [];
+
+        for (const file of files) {
+          if (allowedImageTypes.includes(file.type)) {
+            hasImage = true;
+          } else if (allowedVideoTypes.includes(file.type)) {
+            hasVideo = true;
+            videoCount++;
+          } else {
+            invalidFiles.push(file.name);
+          }
+        }
+
+        if (invalidFiles.length > 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: `קבצים לא חוקיים: ${invalidFiles.join(', ')}. ניתן להעלות רק קבצים מסוג mp4, jpg, jpeg, png.`,
+          });
+          return;
+        }
+
+        if (hasImage && hasVideo) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'שגיאה',
+            text: 'לא ניתן להעלות גם תמונות וגם סרטונים יחד. יש לבחור סוג מדיה אחד בלבד.',
+          });
+          return;
+        }
+
+        if (videoCount > 1) {
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: 'ניתן להעלות רק סרטון אחד בכל פרסום.',
+          });
+          return;
+        }
+
 
         if (files.length === 0) {
             console.log('No files selected.');
@@ -291,7 +347,7 @@
 
               if (response.ok) {
                   let downloadLink = data.data.url;
-                  downloadLink = downloadLink.replace("https://tmpfiles.org/", "https://tmpfiles.org/dl/");
+                  downloadLink = downloadLink.replace("tmpfiles.org/", "tmpfiles.org/dl/");
                   uploadedUrls.push(downloadLink);
               } else {
                   console.error(`Failed to upload ${file.name}:`, data);
@@ -302,56 +358,170 @@
         }
 
         const jsonToSend = {
-        id: id,
+        guid: crypto.randomUUID(),
+        id: publisherId,
         postContent: content,
         files: uploadedUrls
         };
 
-      try {
-          const response = fetch('http://127.0.0.1:5000/', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(jsonToSend)
-          }).then(()=>{
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 500000);
 
-              const result = response.json();
-          
-          if (response.ok) {
-              clearInterval(statusInterval);
-              console.log("Server response:", result);
-              alert("העלאה הצליחה!");
-          } else {
-              console.error("Server error:", result);
-              alert("שגיאה בעת שליחת הנתונים לשרת.");
-          }
-          });
+        fetch('http://127.0.0.1:5000/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonToSend),
+        signal: controller.signal
+    }).then(async (response) => {
+        result = await response.json();
+        if (!response.ok) {
+          console.error("שגיאה בשליחה:", result);
+           Swal.fire({
+                icon: 'error',
+                title: 'שגיאה בשליחה',
+                text: 'אירעה שגיאה בשליחת הבקשה לשרת.',
+                confirmButtonText: 'סגור'
+            });
+        }
+    }).catch(error => {
+        if (error.name === 'AbortError') {
+            Swal.fire({
+                icon: 'error',
+                title: '⏱️ חרג מהזמן',
+                text: 'הבקשה לשרת לקחה יותר מדי זמן. נסה שוב.',
+                confirmButtonText: 'סגור'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'שגיאה בשליחה',
+                text: 'אירעה שגיאה בשליחת הבקשה לשרת.',
+                confirmButtonText: 'סגור'
+            });
+        }
+    }).finally(() => {
+        clearTimeout(timeoutId);
+    });
 
-          
-      } catch (error) {
-          console.error("Request failed:", error);
-          alert("שגיאה כללית בשליחה לשרת.");
-      }
-
-
-
-      const intervalID = setInterval(() => {
-      fetch('http://127.0.0.1:5000/')
-          .then(response => response.json())
-          .then(data => {
-              document.getElementById('statusBox').innerText = `Status: ${data.status}`;
-          })
-          .catch(error => {
-              console.error("Error fetching status:", error);
-              document.getElementById('statusBox').innerText = "Status: Error";
-          });
-      }, 500);
-    
+    checkStatus(jsonToSend.guid);
       });
     });
-   </script>
 
+function renderSocialButtons(links) {
+  const platforms = [
+    {
+      name: "Facebook",
+      class: "facebook",
+      icon: "fa-facebook-f",
+      url: links.FbPostUrl
+    },
+    {
+      name: "Instagram",
+      class: "instagram",
+      icon: "fa-instagram",
+      url: links.IgPostUrl
+    },
+    {
+      name: "Twitter X",
+      class: "twitter",
+      icon: "fa-x-twitter",
+      url: links.TwitterPostUrl
+    },
+    {
+      name: "Telegram",
+      class: "telegram",
+      icon: "fa-telegram-plane",
+      url: links.TelegramPostUrl
+    }
+  ];
+
+  let html = '<div class="social-buttons" style="text-align:center; margin-top: 30px;">';
+
+  platforms.forEach(p => {
+    const isValid = typeof p.url === 'string' && (p.url.startsWith('http://') || p.url.startsWith('https://'));
+    if (isValid) {
+      html += `
+        <a href="${p.url}" class="${p.class}" target="_blank" title="${p.name} - פורסם בהצלחה">
+          <i class="fab ${p.icon}"></i> ${p.name} ✅
+        </a>
+      `;
+    } else {
+      html += `
+        <a class="${p.class}" style="opacity: 0.5; cursor: not-allowed;" title="${p.name} - נכשל בפרסום">
+          <i class="fab ${p.icon}"></i> ${p.name} ❌
+        </a>
+      `;
+    }
+  });
+
+  html += '</div>';
+  return html;
+}
+
+    function checkStatus(guid) {
+    Swal.fire({
+        title: 'מעדכן סטטוס...',
+        text: 'אנא המתן',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    const intervalId = setInterval(async () => {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/status/${guid}`);
+            const data = await response.json();
+            const status = data.status;
+
+            if (Swal.isVisible()) {
+                Swal.getHtmlContainer().textContent = `סטטוס נוכחי: ${status}`;
+            }
+
+            if (status === "הפרסום בוצע בהצלחה") {
+                clearInterval(intervalId);
+                const links = result.received;
+                Swal.fire({
+                    icon: 'success',
+                    title: '',
+                    html: renderSocialButtons(links),
+                    confirmButtonText: 'סגור'
+                });
+            } else if (status.includes("שגיאה") || status === "Invalid or expired task ID") {
+                clearInterval(intervalId);
+
+                if (status.includes("מפרסם לא נמצא")) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '⚠️ שגיאה בזיהוי',
+                        text: 'לא נמצא מפרסם מתאים. בדוק את הקוד שלך ונסה שוב.',
+                        confirmButtonText: 'אישור'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '❌ שגיאה',
+                        text: `${status}`,
+                        confirmButtonText: 'סגור'
+                    });
+                }
+            }
+        } catch (error) {
+            clearInterval(intervalId);
+            Swal.fire({
+                icon: 'error',
+                title: 'שגיאה ברשת',
+                text: 'לא ניתן לבדוק את הסטטוס כעת. נסה שוב מאוחר יותר.',
+                confirmButtonText: 'סגור'
+            });
+        }
+    }, 3000);
+}
+
+  </script>
 </head>
 <body>
 
@@ -382,3 +552,6 @@
   </div>
 </body>
 </html>
+
+
+
