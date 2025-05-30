@@ -207,53 +207,6 @@ input#telegram:checked + label.telegram::after {
     .slick-prev:hover, .slick-next:hover {
       background-color: #555;
     }
-
-    .result-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 25px;
-}
-
-.result-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  font-size: 16px;
-}
-
-.result-button i {
-  font-size: 18px;
-}
-
-.result-button.facebook {
-  background-color: #1877f2;
-}
-
-.result-button.instagram {
-  background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
-}
-
-.result-button.twitter {
-  background-color: #000000;
-}
-
-.result-button.telegram {
-  background-color: #0088cc;
-}
-
-.result-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-}
-
   </style>
 
   <script>
@@ -409,31 +362,27 @@ input#telegram:checked + label.telegram::after {
         };
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 500000); // Timeout after ~8.3 min
+        const timeoutId = setTimeout(() => controller.abort(), 500000);
 
         Swal.fire({
-          title: 'מעדכן סטטוס...',
-          text: 'אנא המתן',
-          allowOutsideClick: false,
-          showConfirmButton: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
+        title: 'מעדכן סטטוס...',
+        text: 'אנא המתן',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
         });
-
-        // Begin the fetch
-        fetch('https://mediapublisherbackend.onrender.com/', {
+        fetch('http://127.0.0.1:5000/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(jsonToSend),
           signal: controller.signal
-        })
-        .then(async (response) => {
-          const result = await response.json();
-        })
-        .catch(error => {
+        }).then(async (response) => {
+          result = await response.json();
+        }).catch(error => {
           if (error.name === 'AbortError') {
             Swal.fire({
               icon: 'error',
@@ -442,46 +391,52 @@ input#telegram:checked + label.telegram::after {
               confirmButtonText: 'סגור'
             });
           }
-        })
-        .finally(() => {
+        }).finally(() => {
           clearTimeout(timeoutId);
+          checkStatus(jsonToSend.guid);
         });
-        checkStatus(jsonToSend.guid);
       });
     });
 
     function checkStatus(guid) {
+      Swal.fire({
+        title: 'מעדכן סטטוס...',
+        text: 'אנא המתן',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
       const intervalId = setInterval(async () => {
         try {
-          const response = await fetch(`https://mediapublisherbackend.onrender.com/status/${guid}`);
+          const response = await fetch(`http://127.0.0.1:5000/status/${guid}`);
           const data = await response.json();
           const status = data.status;
 
-          // Update the loading message in the modal
           if (Swal.isVisible()) {
             Swal.getHtmlContainer().textContent = `סטטוס נוכחי: ${status}`;
           }
 
-          // Success
-          if (status === "פוסט פורסם בהצלחה") {
+          if (status === "הפרסום בוצע בהצלחה") {
             clearInterval(intervalId);
-            const links = data.results || [];
+            const links = result.received;
             Swal.fire({
               icon: 'success',
-              title: '✅ הצלחה',
+              title: '',
               html: renderSocialButtons(links),
               confirmButtonText: 'סגור'
             });
-          }else if(status.includes("שגיאה")){
+          }else if (status == "סטטוס הבקשה פג תוקף"){
             clearInterval(intervalId);
             Swal.fire({
               icon: 'error',
               title: '❌ שגיאה',
-              text: status,
+              text: result?.error || "סטטוס הבקשה פג תוקף",
               confirmButtonText: 'סגור'
             });
           }
-
         } catch (error) {
           clearInterval(intervalId);
           Swal.fire({
@@ -491,38 +446,27 @@ input#telegram:checked + label.telegram::after {
             confirmButtonText: 'סגור'
           });
         }
-      }, 3000); // Poll every 3 seconds
+      }, 3000);
     }
 
-
     function renderSocialButtons(links) {
-  const platforms = [
-    { name: "Facebook", class: "facebook", icon: "fa-facebook-f", url: links.facebook },
-    { name: "Instagram", class: "instagram", icon: "fa-instagram", url: links.instagram },
-    { name: "Twitter X", class: "twitter", icon: "fa-x-twitter", url: links.twitter },
-    { name: "Telegram", class: "telegram", icon: "fa-telegram-plane", url: links.telegram }
-  ];
+      const platforms = [
+        { name: "Facebook", class: "facebook", icon: "fa-facebook-f", url: links.FbPostUrl },
+        { name: "Instagram", class: "instagram", icon: "fa-instagram", url: links.IgPostUrl },
+        { name: "Twitter X", class: "twitter", icon: "fa-x-twitter", url: links.TwitterPostUrl },
+        { name: "Telegram", class: "telegram", icon: "fa-telegram-plane", url: links.TelegramPostUrl }
+      ];
 
-  let html = '<div class="result-buttons">';
-
-  platforms.forEach(p => {
-    const isValid = typeof p.url === 'string' && (p.url.startsWith('http://') || p.url.startsWith('https://'));
-
-    html += `
-      <a href="${isValid ? p.url : '#'}"
-         class="result-button ${p.class}"
-         style="${!isValid ? 'opacity: 0.5; pointer-events: none;' : ''}"
-         target="_blank"
-      >
-        <i class="fab ${p.icon}"></i> ${p.name} ${isValid ? '✅' : '❌'}
-      </a>
-    `;
-  });
-
-  html += '</div>';
-  return html;
-}
-
+      let html = '<div class="social-buttons" style="text-align:center; margin-top: 30px;">';
+      platforms.forEach(p => {
+        const isValid = typeof p.url === 'string' && (p.url.startsWith('http://') || p.url.startsWith('https://'));
+        html += isValid
+          ? `<a href="${p.url}" class="${p.class}" target="_blank"><i class="fab ${p.icon}"></i> ${p.name} ✅</a>`
+          : `<a class="${p.class}" style="opacity: 0.5; cursor: not-allowed;"><i class="fab ${p.icon}"></i> ${p.name} ❌</a>`;
+      });
+      html += '</div>';
+      return html;
+    }
   </script>
 </head>
 
