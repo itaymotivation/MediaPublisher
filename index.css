@@ -1,0 +1,247 @@
+body {
+      font-family: "Heebo", sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #ffffff);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 30px 40px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0d47a1;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 14px;
+      font-size: 18px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background: #357ab8;
+    }
+
+ .social-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.social-checkboxes input[type="checkbox"] {
+  display: none;
+}
+
+.social-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s, opacity 0.3s;
+  position: relative;
+  opacity: 0.8;
+}
+
+/* כשה-checkbox מסומן */
+.social-checkboxes input[type="checkbox"]:checked + label {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* סימון ויזואלי בפינה */
+.social-checkboxes input[type="checkbox"]:checked + label::after {
+  content: "✔";
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 16px;
+  background: #ffffff;
+  color: transparent;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-weight: bold;
+}
+
+/* צבע ייחודי לסימן לפי הפלטפורמה */
+input#facebook:checked + label.facebook::after {
+  color: #1877f2;
+}
+input#instagram:checked + label.instagram::after {
+  color: #d62976;
+}
+input#twitter:checked + label.twitter::after {
+  color: #000000;
+}
+input#telegram:checked + label.telegram::after {
+  color: #0088cc;
+}
+
+/* צבעים לפלטפורמות */
+.facebook { background-color: #1877f2; }
+.instagram { background: linear-gradient(45deg, #feda75, #d62976, #962fbf); }
+.twitter { background-color: #000000; }
+.telegram { background-color: #0088cc; }
+
+.social-checkboxes label i {
+  margin-left: 6px;
+}
+
+ .file-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .file-preview img, .file-preview video {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    /* Info button styles */
+    .info-btn,.LS-btn{
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #0d47a1;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      padding: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+    #localStorageButton{
+      right: 120px;
+      font-size: 14px;
+    }
+    .info-btn:hover,.LS-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .preview-area {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .preview-area img,
+    .preview-area video {
+      max-width: 120px;
+      max-height: 120px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .slick-prev, .slick-next {
+      background-color: #333;
+      border-radius: 50%;
+      color: white;
+      font-size: 18px;
+      line-height: 30px;
+      width: 30px;
+      height: 30px;
+    }
+
+    .slick-prev:hover, .slick-next:hover {
+      background-color: #555;
+    }
+
+.result-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.result-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 16px;
+}
+
+.result-button i {
+  font-size: 18px;
+}
+
+.result-button.facebook {
+  background-color: #1877f2;
+}
+
+.result-button.instagram {
+  background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
+}
+
+.result-button.twitter {
+  background-color: #000000;
+}
+
+.result-button.telegram {
+  background-color: #0088cc;
+}
+
+.result-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}

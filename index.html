@@ -9,271 +9,280 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://js.puter.com/v2/"></script>
-
-  <style>
-    body {
-      font-family: "Heebo", sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #ffffff);
-      margin: 0;
-      padding: 0;
-      color: #333;
-      direction: rtl;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 40px auto;
-      background-color: #ffffff;
-      border-radius: 16px;
-      padding: 30px 40px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      text-align: center;
-      color: #0d47a1;
-      margin-bottom: 30px;
-      font-size: 28px;
-    }
-
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: 600;
-    }
-
-    input[type="text"],
-    input[type="password"],
-    textarea,
-    input[type="file"] {
-      width: 100%;
-      padding: 12px;
-      margin-top: 8px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    .button {
-      margin-top: 25px;
-      width: 100%;
-      padding: 14px;
-      font-size: 18px;
-      background: #4a90e2;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .button:hover {
-      background: #357ab8;
-    }
-
- .social-checkboxes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
-  justify-content: center;
-}
-
-.social-checkboxes input[type="checkbox"] {
-  display: none;
-}
-
-.social-checkboxes label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border-radius: 10px;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.2s, opacity 0.3s;
-  position: relative;
-  opacity: 0.8;
-}
-
-/* כשה-checkbox מסומן */
-.social-checkboxes input[type="checkbox"]:checked + label {
-  opacity: 1;
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
-
-/* סימון ויזואלי בפינה */
-.social-checkboxes input[type="checkbox"]:checked + label::after {
-  content: "✔";
-  position: absolute;
-  top: 8px;
-  left: 10px;
-  font-size: 16px;
-  background: #ffffff;
-  color: transparent;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-weight: bold;
-}
-
-/* צבע ייחודי לסימן לפי הפלטפורמה */
-input#facebook:checked + label.facebook::after {
-  color: #1877f2;
-}
-input#instagram:checked + label.instagram::after {
-  color: #d62976;
-}
-input#twitter:checked + label.twitter::after {
-  color: #000000;
-}
-input#telegram:checked + label.telegram::after {
-  color: #0088cc;
-}
-
-/* צבעים לפלטפורמות */
-.facebook { background-color: #1877f2; }
-.instagram { background: linear-gradient(45deg, #feda75, #d62976, #962fbf); }
-.twitter { background-color: #000000; }
-.telegram { background-color: #0088cc; }
-
-.social-checkboxes label i {
-  margin-left: 6px;
-}
-
- .file-preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    .file-preview img, .file-preview video {
-      width: 100px;
-      height: auto;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    /* Info button styles */
-    .info-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: #0d47a1;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      padding: 10px;
-      font-size: 20px;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
-    }
-    .info-btn:hover {
-      transform: scale(1.1);
-    }
-
-    .preview-area {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .preview-area img,
-    .preview-area video {
-      max-width: 120px;
-      max-height: 120px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    .slick-prev, .slick-next {
-      background-color: #333;
-      border-radius: 50%;
-      color: white;
-      font-size: 18px;
-      line-height: 30px;
-      width: 30px;
-      height: 30px;
-    }
-
-    .slick-prev:hover, .slick-next:hover {
-      background-color: #555;
-    }
-
-    .result-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 25px;
-}
-
-.result-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  font-size: 16px;
-}
-
-.result-button i {
-  font-size: 18px;
-}
-
-.result-button.facebook {
-  background-color: #1877f2;
-}
-
-.result-button.instagram {
-  background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
-}
-
-.result-button.twitter {
-  background-color: #000000;
-}
-
-.result-button.telegram {
-  background-color: #0088cc;
-}
-
-.result-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-}
-
-  </style>
+  <link rel="stylesheet" href="index.css" />
+  
 
   <script>
+    function GetDataFromLS(){
+      const savedData = JSON.parse(localStorage.getItem("postData") || "{}");
+      if (savedData.email) $("#email").val(savedData.email);
+      if (savedData.content) $("#content").val(savedData.content);
+      if (Array.isArray(savedData.socials)) {
+          savedData.socials.forEach(id => $(`#${id}`).prop("checked", true));
+      }
+    }
+
+    function SaveDataToLS(){
+      const email = $("#email").val();
+      const content = $("#content").val();
+      const socials = Array.from(document.querySelectorAll('input[name="platforms"]:checked')).map(cb => cb.id);
+
+      const formData = {
+          email: email,
+          content: content,
+          socials: socials
+      };
+      
+    const history = JSON.parse(localStorage.getItem("postHistory") || "[]");
+    history.unshift(formData); // Add latest at the top
+    localStorage.setItem("postHistory", JSON.stringify(history.slice(0, 4))); // Keep only 10 entries
+    }
+
+    function Validation(selectedPlatforms){
+      if (selectedPlatforms.length === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'לא נבחרו פלטפורמות',
+            text: 'יש לבחור לפחות פלטפורמה אחת לפרסום.',
+            confirmButtonText: 'אישור'
+          });
+          return -1;
+        }
+
+        const fileInput = document.getElementById('media');
+        files = fileInput.files;
+        const uploadedUrls = [];
+        result = {};
+
+        const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        const allowedVideoTypes = ['video/mp4'];
+
+        let hasImage = false;
+        let hasVideo = false;
+        let videoCount = 0;
+        let invalidFiles = [];
+
+        for (const file of files) {
+          if (allowedImageTypes.includes(file.type)) {
+            hasImage = true;
+          } else if (allowedVideoTypes.includes(file.type)) {
+            hasVideo = true;
+            videoCount++;
+          } else {
+            invalidFiles.push(file.name);
+          }
+        }
+
+        if (invalidFiles.length > 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: `קבצים לא חוקיים: ${invalidFiles.join(', ')}. ניתן להעלות רק קבצים מסוג mp4, jpg, jpeg, png.`,
+          });
+          return -1;
+        }
+
+        if (hasImage && hasVideo) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'שגיאה',
+            text: 'לא ניתן להעלות גם תמונות וגם סרטונים יחד. יש לבחור סוג מדיה אחד בלבד.',
+          });
+          return -1;
+        }
+
+        if (videoCount > 1) {
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: 'ניתן להעלות רק סרטון אחד בכל פרסום.',
+          });
+          return -1;
+        }
+
+        if (files.length === 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: 'יש להעלות לפחות קובץ אחד לפוסט',
+          });
+          return -1;
+        }
+        return 0;
+    }
+
+    async function GetTempFilesUrl(){
+      uploadedUrls=[];
+      for (const file of files) {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          try {
+            const response = await fetch('https://tmpfiles.org/api/v1/upload', {
+              method: 'POST',
+              body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              let downloadLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
+              uploadedUrls.push(downloadLink);
+            } else {
+              console.error(`Failed to upload ${file.name}:`, data);
+            }
+          } catch (error) {
+            console.error(`Error uploading ${file.name}:`, error);
+          }
+        }
+        return uploadedUrls
+    }
+
+    function checkStatus(guid) {
+      const intervalId = setInterval(async () => {
+        try {
+          const response = await fetch(`https://mediapublisherbackend.onrender.com/status/${guid}`);
+          const data = await response.json();
+          const status = data.status;
+
+          // Update the loading message in the modal
+          if (Swal.isVisible()) {
+            Swal.getHtmlContainer().textContent = `סטטוס נוכחי: ${status}`;
+          }
+
+          // Success
+          if (status === "פוסט פורסם בהצלחה") {
+            clearInterval(intervalId);
+            const links = data.results || [];
+            Swal.fire({
+              icon: 'success',
+              title: '✅ הצלחה',
+              html: renderSocialButtons(links),
+              confirmButtonText: 'סגור'
+            });
+
+            SaveDataToLS();
+
+          }else if(status.includes("שגיאה")){
+            clearInterval(intervalId);
+            Swal.fire({
+              icon: 'error',
+              title: '❌ שגיאה',
+              text: status,
+              confirmButtonText: 'סגור'
+            });
+          }
+
+        } catch (error) {
+          clearInterval(intervalId);
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה ברשת',
+            text: 'לא ניתן לבדוק את הסטטוס כעת. נסה שוב מאוחר יותר.',
+            confirmButtonText: 'סגור'
+          });
+        }
+      }, 3000);
+    }
+
+
+  function renderSocialButtons(links) {
+  const platforms = [
+    { name: "Facebook", class: "facebook", icon: "fa-facebook-f", url: links.facebook },
+    { name: "Instagram", class: "instagram", icon: "fa-instagram", url: links.instagram },
+    { name: "Twitter X", class: "twitter", icon: "fa-x-twitter", url: links.twitter },
+    { name: "Telegram", class: "telegram", icon: "fa-telegram-plane", url: links.telegram }
+  ];
+
+  let html = '<div class="result-buttons">';
+
+  platforms.forEach(p => {
+    const isValid = typeof p.url === 'string' && (p.url.startsWith('http://') || p.url.startsWith('https://'));
+
+    html += `
+      <a href="${isValid ? p.url : '#'}"
+         class="result-button ${p.class}"
+         style="${!isValid ? 'opacity: 0.5; pointer-events: none;' : ''}"
+         target="_blank"
+      >
+        <i class="fab ${p.icon}"></i> ${p.name} ${isValid ? '✅' : '❌'}
+      </a>
+    `;
+  });
+
+  html += '</div>';
+  return html;
+}
+
     $(document).ready(function () {
 
-      puter.ai.chat("What are the benefits of exercise?")
-    .then(response => {
-        puter.print(response);
-    });
+    //   puter.ai.chat("What are the benefits of exercise?")
+    // .then(response => {
+    //     puter.print(response);
+    // });
 
-      const savedEmail = localStorage.getItem("email");
-      const savedContent = localStorage.getItem("content");
-      const savedSocials = JSON.parse(localStorage.getItem("socials") || "[]");
+      // puter.ai.txt2img('טיסה לאוסטרליה אף פעם לא הייתה פשוטה יותר').then((image)=>{
+      //       document.body.appendChild(image);
+      //   });
 
-      if (savedEmail) $("#email").val(savedEmail);
-      if (savedContent) $("#content").val(savedContent);
-      savedSocials.forEach(id => $(`#${id}`).prop("checked", true));
+      
+      const observer = new MutationObserver((mutations, observer) => {
+        const dialog = document.querySelector('puter-dialog#shedow');
+        if (dialog && dialog.shadowRoot) {
+          console.log('Element and shadow root are ready!');
 
-      // Info button
+          // ✅ Access elements inside shadow DOM
+          const shadowEl = dialog.shadowRoot.querySelector('div');
+          console.log(shadowEl);
+
+          observer.disconnect();
+        }
+      });
+
+observer.observe(document.body, { childList: true, subtree: true });
+       $("#localStorageButton").on("click", function () {
+          const history = JSON.parse(localStorage.getItem("postHistory") || "[]");
+
+          let html = `
+            <div style="max-height:300px; overflow-y:auto; text-align:right;">
+              ${history.map((item, index) => `
+                <div class="history-row" data-index="${index}" style="cursor:pointer; padding:10px; border-bottom:1px solid #ddd;">
+                  <strong>אימייל:</strong> ${item.email || ''}<br/>
+                  <strong>תוכן:</strong> ${item.content || ''}<br/>
+                  <strong>רשתות:</strong> ${item.socials?.join(", ") || ''}
+                </div>
+              `).join('')}
+            </div>
+          `;
+
+          Swal.fire({
+              title: 'היסטוריית פוסטים',
+              html: html,
+              confirmButtonText: 'סגור',
+              didOpen: () => {
+                  document.querySelectorAll(".history-row").forEach(row => {
+                      row.addEventListener("click", function () {
+                          const index = this.getAttribute("data-index");
+                          const selectedPost = history[index];
+                          if (selectedPost) {
+                              $("#email").val(selectedPost.email);
+                              $("#content").val(selectedPost.content);
+                              $("input[name='platforms']").prop("checked", false);
+                              selectedPost.socials.forEach(id => $(`#${id}`).prop("checked", true));
+                              Swal.fire({
+                              icon: 'success',
+                              title: 'הנתונים שוחזרו',
+                              showConfirmButton: false,
+                              timer: 1500,
+                              timerProgressBar: true
+                            });
+                          }
+                      });
+                  });
+              }
+          });
+      });
+
       $("#infoButton").on("click", function () {
         Swal.fire({
           icon: 'info',
@@ -311,100 +320,17 @@ input#telegram:checked + label.telegram::after {
       });
 
 
-
+      //On Submit
       document.getElementById('postForm').addEventListener('submit', async function (event) {
         event.preventDefault();
         const publisherId = $("#password").val();
         const content = $("#content").val();
         const selectedPlatforms = Array.from(document.querySelectorAll('input[name="platforms"]:checked')).map(cb => cb.value);
 
-        if (selectedPlatforms.length === 0) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'לא נבחרו פלטפורמות',
-            text: 'יש לבחור לפחות פלטפורמה אחת לפרסום.',
-            confirmButtonText: 'אישור'
-          });
-          return;
-        }
-
-        const fileInput = document.getElementById('media');
-        const files = fileInput.files;
-        const uploadedUrls = [];
-        result = {};
-
-        const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-        const allowedVideoTypes = ['video/mp4'];
-
-        let hasImage = false;
-        let hasVideo = false;
-        let videoCount = 0;
-        let invalidFiles = [];
-
-        for (const file of files) {
-          if (allowedImageTypes.includes(file.type)) {
-            hasImage = true;
-          } else if (allowedVideoTypes.includes(file.type)) {
-            hasVideo = true;
-            videoCount++;
-          } else {
-            invalidFiles.push(file.name);
-          }
-        }
-
-        if (invalidFiles.length > 0) {
-          Swal.fire({
-            icon: 'error',
-            title: 'שגיאה',
-            text: `קבצים לא חוקיים: ${invalidFiles.join(', ')}. ניתן להעלות רק קבצים מסוג mp4, jpg, jpeg, png.`,
-          });
-          return;
-        }
-
-        if (hasImage && hasVideo) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'שגיאה',
-            text: 'לא ניתן להעלות גם תמונות וגם סרטונים יחד. יש לבחור סוג מדיה אחד בלבד.',
-          });
-          return;
-        }
-
-        if (videoCount > 1) {
-          Swal.fire({
-            icon: 'error',
-            title: 'שגיאה',
-            text: 'ניתן להעלות רק סרטון אחד בכל פרסום.',
-          });
-          return;
-        }
-
-        if (files.length === 0) {
-          console.log('No files selected.');
-        }
-
-        for (const file of files) {
-          const formData = new FormData();
-          formData.append('file', file);
-
-          try {
-            const response = await fetch('https://tmpfiles.org/api/v1/upload', {
-              method: 'POST',
-              body: formData
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-              let downloadLink = data.data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
-              uploadedUrls.push(downloadLink);
-            } else {
-              console.error(`Failed to upload ${file.name}:`, data);
-            }
-          } catch (error) {
-            console.error(`Error uploading ${file.name}:`, error);
-          }
-        }
+        isValid=Validation(selectedPlatforms);
+        if (isValid!=0) return;
+        const uploadedUrls = await GetTempFilesUrl();
+        
 
         const jsonToSend = {
           guid: crypto.randomUUID(),
@@ -415,7 +341,7 @@ input#telegram:checked + label.telegram::after {
         };
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 500000); // Timeout after ~8.3 min
+        const timeoutId = setTimeout(() => controller.abort(), 100000);
 
         Swal.fire({
           title: 'מעדכן סטטוס...',
@@ -455,86 +381,13 @@ input#telegram:checked + label.telegram::after {
         checkStatus(jsonToSend.guid);
       });
     });
-
-    function checkStatus(guid) {
-      const intervalId = setInterval(async () => {
-        try {
-          const response = await fetch(`https://mediapublisherbackend.onrender.com/status/${guid}`);
-          const data = await response.json();
-          const status = data.status;
-
-          // Update the loading message in the modal
-          if (Swal.isVisible()) {
-            Swal.getHtmlContainer().textContent = `סטטוס נוכחי: ${status}`;
-          }
-
-          // Success
-          if (status === "פוסט פורסם בהצלחה") {
-            clearInterval(intervalId);
-            const links = data.results || [];
-            Swal.fire({
-              icon: 'success',
-              title: '✅ הצלחה',
-              html: renderSocialButtons(links),
-              confirmButtonText: 'סגור'
-            });
-          }else if(status.includes("שגיאה")){
-            clearInterval(intervalId);
-            Swal.fire({
-              icon: 'error',
-              title: '❌ שגיאה',
-              text: status,
-              confirmButtonText: 'סגור'
-            });
-          }
-
-        } catch (error) {
-          clearInterval(intervalId);
-          Swal.fire({
-            icon: 'error',
-            title: 'שגיאה ברשת',
-            text: 'לא ניתן לבדוק את הסטטוס כעת. נסה שוב מאוחר יותר.',
-            confirmButtonText: 'סגור'
-          });
-        }
-      }, 3000); // Poll every 3 seconds
-    }
-
-
-    function renderSocialButtons(links) {
-  const platforms = [
-    { name: "Facebook", class: "facebook", icon: "fa-facebook-f", url: links.facebook },
-    { name: "Instagram", class: "instagram", icon: "fa-instagram", url: links.instagram },
-    { name: "Twitter X", class: "twitter", icon: "fa-x-twitter", url: links.twitter },
-    { name: "Telegram", class: "telegram", icon: "fa-telegram-plane", url: links.telegram }
-  ];
-
-  let html = '<div class="result-buttons">';
-
-  platforms.forEach(p => {
-    const isValid = typeof p.url === 'string' && (p.url.startsWith('http://') || p.url.startsWith('https://'));
-
-    html += `
-      <a href="${isValid ? p.url : '#'}"
-         class="result-button ${p.class}"
-         style="${!isValid ? 'opacity: 0.5; pointer-events: none;' : ''}"
-         target="_blank"
-      >
-        <i class="fab ${p.icon}"></i> ${p.name} ${isValid ? '✅' : '❌'}
-      </a>
-    `;
-  });
-
-  html += '</div>';
-  return html;
-}
-
   </script>
 </head>
 
 <body>
   <div class="container">
-     <button class="info-btn" id="infoButton"><i class="fas fa-info-circle"></i> תנאים</button>
+    <button class="info-btn" id="infoButton"><i class="fas fa-info-circle"></i> תנאים</button>
+    <button class="LS-btn" id="localStorageButton"><i class="fas fa-info-circle"></i> הסטוריית <br>שימוש</button>
 
     <h1>טופס שליחת פוסט</h1>
     <form id="postForm">
@@ -564,8 +417,6 @@ input#telegram:checked + label.telegram::after {
   <input type="checkbox" id="telegram" name="platforms" value="telegram">
   <label for="telegram" class="telegram"><i class="fab fa-telegram-plane"></i> טלגרם</label>
 </div>
-
-
       <button type="submit" class="button">שלח</button>
     </form>
   </div>
