@@ -214,34 +214,73 @@
   return html;
 }
 
-
-    function waitForShadowDialog() {
-  const observer = new MutationObserver((mutations, obs) => {
-    const dialog = document.querySelector('puter-dialog#shedow'); // adjust selector if needed
-    if (dialog && dialog.shadowRoot) {
-      console.log("Detected fallback dialog with shadow root:", dialog.shadowRoot);
-
-      // Example: access something inside the shadow root
-      const inner = dialog.shadowRoot.querySelector('div'); // or any known tag
-      if (inner) inner.style.border = "2px solid red";
-
-      obs.disconnect();
-    }
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
-}
     
+
+const messages = [];
+
+function addMessage(msg, isUser) {
+  const messagesDiv = document.getElementById("messages");
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add("message");
+  if (isUser) {
+    messageDiv.classList.add("user-message");
+  }
+  messageDiv.textContent = msg;
+  messagesDiv.appendChild(messageDiv);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById("input-message");
+  const message = input.value.trim();
+  if (message) {
+    addMessage(message, true);
+    input.value = '';
+    // Record the message in array of messages
+    messages.push({ content: message, role: 'user' });
+    // Call the AI chat function
+    puter.ai.chat(messages).then(response => {
+      addMessage(response, false);
+      messages.push(response.message);
+    }).catch(error => {
+      console.error("AI response error:", error);
+    });
+  }
+}
+
     $(document).ready(function () {
 
-      puter.ai.txt2img('טיסה לאוסטרליה אף פעם לא הייתה פשוטה יותר').then((image)=>{
-            document.body.appendChild(image);
-      }).catch((err) => {
-    console.error("txt2img failed:", err);
-    waitForShadowDialog(); // fallback
-    });
+      // puter.ai.txt2img('טיסה לאוסטרליה אף פעם לא הייתה פשוטה יותר').then((image)=>{
+      //       document.body.appendChild(image);
+      // })
 
-      
+       $("#gpt").on("click", function () {
+          Swal.fire({
+          title: 'Chat with AI',
+          html: `
+            <div id="messages" style="max-height: 300px; overflow-y: auto; margin-bottom: 10px;"></div>
+            <input id="input-message" class="swal2-input" placeholder="Type your message..." />
+          `,
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: 'Send',
+          cancelButtonText: 'Close',
+          preConfirm: () => {
+            const message = document.getElementById('input-message').value.trim();
+            if (message) {
+              addMessage(message, true);
+              messages.push({ content: message, role: 'user' });
+              return puter.ai.chat(messages).then(response => {
+                addMessage(response, false);
+                messages.push(response.message);
+              }).catch(error => {
+                console.error("AI response error:", error);
+              });
+            }
+          }
+        });
+       });
+
 
       
        $("#localStorageButton").on("click", function () {
@@ -392,7 +431,9 @@
   <div class="container">
     <button class="info-btn" id="infoButton"><i class="fas fa-info-circle"></i> תנאים</button>
     <button class="LS-btn" id="localStorageButton"><i class="fas fa-info-circle"></i> הסטוריית <br>שימוש</button>
+    <button class="gpt-btn" id="gpt"><i class="fas fa-info-circle"></i> בינה מלכותית</button>
 
+    
     <h1>טופס שליחת פוסט</h1>
     <form id="postForm">
       <label for="email">אימייל:</label>

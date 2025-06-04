@@ -148,7 +148,7 @@ input#telegram:checked + label.telegram::after {
     }
 
     /* Info button styles */
-    .info-btn,.LS-btn{
+    .info-btn,.LS-btn,.gpt-btn{
       position: absolute;
       top: 20px;
       right: 20px;
@@ -164,6 +164,10 @@ input#telegram:checked + label.telegram::after {
     }
     #localStorageButton{
       right: 120px;
+      font-size: 14px;
+    }
+    #gpt{
+      right: 220px;
       font-size: 14px;
     }
     .info-btn:hover,.LS-btn:hover {
