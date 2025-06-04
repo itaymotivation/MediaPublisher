@@ -148,7 +148,7 @@ input#telegram:checked + label.telegram::after {
     }
 
     /* Info button styles */
-    .info-btn,.LS-btn,.gpt-btn{
+    /* .info-btn,.LS-btn,.gpt-btn{
       position: absolute;
       top: 20px;
       right: 20px;
@@ -161,16 +161,8 @@ input#telegram:checked + label.telegram::after {
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
-    }
-    #localStorageButton{
-      right: 120px;
-      font-size: 14px;
-    }
-    #gpt{
-      right: 220px;
-      font-size: 14px;
-    }
-    .info-btn:hover,.LS-btn:hover {
+    } */
+    .info-btn:hover,.LS-btn:hover,.gpt-btn:hover {
       transform: scale(1.1);
     }
 
@@ -324,7 +316,7 @@ input#telegram:checked + label.telegram::after {
 /* Input + Button Layout */
 .modal-footer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -417,3 +409,98 @@ input#telegram:checked + label.telegram::after {
 .swal2-container {
   z-index: 9999 !important;
 }
+.BTNS {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.BTNS button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(13, 71, 161);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.BTNS button:hover,
+.BTNS button:focus {
+  background-color: #0056b3;
+  outline: none;
+  transform: scale(1.02);
+}
+
+.BTNS button:active {
+  transform: scale(0.98);
+}
+@media (max-width: 480px) {
+  .BTNS {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .BTNS button {
+    width: 100%;
+  }
+}
+.BTNS {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+/* Hamburger hidden on desktop */
+.hamburger {
+  display: none;
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 10px auto;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .BTNS {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .BTNS.show {
+    display: flex;
+  }
+
+  .BTNS button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+textarea {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+

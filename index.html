@@ -231,21 +231,40 @@ function addMessage(msg, isUser) {
 function sendMessage() {
   const input = document.getElementById("input-message");
   const message = input.value.trim();
+
   if (message) {
     addMessage(message, true);
     messages.push({ content: message, role: 'user' });
     input.value = '';
 
+    // Show loader
+    Swal.fire({
+      title: 'ממתין לתגובה מהבינה המלאכותית...',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Send message to GPT
     puter.ai.chat(messages)
       .then(response => {
+        Swal.close(); // Close the loader
         addMessage(response, false);
         messages.push(response.message);
       })
       .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'שגיאה',
+          text: 'אירעה שגיאה בקבלת תשובה מהבוט. נסה שוב.',
+        });
         console.error("AI response error:", error);
       });
   }
 }
+
 
 function moveToPost() {
   const lastAIMessage = messages.reverse().find(msg => msg.role !== 'user');
@@ -271,58 +290,108 @@ function openChatModal() {
   document.getElementById("chatModal").style.display = "block";
 }
 
+function openImageModal() {
+  document.getElementById("imageModal").style.display = "block";
+}
+
+function closeImageModal() {
+  document.getElementById("imageModal").style.display = "none";
+  document.getElementById("imagePrompt").value = "";
+  document.getElementById("imagePreview").innerHTML = "";
+}
+
+function useLastGPTResponse() {
+  const lastBotMessage = messages.slice().reverse().find(msg => msg.role !== 'user');
+  if (lastBotMessage && lastBotMessage.content) {
+    document.getElementById("imagePrompt").value = lastBotMessage.content;
+    generateImage(lastBotMessage.content);
+  } else {
+    Swal.fire({
+      icon: 'info',
+      title: 'אין תשובת GPT',
+      text: 'לא ניתן למצוא תשובה אחרונה של הבוט.'
+    });
+  }
+}
+
+function generateImageNew() {
+ prom = document.getElementById("imagePrompt").value.trim();
+ generateImage(prom);
+}
+
+function generateImage(prom) {
+  prom = "translate to english "+ prom;
+  puter.ai.chat(prom)
+      .then(response => {
+        if (!response.message) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'חסר תיאור',
+            text: 'אנא הזן תיאור לתמונה.'
+          });
+          return;
+        }
+
+      Swal.fire({
+        title: '🎨 יוצר תמונה...',
+        text: 'אנא המתן מספר שניות',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      puter.ai.txt2img(prompt)
+        .then(image => {
+          Swal.close();
+          const imagePreview = document.getElementById("imagePreview");
+          imagePreview.innerHTML = `<img src="${image.src}" alt="AI Image" style="max-width: 100%; border: 1px solid #ccc;"/>`;
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה ביצירת תמונה',
+            text: 'התרחשה שגיאה ביצירת התמונה. נסה שוב.'
+          });
+          console.error("Image generation error:", error);
+        });
+
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'שגיאה',
+          text: 'אירעה שגיאה בקבלת תשובה מהבוט. נסה שוב.',
+        });
+        console.error("AI response error:", error);
+      });
+}
 
 
     $(document).ready(function () {
 
       document.getElementById("closeChatModal").addEventListener("click", function () {
-  document.getElementById("chatModal").style.display = "none";
-});
+      document.getElementById("chatModal").style.display = "none";
+      });
 
-// Optional: Close modal when clicking outside of it
-window.onclick = function(event) {
-  const modal = document.getElementById("chatModal");
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-      // puter.ai.txt2img('טיסה לאוסטרליה אף פעם לא הייתה פשוטה יותר').then((image)=>{
-      //       document.body.appendChild(image);
-      // })
-
-      //  $("#gpt").on("click", function () {
-      //     Swal.fire({
-      //     title: 'Chat with AI',
-      //     html: `
-      //       <div id="messages" style="max-height: 300px; overflow-y: auto; margin-bottom: 10px;"></div>
-      //       <input id="input-message" class="swal2-input" placeholder="Type your message..." />
-      //     `,
-      //     focusConfirm: false,
-      //     showCancelButton: true,
-      //     confirmButtonText: 'Send',
-      //     cancelButtonText: 'Close',
-      //     preConfirm: () => {
-      //       const message = document.getElementById('input-message').value.trim();
-      //       if (message) {
-      //         addMessage(message, true);
-      //         messages.push({ content: message, role: 'user' });
-      //         return puter.ai.chat(messages).then(response => {
-      //           addMessage(response, false);
-      //           messages.push(response.message);
-      //         }).catch(error => {
-      //           console.error("AI response error:", error);
-      //         });
-      //       }
-      //     }
-      //   });
-      //  });
-
+      // Optional: Close modal when clicking outside of it
+      window.onclick = function(event) {
+        const modal = document.getElementById("chatModal");
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+          document.getElementById("hamburgerMenu").addEventListener("click", function () {
+          document.getElementById("actionButtons").classList.toggle("show");
+        });
 
       
        $("#localStorageButton").on("click", function () {
           const history = JSON.parse(localStorage.getItem("postHistory") || "[]");
 
           let html = `
+          <h3 style="font-weight: normal; margin-top: -10px; color: #666;">לחץ על שורה כדי לשחזר את הפוסט</h3>
             <div style="max-height:300px; overflow-y:auto; text-align:right;">
               ${history.map((item, index) => `
                 <div class="history-row" data-index="${index}" style="cursor:pointer; padding:10px; border-bottom:1px solid #ddd;">
@@ -465,9 +534,24 @@ window.onclick = function(event) {
 
 <body>
   <div class="container">
-    <button class="info-btn" id="infoButton"><i class="fas fa-info-circle"></i> תנאים</button>
-    <button class="LS-btn" id="localStorageButton"><i class="fas fa-info-circle"></i> הסטוריית <br>שימוש</button>
-    <button onclick="openChatModal()" class="gpt-btn" id="gpt"><i class="fas fa-info-circle"></i> בינה מלכותית</button>
+   <!-- Hamburger Button for Mobile -->
+<button class="hamburger" id="hamburgerMenu" aria-label="תפריט ניווט">
+  ☰
+</button>
+
+<!-- Collapsible menu for mobile -->
+<div class="BTNS" id="actionButtons">
+  <button type="button" class="info-btn" id="infoButton">
+    <i class="fas fa-info-circle" aria-hidden="true"></i> תנאים
+  </button>
+  <button type="button" class="LS-btn" id="localStorageButton">הסטוריית שימוש</button>
+  <button type="button" onclick="openChatModal()" class="gpt-btn" id="gpt">בינה מלכותית לניסוח פוסט</button>
+  <button onclick="openImageModal()" class="image-btn" id="imageBtn">
+    בינה מלכותית ליצירת תמונה לפוסט
+  </button>
+</div>
+
+
 
     
     <h1>טופס שליחת פוסט</h1>
@@ -513,6 +597,21 @@ window.onclick = function(event) {
   <button onclick="sendMessage()">שלח</button>
   <button onclick="moveToPost()">העבר את תשובת הבוט לפוסט</button>
 </div>
+  </div>
+</div>
+
+<!-- Image Generation Modal -->
+<div id="imageModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeImageModal()">&times;</span>
+    <h2>🎨 יצירת תמונה עם בינה מלכותית</h2>
+
+    <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="4"></textarea>
+    <button onclick="useLastGPTResponse()">צור תמונה ממלל הפוסט הקיים</button>
+    <br /><br />
+    <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
+
+    <div id="imagePreview" style="margin-top:20px;"></div>
   </div>
 </div>
 
