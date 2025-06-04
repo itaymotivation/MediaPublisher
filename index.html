@@ -342,7 +342,7 @@ function generateImage(prom) {
         }
       });
 
-      puter.ai.txt2img(prom)
+      puter.ai.txt2img(response.message.content)
         .then(image => {
           Swal.close();
           const imagePreview = document.getElementById("imagePreview");
