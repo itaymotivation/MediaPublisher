@@ -214,27 +214,36 @@
   return html;
 }
 
+
+    function waitForShadowDialog() {
+  const observer = new MutationObserver((mutations, obs) => {
+    const dialog = document.querySelector('puter-dialog#shedow'); // adjust selector if needed
+    if (dialog && dialog.shadowRoot) {
+      console.log("Detected fallback dialog with shadow root:", dialog.shadowRoot);
+
+      // Example: access something inside the shadow root
+      const inner = dialog.shadowRoot.querySelector('div'); // or any known tag
+      if (inner) inner.style.border = "2px solid red";
+
+      obs.disconnect();
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+    
     $(document).ready(function () {
 
       puter.ai.txt2img('טיסה לאוסטרליה אף פעם לא הייתה פשוטה יותר').then((image)=>{
             document.body.appendChild(image);
-      });
+      }).catch((err) => {
+    console.error("txt2img failed:", err);
+    waitForShadowDialog(); // fallback
+    });
 
       
-      const observer = new MutationObserver((mutations, observer) => {
-        const dialog = document.querySelector('puter-dialog#shedow');
-        if (dialog && dialog.shadowRoot) {
-          console.log('Element and shadow root are ready!');
 
-          // ✅ Access elements inside shadow DOM
-          const shadowEl = dialog.shadowRoot.querySelector('div');
-          console.log(shadowEl);
-
-          observer.disconnect();
-        }
-      });
-
-observer.observe(document.body, { childList: true, subtree: true });
+      
        $("#localStorageButton").on("click", function () {
           const history = JSON.parse(localStorage.getItem("postHistory") || "[]");
 
