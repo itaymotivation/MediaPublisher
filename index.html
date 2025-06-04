@@ -368,6 +368,35 @@ function generateImage(prom) {
       });
 }
 
+function renderMedia() {
+  const preview = $("#previewArea").empty();
+
+  if (selectedFiles.length > 0) {
+    const carousel = $('<div class="carousel"></div>').appendTo(preview);
+
+    selectedFiles.forEach((file, index) => {
+      const type = file.type.startsWith("image") ? "img" : "video";
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const elWrapper = $('<div class="media-wrapper" style="position: relative; display: inline-block; margin: 10px;"></div>');
+        const el = $(`<${type} ${type === "video" ? "controls" : ""} src="${e.target.result}" style="max-width: 200px; display: block;"></${type}>`);
+        const deleteBtn = $('<button style="position: absolute; top: 5px; right: 5px;">🗑️</button>');
+
+        deleteBtn.on("click", function () {
+          selectedFiles.splice(index, 1); // Remove the file from array
+          renderMedia(); // Re-render preview
+        });
+
+        elWrapper.append(el).append(deleteBtn);
+        carousel.append(elWrapper);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
 
     $(document).ready(function () {
 
@@ -449,22 +478,24 @@ function generateImage(prom) {
 
       // Preview uploads
       $("#media").on("change", function () {
-        const preview = $("#previewArea").empty();
-        const files = this.files;
+        selectedFiles = Array.from(this.files); // Save selected files to a separate array
+        renderMedia();
+        // const preview = $("#previewArea").empty();
+        // const files = this.files;
 
-        if (files.length > 0) {
-          const carousel = $('<div class="carousel"></div>').appendTo(preview);
+        // if (files.length > 0) {
+        //   const carousel = $('<div class="carousel"></div>').appendTo(preview);
 
-          Array.from(files).forEach(file => {
-            const type = file.type.startsWith("image") ? "img" : "video";
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              const el = $(`<${type} ${type === "video" ? "controls" : ""} src="${e.target.result}"></${type}>`);
-              carousel.append(el);
-            };
-            reader.readAsDataURL(file);
-          });
-        }
+        //   Array.from(files).forEach(file => {
+        //     const type = file.type.startsWith("image") ? "img" : "video";
+        //     const reader = new FileReader();
+        //     reader.onload = function (e) {
+        //       const el = $(`<${type} ${type === "video" ? "controls" : ""} src="${e.target.result}"></${type}>`);
+        //       carousel.append(el);
+        //     };
+        //     reader.readAsDataURL(file);
+        //   });
+        // }
       });
 
 
