@@ -505,11 +505,13 @@ window.onclick = function(event) {
 <div id="chatModal" class="modal">
   <div class="modal-content">
     <span class="close" id="closeChatModal">&times;</span>
-    <div id="messages" class="messages-container"></div>
-    <input type="text" id="input-message" placeholder="Type your message..." />
+   <div class="chat-body">
+  <div id="messages" class="messages-container"></div>
+  <textarea type="text" id="input-message" placeholder="כתוב לבוט ליצירת פוסט חכם..."></textarea>
+</div>
 <div class="modal-footer">
-  <button onclick="sendMessage()">Send</button>
-  <button onclick="moveToPost()">העבר לפוסט</button>
+  <button onclick="sendMessage()">שלח</button>
+  <button onclick="moveToPost()">העבר את תשובת הבוט לפוסט</button>
 </div>
   </div>
 </div>
