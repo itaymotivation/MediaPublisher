@@ -584,6 +584,36 @@ function renderMedia() {
 
 
 
+
+
+<div id="imageContainer">Loading...</div>
+
+  <script type="module">
+    import { txt2img } from 'https://cdn.puter.ai/sdk/puter.ai.min.js';
+
+    const prompt = "A futuristic cityscape at sunset with flying cars";
+    
+    txt2img(prompt)
+      .then(imageDataUrl => {
+        const img = document.createElement('img');
+        img.src = imageDataUrl;
+        img.alt = "Generated image";
+        img.style.maxWidth = '100%';
+        document.getElementById('imageContainer').innerHTML = '';
+        document.getElementById('imageContainer').appendChild(img);
+      })
+      .catch(error => {
+        console.error("Error generating image:", error);
+        document.getElementById('imageContainer').innerText = "Failed to generate image.";
+      });
+  </script>
+
+    
+
+
+
+    
+
     
     <h1>טופס שליחת פוסט</h1>
     <form id="postForm">
