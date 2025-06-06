@@ -527,7 +527,7 @@ function renderMedia() {
         })
         .then(async (response) => {
           const result = await response.json();
-          const status = result.status;
+          const status = result.error;
           if (status === "פוסט פורסם בהצלחה") {
             clearInterval(intervalId);
             const links = data.results || [];
@@ -556,6 +556,13 @@ function renderMedia() {
               icon: 'error',
               title: '⏱️ חרג מהזמן',
               text: 'הבקשה לשרת לקחה יותר מדי זמן. נסה שוב.',
+              confirmButtonText: 'סגור'
+            });
+          }else{
+            Swal.fire({
+              icon: 'error',
+              title: 'שגיאה מהשרת',
+              text: error.text,
               confirmButtonText: 'סגור'
             });
           }
