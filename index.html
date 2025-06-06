@@ -528,7 +528,6 @@ function renderMedia() {
           const result = await response.json();
           const status = result.error;
           if (status === "פוסט פורסם בהצלחה") {
-            clearInterval(intervalId);
             const links = data.results || [];
             Swal.fire({
               icon: 'success',
@@ -541,7 +540,6 @@ function renderMedia() {
 
           }else if(status.includes("שגיאה")){
             if(status.includes("המפרסם")){
-            clearInterval(intervalId);
             Swal.fire({
               icon: 'error',
               title: status,
@@ -559,7 +557,6 @@ function renderMedia() {
               }
             });
           }else{
-            clearInterval(intervalId);
             Swal.fire({
               icon: 'error',
               title: '❌ שגיאה',
