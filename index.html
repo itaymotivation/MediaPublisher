@@ -558,13 +558,6 @@ function renderMedia() {
               text: 'הבקשה לשרת לקחה יותר מדי זמן. נסה שוב.',
               confirmButtonText: 'סגור'
             });
-          }else{
-            Swal.fire({
-              icon: 'error',
-              title: 'שגיאה מהשרת',
-              text: error.text,
-              confirmButtonText: 'סגור'
-            });
           }
         })
         .finally(() => {
