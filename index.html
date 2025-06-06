@@ -528,7 +528,7 @@ function renderMedia() {
           const result = await response.json();
           const status = response.status == 200 ? result.message : result.error;
           if (status === "פוסט פורסם בהצלחה") {
-            const links = data.results || [];
+            const links = result.results || [];
             Swal.fire({
               icon: 'success',
               title: '✅ הצלחה',
