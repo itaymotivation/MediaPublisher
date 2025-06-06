@@ -301,10 +301,9 @@ function closeImageModal() {
 }
 
 function useLastGPTResponse() {
-  const lastBotMessage = messages.slice().reverse().find(msg => msg.role !== 'user');
-  if (lastBotMessage && lastBotMessage.content) {
-    document.getElementById("imagePrompt").value = lastBotMessage.content;
-    generateImage(lastBotMessage.content);
+  if($("#content").val().trim()!=""){
+    document.getElementById("imagePrompt").value = $("#content").val();
+    generateImage($("#content").val());
   } else {
     Swal.fire({
       icon: 'info',
