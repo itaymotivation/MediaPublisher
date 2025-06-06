@@ -583,43 +583,11 @@ function renderMedia() {
   </button>
   <button type="button" class="LS-btn" id="localStorageButton">הסטוריית שימוש</button>
   <button type="button" onclick="openChatModal()" class="gpt-btn" id="gpt">בינה מלכותית לניסוח פוסט</button>
-  <button onclick="openImageModal()" class="image-btn" id="imageBtn">
+  <button disabled onclick="openImageModal()" class="image-btn" id="imageBtn">
     בינה מלכותית ליצירת תמונה לפוסט
   </button>
 </div>
 
-
-
-
-
-<div id="imageContainer">Loading...</div>
-
-  <script type="module">
-
-    const prompt = "A futuristic cityscape at sunset with flying cars";
-    
-    puter.ai.txt2img(prompt)
-      .then(imageDataUrl => {
-        const img = document.createElement('img');
-        img.src = imageDataUrl;
-        img.alt = "Generated image";
-        img.style.maxWidth = '100%';
-        document.getElementById('imageContainer').innerHTML = '';
-        document.getElementById('imageContainer').appendChild(img);
-      })
-      .catch(error => {
-        console.error("Error generating image:", error);
-        document.getElementById('imageContainer').innerText = "Failed to generate image.";
-      });
-  </script>
-
-    
-
-
-
-    
-
-    
     <h1>טופס שליחת פוסט</h1>
     <form id="postForm">
       <label for="email">אימייל:</label>
