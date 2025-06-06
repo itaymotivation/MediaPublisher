@@ -381,7 +381,7 @@ function renderMedia() {
       reader.onload = function (e) {
         const elWrapper = $('<div class="media-wrapper" style="position: relative; display: inline-block; margin: 10px;"></div>');
         const el = $(`<${type} ${type === "video" ? "controls" : ""} src="${e.target.result}" style="max-width: 200px; display: block;"></${type}>`);
-        const deleteBtn = $('<button style="position: absolute; top: 5px; right: 5px;">❌</button>');
+        const deleteBtn = $('<button style="position: absolute; top: 5px; right: 5px;">🗑️</button>');
 
         deleteBtn.on("click", function () {
           selectedFiles.splice(index, 1); // Remove the file from array
@@ -478,8 +478,24 @@ function renderMedia() {
 
       // Preview uploads
       $("#media").on("change", function () {
-        selectedFiles = Array.from(this.files);
+        selectedFiles = Array.from(this.files); // Save selected files to a separate array
         renderMedia();
+        // const preview = $("#previewArea").empty();
+        // const files = this.files;
+
+        // if (files.length > 0) {
+        //   const carousel = $('<div class="carousel"></div>').appendTo(preview);
+
+        //   Array.from(files).forEach(file => {
+        //     const type = file.type.startsWith("image") ? "img" : "video";
+        //     const reader = new FileReader();
+        //     reader.onload = function (e) {
+        //       const el = $(`<${type} ${type === "video" ? "controls" : ""} src="${e.target.result}"></${type}>`);
+        //       carousel.append(el);
+        //     };
+        //     reader.readAsDataURL(file);
+        //   });
+        // }
       });
 
 
@@ -527,28 +543,6 @@ function renderMedia() {
         })
         .then(async (response) => {
           const result = await response.json();
-          const status = result.status;
-          if (status === "פוסט פורסם בהצלחה") {
-            clearInterval(intervalId);
-            const links = data.results || [];
-            Swal.fire({
-              icon: 'success',
-              title: '✅ הצלחה',
-              html: renderSocialButtons(links),
-              confirmButtonText: 'סגור'
-            });
-
-            SaveDataToLS();
-
-          }else if(status.includes("שגיאה")){
-            clearInterval(intervalId);
-            Swal.fire({
-              icon: 'error',
-              title: '❌ שגיאה',
-              text: status,
-              confirmButtonText: 'סגור'
-            });
-          }
         })
         .catch(error => {
           if (error.name === 'AbortError') {
@@ -563,7 +557,7 @@ function renderMedia() {
         .finally(() => {
           clearTimeout(timeoutId);
         });
-        //checkStatus(jsonToSend.guid);
+        checkStatus(jsonToSend.guid);
       });
     });
   </script>
