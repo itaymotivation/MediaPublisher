@@ -8,7 +8,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script src="https://js.puter.com/v2/"></script>
+  <!-- <script src="https://js.puter.com/v2/"></script> -->
   <link rel="stylesheet" href="index.css" />
   
 
@@ -186,29 +186,31 @@
     }
 
 
-  function renderSocialButtons(links) {
+  function renderSocialButtons(links, selectedPlatforms = []) {
   const platforms = [
-    { name: "Facebook", class: "facebook", icon: "fa-facebook-f", url: links.facebook },
-    { name: "Instagram", class: "instagram", icon: "fa-instagram", url: links.instagram },
-    { name: "Twitter X", class: "twitter", icon: "fa-x-twitter", url: links.twitter },
-    { name: "Telegram", class: "telegram", icon: "fa-telegram-plane", url: links.telegram }
+    { name: "Facebook", key: "facebook", class: "facebook", icon: "fa-facebook-f" },
+    { name: "Instagram", key: "instagram", class: "instagram", icon: "fa-instagram" },
+    { name: "Twitter X", key: "twitter", class: "twitter", icon: "fa-x-twitter" },
+    { name: "Telegram", key: "telegram", class: "telegram", icon: "fa-telegram-plane" }
   ];
 
   let html = '<div class="result-buttons">';
 
-  platforms.forEach(p => {
-    const isValid = typeof p.url === 'string' && (p.url.startsWith('http://') || p.url.startsWith('https://'));
-
-    html += `
-      <a href="${isValid ? p.url : '#'}"
-         class="result-button ${p.class}"
-         style="${!isValid ? 'opacity: 0.5; pointer-events: none;' : ''}"
-         target="_blank"
-      >
-        <i class="fab ${p.icon}"></i> ${p.name} ${isValid ? '✅' : '❌'}
-      </a>
-    `;
-  });
+  platforms
+    .filter(p => selectedPlatforms.includes(p.key))
+    .forEach(p => {
+      const url = links[p.key];
+      const isValid = typeof url === 'string' && url.startsWith('http');
+      html += `
+        <a href="${isValid ? url : '#'}"
+           class="result-button ${p.class}"
+           style="${!isValid ? 'opacity: 0.5; pointer-events: none;' : ''}"
+           target="_blank"
+        >
+          <i class="fab ${p.icon}"></i> ${p.name} ${isValid ? '✅' : '❌'}
+        </a>
+      `;
+    });
 
   html += '</div>';
   return html;
@@ -367,6 +369,18 @@ function generateImage(prom) {
       });
 }
 
+function syncFileInput() {
+  const dt = new DataTransfer();
+  selectedFiles.forEach(file => dt.items.add(file));
+  document.getElementById('media').files = dt.files;
+}
+
+function removeFileByIndex(indexToRemove) {
+  selectedFiles.splice(indexToRemove, 1);
+  syncFileInput(); // Update file input to reflect changes
+  renderMedia();    // Re-render UI
+}
+
 function renderMedia() {
   const preview = $("#previewArea").empty();
 
@@ -380,11 +394,10 @@ function renderMedia() {
       reader.onload = function (e) {
         const elWrapper = $('<div class="media-wrapper" style="position: relative; display: inline-block; margin: 10px;"></div>');
         const el = $(`<${type} ${type === "video" ? "controls" : ""} src="${e.target.result}" style="max-width: 200px; display: block;"></${type}>`);
-        const deleteBtn = $('<button style="position: absolute; top: 5px; right: 5px;">❌</button>');
+        const deleteBtn = $(`<button style="position: absolute; top: 5px; right: 5px;">❌</button>`);
 
         deleteBtn.on("click", function () {
-          selectedFiles.splice(index, 1); // Remove the file from array
-          renderMedia(); // Re-render preview
+          removeFileByIndex(index); // Remove from selectedFiles and update input
         });
 
         elWrapper.append(el).append(deleteBtn);
@@ -476,9 +489,12 @@ function renderMedia() {
       });
 
       // Preview uploads
+      selectedFiles = [];
       $("#media").on("change", function () {
-        selectedFiles = Array.from(this.files);
-        renderMedia();
+        const newFiles = Array.from(this.files);
+        selectedFiles = selectedFiles.concat(newFiles); // Merge
+        syncFileInput(); // Sync file input
+        renderMedia();   // Show preview
       });
 
 
@@ -532,7 +548,7 @@ function renderMedia() {
             Swal.fire({
               icon: 'success',
               title: '✅ הצלחה',
-              html: renderSocialButtons(links),
+              html: renderSocialButtons(links,selectedPlatforms),
               confirmButtonText: 'סגור'
             });
 
