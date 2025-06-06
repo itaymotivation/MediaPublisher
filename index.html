@@ -540,6 +540,25 @@ function renderMedia() {
             SaveDataToLS();
 
           }else if(status.includes("שגיאה")){
+            if(status.includes("המפרסם")){
+            clearInterval(intervalId);
+            Swal.fire({
+              icon: 'error',
+              title: status,
+              text: "האם תרצה לפרסם כאורח?",
+              showCancelButton: true,
+              confirmButtonText: 'כן',
+              cancelButtonText: 'לא'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $("#password").val("111");
+                $('#postForm button[type="submit"]').click();
+                $("#password").val("");
+              } else {
+                console.log("User declined guest publishing.");
+              }
+            });
+          }else{
             clearInterval(intervalId);
             Swal.fire({
               icon: 'error',
@@ -547,7 +566,7 @@ function renderMedia() {
               text: status,
               confirmButtonText: 'סגור'
             });
-          }
+          }}
         })
         .catch(error => {
           if (error.name === 'AbortError') {
