@@ -526,7 +526,7 @@ function renderMedia() {
         })
         .then(async (response) => {
           const result = await response.json();
-          const status = result.error;
+          const status = response.status == 200 ? result.message : result.error;
           if (status === "פוסט פורסם בהצלחה") {
             const links = data.results || [];
             Swal.fire({
