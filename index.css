@@ -162,7 +162,7 @@ input#telegram:checked + label.telegram::after {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       transition: transform 0.3s ease;
     } */
-    .info-btn:hover,.LS-btn:hover,.gpt-btn:hover {
+    .info-btn:hover,.LS-btn:hover,.gpt-btn:hover{
       transform: scale(1.1);
     }
 
@@ -504,3 +504,91 @@ textarea {
   resize: vertical;
 }
 
+.Clear-btn {
+    background-color:red;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    opacity: 0.8;
+    border: none;
+}
+
+.swal2-input#flatpickrInput {
+  min-width: 100%;
+  font-size: 16px;
+  padding: 10px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+ .swal-popup-rtl {
+    direction: rtl !important;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .features-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    word-break: keep-all;
+  }
+
+  .features-table thead tr {
+    background: linear-gradient(90deg, #1877F2 0%, #4A90E2 100%); /* כחול פייסבוק */
+    color: white;
+  }
+
+  .features-table th, .features-table td {
+    padding: 14px 20px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .features-table tbody tr.even-row {
+    background-color: #f9f9f9;
+  }
+
+  .features-table tbody tr.odd-row {
+    background-color: #ffffff;
+  }
+
+  /* צבעים לפי רשתות חברתיות לעלות */
+  .price-cell {
+    font-weight: bold;
+    color: #1DA1F2; /* טוויטר תכלת */
+  }
+
+  /* רספונסיביות - לטאבלטים ומטה */
+  @media(max-width: 700px) {
+    .features-table th, .features-table td {
+      padding: 10px 8px;
+      font-size: 0.9rem;
+    }
+  }
+
+  .swal-popup-rtl {
+  direction: rtl;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.whatsapp-btn {
+  display: inline-block;
+  background-color: #25D366;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 12px;
+}
