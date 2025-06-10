@@ -436,7 +436,7 @@ async function generateImage(prom) {
             });
             return;
         }
-        translatedSearchTerm = chatResponse.message;
+        translatedSearchTerm = chatResponse.message.content;
 
     } catch (error) {
         Swal.fire({
