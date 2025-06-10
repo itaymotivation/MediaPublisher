@@ -422,11 +422,11 @@ function generateImageNew() {
 }
 
 async function generateImage(prom) {
-    const translationPrompt = "finally give me 1 word that subscribe the subject of the prompt and translate the subject to english : " + prom;
+    const translationPrompt = "translate to english " + prom;
     let translatedSearchTerm;
 
     try {
-        const chatResponse = await puter.ai.chat(translationPrompt); // Await the chat response
+        const chatResponse = await puter.ai.chat(translationPrompt);
 
         if (!chatResponse || !chatResponse.message) {
             Swal.fire({
@@ -434,22 +434,20 @@ async function generateImage(prom) {
                 title: 'חסר תיאור',
                 text: 'אנא הזן תיאור לתמונה.'
             });
-            return; // Exit if no valid message
+            return;
         }
         translatedSearchTerm = chatResponse.message;
 
     } catch (error) {
-        // Catch errors from puter.ai.chat
         Swal.fire({
             icon: 'error',
             title: 'שגיאה',
             text: 'אירעה שגיאה בתרגום התיאור. אנא נסה שוב.'
         });
         console.error("Error during translation with puter.ai.chat:", error);
-        return; // Exit on error
+        return;
     }
 
-    // Show loading indicator
     Swal.fire({
         title: '🎨 יוצר תמונה...',
         text: 'אנא המתן מספר שניות',
@@ -461,35 +459,56 @@ async function generateImage(prom) {
     });
 
     try {
-        // Now fetch images from Unsplash using the translated term
-        const imageUrls = await fetchFromUnsplash(translatedSearchTerm); // Use the translated term
+        const imageUrls = await fetchFromUnsplash(translatedSearchTerm);
 
-        Swal.close(); // Close loading alert on success
-
-        // TODO: Here you would take the `imageUrls` and display them on your page.
-        // For example, if you have a div with id 'unsplashResults':
-        const resultsDiv = document.getElementById('imagePreview');
+        const resultsDiv = document.getElementById('imagePreview'); // Use 'imagePreview' as specified
         if (resultsDiv) {
             resultsDiv.innerHTML = ''; // Clear previous results
+
+            const imageLoadPromises = []; // Array to hold promises for image loading
+
             imageUrls.forEach(url => {
                 const imgElement = document.createElement('img');
                 imgElement.src = url;
                 imgElement.style.width = '200px'; // Example styling
                 imgElement.style.margin = '5px';
-                resultsDiv.appendChild(imgElement);
+                // You might also want to set a height or aspect-ratio to prevent layout shifts
+                // imgElement.style.height = '150px';
+                // imgElement.style.objectFit = 'cover';
+
+
+                // Create a promise that resolves when the image loads
+                const imgLoadPromise = new Promise((resolve, reject) => {
+                    imgElement.onload = () => resolve();
+                    imgElement.onerror = (e) => {
+                        console.warn(`Failed to load image: ${url}`, e);
+                        // Resolve anyway to not block other images, but log the warning
+                        resolve();
+                        // Or reject if you want to fail the whole Promise.all if one image fails
+                        // reject(new Error(`Failed to load image: ${url}`));
+                    };
+                });
+                imageLoadPromises.push(imgLoadPromise);
+
+                resultsDiv.appendChild(imgElement); // Append the image to the DOM immediately
             });
+
+            // Wait for all images to load before closing the SweetAlert
+            await Promise.all(imageLoadPromises);
         }
-        console.log("Image URLs fetched from Unsplash:", imageUrls);
+
+        Swal.close(); // Close loading alert ONLY after all images have loaded
+
+        console.log("Image URLs fetched and displayed:", imageUrls);
 
     } catch (error) {
-        // Catch errors from fetchFromUnsplash
         Swal.close(); // Close loading alert on error
         Swal.fire({
             icon: 'error',
             title: 'שגיאה',
             text: 'אירעה שגיאה בטעינת התמונות מ-Unsplash. אנא נסה שוב עם תיאור אחר.'
         });
-        console.error("Error fetching images from Unsplash:", error);
+        console.error("Error in generateImage:", error);
     }
 }
 
