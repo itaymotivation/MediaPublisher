@@ -480,9 +480,6 @@ async function CreateImagesByTerm(searchTerm) {
         if (response.ok) {
             console.log('✅ Image URLs received:', data.message);
             
-            const carouselTrack = document.getElementById('carouselTrack');
-            carouselTrack.innerHTML = ''; // Clear previous images
-
             createImageCarousel(data.message);
 
             Swal.close(); // Close loading modal after images are appended
