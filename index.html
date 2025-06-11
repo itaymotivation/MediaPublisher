@@ -501,7 +501,6 @@ async function CreateImagesByTerm(searchTerm) {
 
 
 function createImageModal(imageUrls) {
-  // Create a temporary container for images
   const tempContainer = document.createElement('div');
   tempContainer.style.display = 'flex';
   tempContainer.style.flexWrap = 'wrap';
@@ -509,46 +508,52 @@ function createImageModal(imageUrls) {
   tempContainer.style.justifyContent = 'center';
 
   imageUrls.forEach(url => {
-  const link = document.createElement('a');
-  link.href = url;
-  link.target = '_blank'; // Open in new tab
-  link.style.display = 'inline-block';
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.style.display = 'inline-block';
 
-  const img = document.createElement('img');
-  img.src = url;
-  img.style.width = '120px';
-  img.style.height = '120px';
-  img.style.objectFit = 'cover';
-  img.style.cursor = 'pointer';
-  img.style.border = '1px solid #ccc';
-  img.style.borderRadius = '4px';
-  img.alt = 'Image preview';
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.width = '120px';
+    img.style.height = '120px';
+    img.style.objectFit = 'cover';
+    img.style.cursor = 'pointer';
+    img.style.border = '1px solid #ccc';
+    img.style.borderRadius = '4px';
+    img.alt = 'Image preview';
 
-  link.appendChild(img);
-  tempContainer.appendChild(link);
-});
-
+    link.appendChild(img);
+    tempContainer.appendChild(link);
+  });
 
   const imageHTML = tempContainer.innerHTML;
 
-  // Show SweetAlert2 modal
   Swal.fire({
     title: '🎨 תמונות שנוצרו',
     html: `<div id="modalImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">${imageHTML}</div>`,
     showCancelButton: true,
-    confirmButtonText: 'העבר תמונות לפוסט',
+    confirmButtonText: '📥 העבר תמונות לפוסט',
     cancelButtonText: 'ביטול',
-    preConfirm: () => {
-      const modalImageContainer = document.getElementById('modalImageContainer');
-      const imagePreview = document.getElementById('imagePreview');
+    preConfirm: async () => {
+      const container = document.getElementById('modalImageContainer');
+      const imgs = container.querySelectorAll('img');
 
-      // Move each image from modal container to preview container
-      while (modalImageContainer.firstChild) {
-        imagePreview.appendChild(modalImageContainer.firstChild);
+      for (const img of imgs) {
+        const response = await fetch(img.src);
+        const blob = await response.blob();
+        const filename = img.src.split('/').pop().split('?')[0] || 'generated-image.png';
+        const file = new File([blob], filename, { type: blob.type });
+
+        selectedFiles.push(file);
       }
+
+      syncFileInput();
+      renderMedia();
     }
   });
 }
+
 
 
 function syncFileInput() {
@@ -559,8 +564,8 @@ function syncFileInput() {
 
 function removeFileByIndex(indexToRemove) {
   selectedFiles.splice(indexToRemove, 1);
-  syncFileInput(); // Update file input to reflect changes
-  renderMedia();    // Re-render UI
+  syncFileInput();
+  renderMedia();
 }
 
 function renderMedia() {
@@ -579,7 +584,7 @@ function renderMedia() {
         const deleteBtn = $(`<button style="position: absolute; top: 5px; right: 5px;">❌</button>`);
 
         deleteBtn.on("click", function () {
-          removeFileByIndex(index); // Remove from selectedFiles and update input
+          removeFileByIndex(index);
         });
 
         elWrapper.append(el).append(deleteBtn);
@@ -590,6 +595,7 @@ function renderMedia() {
     });
   }
 }
+
 
 
 function updateScheduleDisplay(dateTime) {
@@ -933,11 +939,11 @@ html += `</tbody></table>`;
 
       // Preview uploads
       selectedFiles = [];
-      $("#media").on("change", function () {
+     $("#media").on("change", function () {
         const newFiles = Array.from(this.files);
-        selectedFiles = selectedFiles.concat(newFiles); // Merge
-        syncFileInput(); // Sync file input
-        renderMedia();   // Show preview
+        selectedFiles = selectedFiles.concat(newFiles);
+        syncFileInput();
+        renderMedia();
       });
 
 
@@ -1096,7 +1102,7 @@ html += `</tbody></table>`;
       <textarea id="content" name="content" required></textarea>
       <button type="button" class="Clear-btn" id="ClearButton">מחק את מלל הפוסט</button>
 
-      <label for="media">קובץ תמונה או וידאו:</label>
+      <label for="media">קובצי תמונה או וידאו:</label>
       <input type="file" id="media" name="media" accept="image/*,video/*" multiple />
  <div class="preview-area" id="previewArea"></div>
       <label>בחר פלטפורמות לפרסום:</label>
