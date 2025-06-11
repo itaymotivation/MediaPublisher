@@ -510,11 +510,11 @@ async function CreateImagesByTerm(searchTerm) {
 function createImageCarousel(imageUrls) {
     const carouselTrack = document.getElementById('carouselTrack');
     carouselTrack.innerHTML = ''; // Clear previous images
-
+    
     imageUrls.forEach(url => {
         const img = document.createElement('img');
         img.src = url;
-        img.style.width = '100px';  // smaller images
+        img.style.width = '200px';
         img.style.margin = '5px';
         img.style.objectFit = 'cover';
         carouselTrack.appendChild(img);
@@ -523,7 +523,7 @@ function createImageCarousel(imageUrls) {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const visibleCount = 4;
-    const imgWidthWithMargin = 110; // 100px + 2*5px margin approx
+    const imgWidthWithMargin = 210; // 200px + 2*5px margin approx
     const maxIndex = Math.max(0, imageUrls.length - visibleCount);
     let currentIndex = 0;
 
@@ -544,10 +544,9 @@ function createImageCarousel(imageUrls) {
             updateCarousel();
         }
     };
-
+    // Initialize
     updateCarousel();
 }
-
 
 function syncFileInput() {
   const dt = new DataTransfer();
