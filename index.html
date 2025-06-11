@@ -515,58 +515,57 @@ function createImageCarousel(imageUrls) {
         const img = document.createElement('img');
         img.src = url;
         img.style.objectFit = 'cover';
+        img.style.width = '100px';
+        img.style.margin = '5px';
         carouselTrack.appendChild(img);
     });
 
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
+    const imgWidthWithMargin = 110; // 100px + 2*5px margin approx
+    const visibleCount = 3; // or calculate dynamically
+    const maxIndex = imageUrls.length - visibleCount;
+
     let currentIndex = 0;
 
-    function getImageWidthWithMargin() {
-        const firstImg = carouselTrack.querySelector('img');
-        if (!firstImg) return 0;
-        const style = getComputedStyle(firstImg);
-        return firstImg.offsetWidth + parseInt(style.marginLeft) + parseInt(style.marginRight);
-    }
-
-    function getVisibleCount() {
-        const containerWidth = document.getElementById('carouselContainer').offsetWidth;
-        const imgWidth = getImageWidthWithMargin();
-        return imgWidth ? Math.floor(containerWidth / imgWidth) : 1;
-    }
-
     function updateCarousel() {
-        const imgWidthWithMargin = getImageWidthWithMargin();
+        carouselTrack.style.transition = 'transform 0.3s ease';
         carouselTrack.style.transform = `translateX(-${currentIndex * imgWidthWithMargin}px)`;
     }
+
+    nextBtn.onclick = () => {
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateCarousel();
+        } else {
+            // Jump instantly back to start
+            currentIndex = 0;
+            carouselTrack.style.transition = 'none';
+            carouselTrack.style.transform = 'translateX(0)';
+            // Force reflow then animate to first position for smoothness
+            void carouselTrack.offsetWidth; 
+            carouselTrack.style.transition = 'transform 0.3s ease';
+        }
+    };
 
     prevBtn.onclick = () => {
         if (currentIndex > 0) {
             currentIndex--;
             updateCarousel();
+        } else {
+            // Jump instantly to last valid position
+            currentIndex = maxIndex;
+            carouselTrack.style.transition = 'none';
+            carouselTrack.style.transform = `translateX(-${currentIndex * imgWidthWithMargin}px)`;
+            void carouselTrack.offsetWidth;
+            carouselTrack.style.transition = 'transform 0.3s ease';
         }
     };
-
-    nextBtn.onclick = () => {
-        const visibleCount = getVisibleCount();
-        const maxIndex = Math.max(0, imageUrls.length - visibleCount);
-        if (currentIndex < maxIndex) {
-            currentIndex++;
-            updateCarousel();
-        }
-    };
-
-    // Reset currentIndex if container resized
-    window.addEventListener('resize', () => {
-        const visibleCount = getVisibleCount();
-        const maxIndex = Math.max(0, imageUrls.length - visibleCount);
-        if (currentIndex > maxIndex) currentIndex = maxIndex;
-        updateCarousel();
-    });
 
     updateCarousel();
 }
+
 
 
 
