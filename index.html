@@ -513,8 +513,8 @@ function createImageCarousel(imageUrls) {
 
     const img = document.createElement('img');
     img.src = url;
-    img.style.width = '200px';
-    img.style.height = '200px';
+    img.style.width = '120px';
+    img.style.height = '120px';
     img.style.objectFit = 'cover';
     img.style.margin = '5px';
     img.style.cursor = 'pointer';
@@ -1109,7 +1109,6 @@ html += `</tbody></table>`;
 <!-- Image Generation Modal -->
 <!-- Modal Wrapper -->
 <div style="display: flex; align-items: flex-start; gap: 20px;">
-
   <!-- Modal -->
   <div id="imageModal" class="modal">
     <div class="modal-content">
@@ -1121,11 +1120,8 @@ html += `</tbody></table>`;
       <br /><br />
       <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
     </div>
+    <div id="imagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; width: 300px;"></div>
   </div>
-
-  <!-- Image Preview Container -->
-  <div id="imagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; width: 300px;"></div>
-
 </div>
 
 
