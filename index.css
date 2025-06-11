@@ -505,7 +505,7 @@ textarea {
   resize: vertical;
 }
 
-.Clear-btn {
+.Clear-btn,.Save-btn {
     background-color:red;
     display: flex;
     align-items: center;
@@ -519,6 +519,9 @@ textarea {
     position: relative;
     opacity: 0.8;
     border: none;
+}
+.Save-btn {
+    background-color:#2fff37;
 }
 
 .swal2-input#flatpickrInput {

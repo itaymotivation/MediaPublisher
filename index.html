@@ -692,6 +692,16 @@ function updateScheduleDisplay(dateTime) {
       });
 
       $("#ClearButton").click(()=>$("#content").val(''));
+      $("#SaveButton").click(()=>{
+        SaveDataToLS();
+        Swal.fire({
+          icon: 'success',
+          title: 'הנתונים נשמרו "בהסטוריית שימוש"',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true
+        });
+      });
 
       $("#TimingButton").click(()=>{ 
           Swal.fire({
@@ -1087,7 +1097,7 @@ html += `</tbody></table>`;
       <strong>תזמון פרסום נבחר:</strong>
       <span id="selectedDateTime" style="margin-left: 8px;"></span>
       <div style="margin-top:10px;">
-        <button type="button" id="deleteSchedule" style="padding:6px 12px; cursor:pointer; background:#e74c3c; color:#fff; border:none; border-radius:4px;">מחק</button>
+        <button type="button" id="deleteSchedule" style="padding:6px 12px; cursor:pointer; background:#e74c3c; color:#fff; border:none; border-radius:4px;">מחק</button>     
       </div>
     </div>
       <label for="email">אימייל:</label>
@@ -1098,8 +1108,10 @@ html += `</tbody></table>`;
 
       <label for="content">תוכן פוסט:</label>
       <textarea id="content" name="content" required></textarea>
-      <button type="button" class="Clear-btn" id="ClearButton">מחק את מלל הפוסט</button>
-
+      <div style="display: flex; flex-direction: row; justify-content: space-between;">
+        <button type="button" class="Clear-btn" id="ClearButton">מחק את מלל הפוסט</button>
+        <button type="button" class="Save-btn" id="SaveButton">שמירה זמנית</button>
+      </div>
       <label for="media">קובצי תמונה או וידאו:</label>
       <input type="file" id="media" name="media" accept="image/*,video/*" multiple />
  <div class="preview-area" id="previewArea"></div>
