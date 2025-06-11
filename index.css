@@ -362,6 +362,7 @@ input#telegram:checked + label.telegram::after {
     padding: 15px 15px 20px;
     width: 90%;
     border-radius: 10px;
+    margin: 0;
   }
   #messages {
     height: 200px;

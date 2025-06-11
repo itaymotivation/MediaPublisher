@@ -395,7 +395,6 @@ function openImageModal() {
 function closeImageModal() {
   document.getElementById("imageModal").style.display = "none";
   document.getElementById("imagePrompt").value = "";
-  document.getElementById("imagePreview").innerHTML = "";
 }
 
 function useLastGPTResponse() {
@@ -1139,25 +1138,22 @@ html += `</tbody></table>`;
 </div>
 
 <!-- Image Generation Modal -->
-<!-- Modal Wrapper -->
 <div style="display: flex; align-items: flex-start; gap: 20px;">
-  <!-- Modal -->
   <div id="imageModal" class="modal" style="padding: 0px 5px 0px 7px;">
-    <div class="modal-content" style="margin: 0;">
+    <div class="modal-content">
       <span class="close" onclick="closeImageModal()">&times;</span>
       <h3>🎨 יצירת תמונה עם בינה מלכותית</h3>
 
       <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="4" style="width: -webkit-fill-available;"></textarea>
-      <button onclick="useLastGPTResponse()">צור תמונה ישר מהפוסט</button>
-      <br /><br />
-      <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
+      <div class="modal-footer">
+
+        <button onclick="useLastGPTResponse()">צור תמונה ישר מהפוסט</button>
+        <br /><br />
+        <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
+      </div>
     </div>
-    <div id="imagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; width: 300px;"></div>
   </div>
 </div>
-
-
-
   </div>
 </body>
 </html>
