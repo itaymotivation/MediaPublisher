@@ -480,17 +480,10 @@ async function CreateImagesByTerm(searchTerm) {
         if (response.ok) {
             console.log('✅ Image URLs received:', data.message);
             
-            const imageContainer = document.getElementById('imagePreview');
-            imageContainer.innerHTML = ''; // Clear previous images
+            const carouselTrack = document.getElementById('carouselTrack');
+            carouselTrack.innerHTML = ''; // Clear previous images
 
-            data.message.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.style.width = '200px';
-                img.style.margin = '5px';
-                img.style.objectFit = 'cover';
-                imageContainer.appendChild(img);
-            });
+            createImageCarousel(data.message);
 
             Swal.close(); // Close loading modal after images are appended
 
@@ -513,6 +506,47 @@ async function CreateImagesByTerm(searchTerm) {
     }
 }
 
+
+function createImageCarousel(imageUrls) {
+    const carouselTrack = document.getElementById('carouselTrack');
+    carouselTrack.innerHTML = ''; // Clear previous images
+    
+    imageUrls.forEach(url => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '200px';
+        img.style.margin = '5px';
+        img.style.objectFit = 'cover';
+        carouselTrack.appendChild(img);
+    });
+
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const visibleCount = 4;
+    const imgWidthWithMargin = 210; // 200px + 2*5px margin approx
+    const maxIndex = Math.max(0, imageUrls.length - visibleCount);
+    let currentIndex = 0;
+
+    function updateCarousel() {
+        carouselTrack.style.transform = `translateX(-${currentIndex * imgWidthWithMargin}px)`;
+    }
+
+    prevBtn.onclick = () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+        }
+    };
+
+    nextBtn.onclick = () => {
+        if (currentIndex < maxIndex) {
+            currentIndex++;
+            updateCarousel();
+        }
+    };
+    // Initialize
+    updateCarousel();
+}
 
 function syncFileInput() {
   const dt = new DataTransfer();
@@ -1106,7 +1140,14 @@ html += `</tbody></table>`;
     <br /><br />
     <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
 
-    <div id="imagePreview" style="margin-top:20px;"></div>
+    <div id="imagePreview" style="margin-top:20px;">
+      <div id="carouselContainer" style="width: 840px; overflow: hidden; position: relative;">
+      <div id="carouselTrack" style="display: flex; transition: transform 0.3s ease;"></div>
+      <button id="prevBtn" style="position: absolute; top: 50%; left: 0;">&#8592;</button>
+      <button id="nextBtn" style="position: absolute; top: 50%; right: 0;">&#8594;</button>
+    </div>
+
+    </div>
   </div>
 </div>
 
