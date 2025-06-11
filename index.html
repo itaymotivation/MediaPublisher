@@ -479,11 +479,7 @@ async function CreateImagesByTerm(searchTerm) {
 
         if (response.ok) {
             console.log('✅ Image URLs received:', data.message);
-            
             createImageModal(data.message);
-
-            Swal.close(); // Close loading modal after images are appended
-
         } else {
             Swal.fire({
                 icon: 'error',
