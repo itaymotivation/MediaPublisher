@@ -525,17 +525,22 @@ function createImageModal(imageUrls) {
     tempContainer.appendChild(img);
   });
 
-  // Show SweetAlert2 modal with the image container and button
+  const imageHTML = tempContainer.innerHTML;
+
+  // Show SweetAlert2 modal
   Swal.fire({
     title: '🎨 תמונות שנוצרו',
-    html: tempContainer,
+    html: `<div id="modalImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">${imageHTML}</div>`,
     showCancelButton: true,
     confirmButtonText: '📥 העבר לאיזור התמונות',
     cancelButtonText: '❌ סגור',
     preConfirm: () => {
+      const modalImageContainer = document.getElementById('modalImageContainer');
       const imagePreview = document.getElementById('imagePreview');
-      while (tempContainer.firstChild) {
-        imagePreview.appendChild(tempContainer.firstChild);
+
+      // Move each image from modal container to preview container
+      while (modalImageContainer.firstChild) {
+        imagePreview.appendChild(modalImageContainer.firstChild);
       }
     }
   });
