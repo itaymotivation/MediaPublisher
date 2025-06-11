@@ -411,6 +411,15 @@ function useLastGPTResponse() {
 }
 
 function generateImageNew() {
+  Swal.fire({
+    title: '🎨 יוצר תמונה...',
+    text: 'אנא המתן מספר שניות',
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    didOpen: () => {
+        Swal.showLoading();
+    }
+});
  prom = document.getElementById("imagePrompt").value.trim();
  generateImage(prom);
 }
@@ -450,16 +459,6 @@ async function generateImage(prom) {
         console.error("Error during translation with puter.ai.chat:", error);
         return;
     }
-
-    Swal.fire({
-        title: '🎨 יוצר תמונה...',
-        text: 'אנא המתן מספר שניות',
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
 
     imagesFromServer = CreateImagesByTerm(translatedSearchTerm);
 }
@@ -550,6 +549,13 @@ function createImageModal(imageUrls) {
       syncFileInput();
       renderMedia();
       closeImageModal();
+      Swal.fire({
+                icon: 'success',
+                title: "התמונות הועברו לפוסט",
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+              });
     }
   });
 }
@@ -1002,10 +1008,9 @@ html += `</tbody></table>`;
             if(status.includes("תוזמן")){
               Swal.fire({
                 icon: 'success',
-                title: status +' ל - '+$("#selectedDateTime").html(),
-                showConfirmButton: false,
-                timer: 4000,
-                timerProgressBar: true});
+                title: status +' ל - '+$("#selectedDateTime").html(),                
+                confirmButtonText: 'סגור'
+              });
             }else{
               const links = result.results || [];
               Swal.fire({
@@ -1145,7 +1150,7 @@ html += `</tbody></table>`;
       <span class="close" onclick="closeImageModal()">&times;</span>
       <h3>🎨 יצירת תמונה עם בינה מלכותית</h3>
 
-      <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="4" style="width: -webkit-fill-available;margin-bottom: 15px;"></textarea>
+      <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="7" style="width: -webkit-fill-available;margin-bottom: 15px;"></textarea>
       <div class="modal-footer">
 
         <button onclick="useLastGPTResponse()">צור תמונה ישר מהפוסט</button>
