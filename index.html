@@ -509,17 +509,25 @@ function createImageModal(imageUrls) {
   tempContainer.style.justifyContent = 'center';
 
   imageUrls.forEach(url => {
-    const img = document.createElement('img');
-    img.src = url;
-    img.style.width = '120px';
-    img.style.height = '120px';
-    img.style.objectFit = 'cover';
-    img.style.cursor = 'pointer';
-    img.style.border = '1px solid #ccc';
-    img.style.borderRadius = '4px';
-    img.alt = 'Image preview';
-    tempContainer.appendChild(img);
-  });
+  const link = document.createElement('a');
+  link.href = url;
+  link.target = '_blank'; // Open in new tab
+  link.style.display = 'inline-block';
+
+  const img = document.createElement('img');
+  img.src = url;
+  img.style.width = '120px';
+  img.style.height = '120px';
+  img.style.objectFit = 'cover';
+  img.style.cursor = 'pointer';
+  img.style.border = '1px solid #ccc';
+  img.style.borderRadius = '4px';
+  img.alt = 'Image preview';
+
+  link.appendChild(img);
+  tempContainer.appendChild(link);
+});
+
 
   const imageHTML = tempContainer.innerHTML;
 
@@ -528,8 +536,8 @@ function createImageModal(imageUrls) {
     title: '🎨 תמונות שנוצרו',
     html: `<div id="modalImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">${imageHTML}</div>`,
     showCancelButton: true,
-    confirmButtonText: '📥 העבר לאיזור התמונות',
-    cancelButtonText: '❌ סגור',
+    confirmButtonText: 'העבר תמונות לפוסט',
+    cancelButtonText: 'ביטול',
     preConfirm: () => {
       const modalImageContainer = document.getElementById('modalImageContainer');
       const imagePreview = document.getElementById('imagePreview');
