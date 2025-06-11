@@ -593,52 +593,9 @@ textarea {
   margin-top: 12px;
 }
 
-#carouselContainer {
-  overflow: hidden;
-  position: relative;
-  width: 100%; /* full width on mobile */
-  max-width: 440px; /* max width for desktop */
-  margin: auto;
-}
-
-#carouselTrack {
-  display: flex;
-  transition: transform 0.3s ease;
-}
-
-#carouselTrack img {
-  width: 100px;
-  margin: 5px;
-  object-fit: cover;
-}
-
-/* Navigation buttons */
-#prevBtn, #nextBtn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.3);
-  border: none;
-  color: white;
-  font-size: 24px;
-  padding: 10px;
-  cursor: pointer;
-  z-index: 10;
-  border-radius: 50%;
-  user-select: none;
-}
-
-#prevBtn { left: 0; }
-#nextBtn { right: 0; }
-
-/* Responsive image sizes and container for smaller screens */
-@media (max-width: 600px) {
-  #carouselTrack img {
-    width: 70px;
-    margin: 3px;
-  }
-
-  #carouselContainer {
-    max-width: 230px; /* fits about 3 images with margins */
-  }
+#imagePreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
 }

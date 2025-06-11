@@ -505,6 +505,7 @@ async function CreateImagesByTerm(searchTerm) {
 
 
 function createImageCarousel(imageUrls) {
+  const imagePreview = document.getElementById('imagePreview');
     imageUrls.forEach(url => {
     const link = document.createElement('a');
     link.href = url;             // Full-size image link
@@ -520,7 +521,7 @@ function createImageCarousel(imageUrls) {
     img.alt = 'Image preview';
 
     link.appendChild(img);
-    imageContainer.appendChild(link);
+    imagePreview.appendChild(link);
 });
 }
 
