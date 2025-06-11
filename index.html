@@ -514,20 +514,30 @@ function createImageCarousel(imageUrls) {
     imageUrls.forEach(url => {
         const img = document.createElement('img');
         img.src = url;
-        img.style.width = '100px';  // smaller images
-        img.style.margin = '5px';
         img.style.objectFit = 'cover';
         carouselTrack.appendChild(img);
     });
 
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const visibleCount = 4;
-    const imgWidthWithMargin = 110; // 100px + 2*5px margin approx
-    const maxIndex = Math.max(0, imageUrls.length - visibleCount);
+
     let currentIndex = 0;
 
+    function getImageWidthWithMargin() {
+        const firstImg = carouselTrack.querySelector('img');
+        if (!firstImg) return 0;
+        const style = getComputedStyle(firstImg);
+        return firstImg.offsetWidth + parseInt(style.marginLeft) + parseInt(style.marginRight);
+    }
+
+    function getVisibleCount() {
+        const containerWidth = document.getElementById('carouselContainer').offsetWidth;
+        const imgWidth = getImageWidthWithMargin();
+        return imgWidth ? Math.floor(containerWidth / imgWidth) : 1;
+    }
+
     function updateCarousel() {
+        const imgWidthWithMargin = getImageWidthWithMargin();
         carouselTrack.style.transform = `translateX(-${currentIndex * imgWidthWithMargin}px)`;
     }
 
@@ -539,14 +549,25 @@ function createImageCarousel(imageUrls) {
     };
 
     nextBtn.onclick = () => {
+        const visibleCount = getVisibleCount();
+        const maxIndex = Math.max(0, imageUrls.length - visibleCount);
         if (currentIndex < maxIndex) {
             currentIndex++;
             updateCarousel();
         }
     };
 
+    // Reset currentIndex if container resized
+    window.addEventListener('resize', () => {
+        const visibleCount = getVisibleCount();
+        const maxIndex = Math.max(0, imageUrls.length - visibleCount);
+        if (currentIndex > maxIndex) currentIndex = maxIndex;
+        updateCarousel();
+    });
+
     updateCarousel();
 }
+
 
 
 function syncFileInput() {
