@@ -1107,21 +1107,27 @@ html += `</tbody></table>`;
 </div>
 
 <!-- Image Generation Modal -->
-<div id="imageModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeImageModal()">&times;</span>
-    <h2>🎨 יצירת תמונה עם בינה מלכותית</h2>
+<!-- Modal Wrapper -->
+<div style="display: flex; align-items: flex-start; gap: 20px;">
 
-    <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="4"></textarea>
-    <button onclick="useLastGPTResponse()">צור תמונה ממלל הפוסט הקיים</button>
-    <br /><br />
-    <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
+  <!-- Modal -->
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeImageModal()">&times;</span>
+      <h2>🎨 יצירת תמונה עם בינה מלכותית</h2>
 
-  <div id="imagePreview" style="margin-top:20px;">
-</div>
-
+      <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="4"></textarea>
+      <button onclick="useLastGPTResponse()">צור תמונה ממלל הפוסט הקיים</button>
+      <br /><br />
+      <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
+    </div>
   </div>
+
+  <!-- Image Preview Container -->
+  <div id="imagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; width: 300px;"></div>
+
 </div>
+
 
 
   </div>
