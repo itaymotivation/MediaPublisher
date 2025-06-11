@@ -504,26 +504,43 @@ async function CreateImagesByTerm(searchTerm) {
 }
 
 
-function createImageCarousel(imageUrls) {
-  const imagePreview = document.getElementById('imagePreview');
-    imageUrls.forEach(url => {
-    const link = document.createElement('a');
-    link.href = url;             // Full-size image link
-    link.target = '_blank';      // Opens in new tab
+function createImageModal(imageUrls) {
+  // Create a temporary container for images
+  const tempContainer = document.createElement('div');
+  tempContainer.style.display = 'flex';
+  tempContainer.style.flexWrap = 'wrap';
+  tempContainer.style.gap = '10px';
+  tempContainer.style.justifyContent = 'center';
 
+  imageUrls.forEach(url => {
     const img = document.createElement('img');
     img.src = url;
     img.style.width = '120px';
     img.style.height = '120px';
     img.style.objectFit = 'cover';
-    img.style.margin = '5px';
     img.style.cursor = 'pointer';
+    img.style.border = '1px solid #ccc';
+    img.style.borderRadius = '4px';
     img.alt = 'Image preview';
+    tempContainer.appendChild(img);
+  });
 
-    link.appendChild(img);
-    imagePreview.appendChild(link);
-});
+  // Show SweetAlert2 modal with the image container and button
+  Swal.fire({
+    title: '🎨 תמונות שנוצרו',
+    html: tempContainer,
+    showCancelButton: true,
+    confirmButtonText: '📥 העבר לאיזור התמונות',
+    cancelButtonText: '❌ סגור',
+    preConfirm: () => {
+      const imagePreview = document.getElementById('imagePreview');
+      while (tempContainer.firstChild) {
+        imagePreview.appendChild(tempContainer.firstChild);
+      }
+    }
+  });
 }
+
 
 function syncFileInput() {
   const dt = new DataTransfer();
