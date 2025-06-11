@@ -17,6 +17,9 @@
 
   <script>
     function PingServer(guid=101) {
+      const UNSPLASH_API_KEY = '_C7gYNIpnWCj3TABkfbsYsBXkEnFgKeFwltg51keHeA';
+      const CLOUDINARY_CLOUD_NAME = 'dgdkjgbrv';
+      const CLOUDINARY_UPLOAD_PRESET = "8d69cc77"
       const intervalId = setInterval(async () => {
           const response = await fetch(`http://127.0.0.1:5000/status/${guid}`);
           const data = await response.json();
