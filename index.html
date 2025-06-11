@@ -420,6 +420,15 @@ async function generateImage(prom) {
     const translationPrompt = "sum the subject of the prompt to 1 word and translate the word to english and return just the word without more explanations: " + prom;
     let translatedSearchTerm;
 
+    if ($("#password").val()=='') {
+      Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: 'יש להזין תחילה קוד משתמש'
+        });
+        return;
+    }
+
     try {
         const chatResponse = await puter.ai.chat(translationPrompt);
 
@@ -463,7 +472,7 @@ async function CreateImagesByTerm(searchTerm) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ search_term: searchTerm })
+            body: JSON.stringify({ id: publisherId, search_term: searchTerm })
         });
 
         const data = await response.json();
