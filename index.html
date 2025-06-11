@@ -422,7 +422,7 @@ function generateImageNew() {
 }
 
 async function generateImage(prom) {
-    const translationPrompt = "find the subject of the prompt in 1 word and translate the word to english without more explanations: " + prom;
+    const translationPrompt = "sum the subject of the prompt to 1 word and translate the word to english and return just the word without more explanations: " + prom;
     let translatedSearchTerm;
 
     try {
@@ -459,57 +459,46 @@ async function generateImage(prom) {
     });
 
     try {
-        const imageUrls = await fetchFromUnsplash(translatedSearchTerm);
+    const imageUrls = await fetchFromUnsplash(translatedSearchTerm);
 
-        const resultsDiv = document.getElementById('imagePreview'); // Use 'imagePreview' as specified
-        if (resultsDiv) {
-            resultsDiv.innerHTML = ''; // Clear previous results
+    const resultsDiv = document.getElementById('imagePreview');
+    if (resultsDiv) {
+        resultsDiv.innerHTML = ''; // Clear previous results
 
-            const imageLoadPromises = []; // Array to hold promises for image loading
+        let loadedCount = 0;
+        let totalImages = imageUrls.length;
 
-            imageUrls.forEach(url => {
-                const imgElement = document.createElement('img');
-                imgElement.src = url;
-                imgElement.style.width = '200px'; // Example styling
-                imgElement.style.margin = '5px';
-                // You might also want to set a height or aspect-ratio to prevent layout shifts
-                // imgElement.style.height = '150px';
-                // imgElement.style.objectFit = 'cover';
-
-
-                // Create a promise that resolves when the image loads
-                const imgLoadPromise = new Promise((resolve, reject) => {
-                    imgElement.onload = () => resolve();
-                    imgElement.onerror = (e) => {
-                        console.warn(`Failed to load image: ${url}`, e);
-                        // Resolve anyway to not block other images, but log the warning
-                        resolve();
-                        // Or reject if you want to fail the whole Promise.all if one image fails
-                        // reject(new Error(`Failed to load image: ${url}`));
-                    };
-                });
-                imageLoadPromises.push(imgLoadPromise);
-
-                resultsDiv.appendChild(imgElement); // Append the image to the DOM immediately
-            });
-
-            // Wait for all images to load before closing the SweetAlert
-            await Promise.all(imageLoadPromises);
+        function checkAllImagesLoaded() {
+            if (loadedCount === totalImages) {
+                Swal.close(); // All images are loaded, close the alert
+                // You can continue your logic here after all images are loaded
+            }
         }
 
-        Swal.close(); // Close loading alert ONLY after all images have loaded
+        imageUrls.forEach(url => {
+            const imgElement = document.createElement('img');
+            imgElement.src = url;
+            imgElement.style.width = '200px';
+            imgElement.style.margin = '5px';
 
-        console.log("Image URLs fetched and displayed:", imageUrls);
+            imgElement.onload = () => {
+                loadedCount++;
+                checkAllImagesLoaded();
+            };
 
-    } catch (error) {
-        Swal.close(); // Close loading alert on error
-        Swal.fire({
-            icon: 'error',
-            title: 'שגיאה',
-            text: 'אירעה שגיאה בטעינת התמונות מ-Unsplash. אנא נסה שוב עם תיאור אחר.'
+            imgElement.onerror = (e) => {
+                console.warn(`Failed to load image: ${url}`, e);
+                loadedCount++; // Still count failed loads so the app doesn't hang
+                checkAllImagesLoaded();
+            };
+
+            resultsDiv.appendChild(imgElement); // Append immediately
         });
-        console.error("Error in generateImage:", error);
     }
+} catch (error) {
+    console.error('Error fetching or displaying images:', error);
+    Swal.close();
+}
 }
 
 function syncFileInput() {
