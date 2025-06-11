@@ -1142,12 +1142,12 @@ html += `</tbody></table>`;
 <!-- Modal Wrapper -->
 <div style="display: flex; align-items: flex-start; gap: 20px;">
   <!-- Modal -->
-  <div id="imageModal" class="modal">
-    <div class="modal-content">
+  <div id="imageModal" class="modal" style="padding: 0px 5px 0px 7px;">
+    <div class="modal-content" style="margin: 0;">
       <span class="close" onclick="closeImageModal()">&times;</span>
-      <h2>🎨 יצירת תמונה עם בינה מלכותית</h2>
+      <h3>🎨 יצירת תמונה עם בינה מלכותית</h3>
 
-      <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="4"></textarea>
+      <textarea id="imagePrompt" placeholder="כתוב כאן תיאור לתמונה..." rows="4" style="width: -webkit-fill-available;"></textarea>
       <button onclick="useLastGPTResponse()">צור תמונה ישר מהפוסט</button>
       <br /><br />
       <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
