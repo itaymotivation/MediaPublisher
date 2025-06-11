@@ -14,6 +14,19 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/he.js"></script>
+
+<script>
+function CheckShabat() {
+      if (new Date().getDay() != 5 || new Date().getDay() != 6)
+        window.location.replace('https://itaymotivation.github.io/MediaPublisher/index.html');
+  }
+
+$(document).ready(()=>{
+
+  CheckShabat();
+
+});
+</script>
 </head>
 
 <body>
