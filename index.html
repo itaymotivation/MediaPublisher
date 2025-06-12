@@ -975,7 +975,7 @@ html += `</tbody></table>`;
       document.getElementById('postForm').addEventListener('submit', async function (event) {
         event.preventDefault();
         const publisherId = $("#password").val();
-        const publisherMail = $("#email").val();//itay
+        const publisherMail = $("#email").val();
         const content = $("#content").val();
         const selectedPlatforms = Array.from(document.querySelectorAll('input[name="platforms"]:checked')).map(cb => cb.value);
 
