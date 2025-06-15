@@ -43,8 +43,8 @@ function deletePost(timingId) {
           endpoint = "https://mediapublisherbackend.onrender.com/deleteTiming";
           const jsonToSend = {
             guid: crypto.randomUUID(),
-            id: document.getElementById('swal-input-password').value,
-            mail: document.getElementById('swal-input-email').value,
+            id: password,
+            mail: email,
             timingId: timingId
           }
           fetch(endpoint, {
@@ -80,8 +80,8 @@ $(document).ready(()=>{
     showCancelButton: true,
     cancelButtonText: 'ביטול',
     preConfirm: () => {
-      const email = document.getElementById('swal-input-email').value;
-      const password = document.getElementById('swal-input-password').value;
+      email = document.getElementById('swal-input-email').value;
+      password = document.getElementById('swal-input-password').value;
 
       if (!email || !password) {
         Swal.showValidationMessage('נא למלא את כל השדות');
