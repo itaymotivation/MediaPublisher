@@ -128,9 +128,10 @@
     function UnsplashAsGuest(){
       $("#password").val("111");
       $("#email").val("111");
-      generateImageNew();
-      $("#password").val("");
-      $("#email").val("");
+      generateImage().then(()=>{
+        $("#password").val("");
+        $("#email").val("");
+      });
     }
 
     function Validation(selectedPlatforms){
@@ -411,23 +412,13 @@ function useLastGPTResponse() {
   }
 }
 
-function generateImageNew() {
- prom = document.getElementById("imagePrompt").value.trim();
- generateImage(prom);
-}
 
-async function generateImage(prom) {
+async function generateImage(prom="") {
+    if(prom == "")
+      prom = document.getElementById("imagePrompt").value.trim();
     const translationPrompt = "sum the subject of the prompt to 1 word and translate the word to english and return just the word without more explanations: " + prom;
     let translatedSearchTerm;
-    // if ($("#password").val()=='') {
-    //   Swal.fire({
-    //         icon: 'error',
-    //         title: 'שגיאה',
-    //         text: 'יש להזין תחילה קוד משתמש'
-    //     });
-    //     return;
-    // }
-
+    
     try {
        Swal.fire({
             title: '🎨 יוצר תמונה...',
@@ -1125,6 +1116,7 @@ html += `</tbody></table>`;
   <button type="button" class="info-btn" id="infoButton">
     <i class="fas fa-info-circle" aria-hidden="true"></i> תנאים
   </button>
+  <button type="button" class="dashboard-button">לוח בקרה</button>
   <button type="button" class="money-btn" id="money">מחירון והרשמה</button>
   <button type="button" class="LS-btn" id="localStorageButton">הסטוריית שימוש</button>
   <button type="button" class="Timing-btn" id="TimingButton">תזמון פוסט</button>
@@ -1202,7 +1194,7 @@ html += `</tbody></table>`;
       <div class="modal-footer">
 
         <button onclick="useLastGPTResponse()">צור תמונה ישר מהפוסט</button>
-        <button onclick="generateImageNew()">🚀 צור תמונה מהתיאור למעלה</button>
+        <button onclick="generateImage()">🚀 צור תמונה מהתיאור למעלה</button>
       </div>
     </div>
   </div>
