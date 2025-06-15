@@ -75,31 +75,74 @@ $(document).ready(()=>{
       <div class="container">
     <h1>לוח תזמונים</h1>
 
-    <div class="post">
-      <div class="post-title">פוסט ראשון</div>
-      <div class="post-meta">15 ביוני 2025 • מאת יוסי</div>
-      <div class="post-content">
-        זהו פוסט דוגמה שמציג כיצד נראה פוסט באתר. כאן יופיע התוכן המלא של הפוסט.
-      </div>
-    </div>
-
-    <div class="post">
-      <div class="post-title">פוסט שני</div>
-      <div class="post-meta">13 ביוני 2025 • מאת דנה</div>
-      <div class="post-content">
-        פוסט נוסף להמחשה. ניתן כמובן להוסיף תמונות, קישורים, ועוד.
-      </div>
-    </div>
-
-    <div class="post">
-      <div class="post-title">עדכון חשוב</div>
-      <div class="post-meta">10 ביוני 2025 • מאת המערכת</div>
-      <div class="post-content">
-        נא לשים לב שביום רביעי תהיה תחזוקה מתוכננת בשעות הלילה.
-      </div>
-    </div>
-
+    <div class="posts-container" id="postsContainer">
+    <!-- פוסטים ייכנסו כאן -->
   </div>
+
+  <script>
+    const postArray = [
+      {
+        content: "fgh",
+        filesLink: "AgACAgQAAyEGAASbaRWyAAPhaE7PoE-lNfXcuOIjlEUzUlplmqkAAie5MRvKHnRS_LnIrbzfq5QBAAMCAANtAAM2BA; AgACAgQAAyEGAASbaRWyAAPiaE7PoXKeQzTYO42NUfK8nEBo-20AAgy5MRvRmn1Slu4JrEuRuiMBAAMCAAN4AAM2BA",
+        platforms: "telegram",
+        publishDate: "15.6.2025",
+        publishTime: "16:00",
+        publisherId: 111,
+        publisherMail: 111,
+        timingId: "928018ca-8a80-4904-9024-f93ef7794048"
+      },
+      // אפשר להוסיף כאן עוד אובייקטים
+    ];
+
+    const container = document.getElementById('postsContainer');
+
+    postArray.forEach(post => {
+      const card = document.createElement('div');
+      card.className = 'post-card';
+      card.setAttribute('data-id', post.timingId);
+
+      const files = post.filesLink.split(';').map(file => file.trim()).filter(Boolean);
+      const filesHTML = files.map((f, i) => `<a href="https://t.me/share/file?url=${encodeURIComponent(f)}" target="_blank">📎 קובץ ${i + 1}</a>`).join('<br>');
+
+      card.innerHTML = `
+        <div class="post-title">🗓 תזמון פרסום</div>
+        <div class="post-detail"><strong>תוכן:</strong> ${post.content}</div>
+        <div class="post-detail"><strong>תאריך:</strong> ${post.publishDate}</div>
+        <div class="post-detail"><strong>שעה:</strong> ${post.publishTime}</div>
+        <div class="post-detail"><strong>פלטפורמות:</strong> ${post.platforms}</div>
+        <div class="post-detail"><strong>מייל מפרסם:</strong> ${post.publisherMail}</div>
+        <div class="post-files">${filesHTML}</div>
+        <button class="delete-button" onclick="deletePost('${post.timingId}')">🗑️ מחיקת תזמון</button>
+      `;
+
+      container.appendChild(card);
+    });
+
+    function deletePost(timingId) {
+      Swal.fire({
+        title: 'האם למחוק את התזמון?',
+        text: "לא תוכל לשחזר אותו לאחר מכן!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'כן, מחק!',
+        cancelButtonText: 'ביטול'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const card = document.querySelector(`[data-id="${timingId}"]`);
+          if (card) card.remove();
+
+          Swal.fire(
+            'נמחק!',
+            'התזמון הוסר בהצלחה.',
+            'success'
+          );
+
+          // כאן תוכל גם לשלוח בקשת DELETE לשרת אם יש API
+        }
+      });
+    }
+  </script>
+
 
 </body>
 </html>
