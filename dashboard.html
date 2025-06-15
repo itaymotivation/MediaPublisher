@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>לוח בקרה</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://js.puter.com/v2/"></script>
+  <link rel="stylesheet" href="index.css" />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/he.js"></script>
+
+<script>
+function CheckShabat() {
+      if (new Date().getDay() != 5 || new Date().getDay() != 6)
+        window.location.replace('https://itaymotivation.github.io/MediaPublisher/index.html');
+  }
+
+$(document).ready(()=>{
+  Swal.fire({
+    title: 'כניסה לחשבון',
+    html:
+      '<input type="email" id="swal-input-email" class="swal2-input" placeholder="אימייל">' +
+      '<input type="password" id="swal-input-password" class="swal2-input" placeholder="סיסמה">',
+    icon: 'info',
+    confirmButtonText: 'התחבר',
+    showCancelButton: true,
+    cancelButtonText: 'ביטול',
+    preConfirm: () => {
+      const email = document.getElementById('swal-input-email').value;
+      const password = document.getElementById('swal-input-password').value;
+
+      if (!email || !password) {
+        Swal.showValidationMessage('נא למלא את כל השדות');
+      }
+
+      return { email, password };
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { email, password } = result.value;
+      console.log("✉️ אימייל:", email);
+      console.log("🔐 סיסמה:", password);
+      endpoint = "https://mediapublisherbackend.onrender.com/getTimings";
+      const jsonToSend = {
+        guid: crypto.randomUUID(),
+        id: password,
+        mail: email
+      }
+      fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(jsonToSend)
+        })
+        .then(async (response) => {
+          const result = await response.json();
+        })
+    }
+  });
+
+});
+</script>
+</head>
+
+<body>
+ 
+    <h1>שבת שלום</h1>
+    <div style="text-align: center;">
+      <img src="https://images.unsplash.com/photo-1611340628555-2cdcc6d9f741?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NjIyMTh8MHwxfHNlYXJjaHwxOHx8U2FiYmF0aHxlbnwwfHx8fDE3NDk2NDk4ODd8MA&ixlib=rb-4.1.0&q=80&w=500" style=" border-radius: 50%;" alt="" srcset="">
+    </div>
+</body>
+</html>

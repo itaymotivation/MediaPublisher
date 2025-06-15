@@ -81,6 +81,7 @@
 
 
 
+
     function CheckShabat() {
       if (new Date().getDay() == 5 || new Date().getDay() == 6)
         window.location.replace('https://itaymotivation.github.io/MediaPublisher/shabat.html');
@@ -1116,7 +1117,7 @@ html += `</tbody></table>`;
   <button type="button" class="info-btn" id="infoButton">
     <i class="fas fa-info-circle" aria-hidden="true"></i> תנאים
   </button>
-  <button type="button" class="dashboard-button">לוח בקרה</button>
+  <button type="button" class="dashboard-button" onclick='window.open("https://itaymotivation.github.io/MediaPublisher/dashboard.html", "_blank")'>לוח בקרה</button>
   <button type="button" class="money-btn" id="money">מחירון והרשמה</button>
   <button type="button" class="LS-btn" id="localStorageButton">הסטוריית שימוש</button>
   <button type="button" class="Timing-btn" id="TimingButton">תזמון פוסט</button>
