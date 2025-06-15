@@ -659,7 +659,7 @@ function updateScheduleDisplay(dateTime) {
           <h3 style="font-weight: normal; margin-top: -10px; color: #666;">לחץ על שורה כדי לשחזר את הפוסט</h3>
             <div style="max-height:300px; overflow-y:auto; text-align:right;">
               ${history.map((item, index) => `
-                <div class="history-row" data-index="${index}" style="cursor:pointer; padding:10px; border-bottom:1px solid #ddd;">
+                <div class="history-row" data-index="${index}" style="cursor:pointer; padding:10px; border-bottom:5px solid #000;">
                   <strong>אימייל:</strong> ${item.email || ''}<br/>
                   <strong>תוכן:</strong> ${item.content || ''}<br/>
                   <strong>רשתות:</strong> ${item.socials?.join(", ") || ''}
