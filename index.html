@@ -90,7 +90,7 @@
           const response = await fetch(`https://mediapublisherbackend.onrender.com/status/${guid}`);
           const data = await response.json();
           const status = data.status;
-      }, 20000);
+      }, 7000);
     }
 
     function GetDataFromLS(){
@@ -121,6 +121,11 @@
     function PublishAsGuest(){
       $("#password").val("111");
       $('#postForm button[type="submit"]').click();
+      $("#password").val("");
+    }
+    function UnsplashAsGuest(){
+      $("#password").val("111");
+      generateImageNew();
       $("#password").val("");
     }
 
@@ -410,17 +415,25 @@ function generateImageNew() {
 async function generateImage(prom) {
     const translationPrompt = "sum the subject of the prompt to 1 word and translate the word to english and return just the word without more explanations: " + prom;
     let translatedSearchTerm;
-
-    if ($("#password").val()=='') {
-      Swal.fire({
-            icon: 'error',
-            title: 'שגיאה',
-            text: 'יש להזין תחילה קוד משתמש'
-        });
-        return;
-    }
+    // if ($("#password").val()=='') {
+    //   Swal.fire({
+    //         icon: 'error',
+    //         title: 'שגיאה',
+    //         text: 'יש להזין תחילה קוד משתמש'
+    //     });
+    //     return;
+    // }
 
     try {
+       Swal.fire({
+            title: '🎨 יוצר תמונה...',
+            text: 'אנא המתן מספר שניות',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         const chatResponse = await puter.ai.chat(translationPrompt);
 
         if (!chatResponse || !chatResponse.message) {
@@ -447,15 +460,6 @@ async function generateImage(prom) {
 }
 
 async function CreateImagesByTerm(searchTerm) {
-    Swal.fire({
-      title: '🎨 יוצר תמונה...',
-      text: 'אנא המתן מספר שניות',
-      allowOutsideClick: false,
-      showConfirmButton: false,
-      didOpen: () => {
-          Swal.showLoading();
-      }
-  });
     try {
         const response = await fetch('https://mediapublisherbackend.onrender.com/images', {
             method: 'POST',
@@ -471,14 +475,31 @@ async function CreateImagesByTerm(searchTerm) {
             console.log('✅ Image URLs received:', data.message);
             createImageModal(data.message);
         } else {
+            if(data.error.includes("המפרסם")){
             Swal.fire({
-                icon: 'error',
-                title: 'שגיאה',
-                text: data.error || 'אירעה שגיאה לא ידועה מהשרת.'
+              icon: 'error',
+              title: data.error,
+              text: "האם תרצה לפרסם כאורח?",
+              showCancelButton: true,
+              confirmButtonText: 'כן',
+              cancelButtonText: 'לא'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  UnsplashAsGuest();
+                } else {
+                  console.log("User declined guest publishing.");
+                }
+              })
+            }
+          else{
+            Swal.fire({
+              icon: 'error',
+              title: 'שגיאה',
+              text: data.error || 'אירעה שגיאה לא ידועה מהשרת.'
             });
             console.error('❌ Server responded with error:', data.error);
-        }
-
+          }
+      }
     } catch (error) {
         Swal.fire({
             icon: 'error',
@@ -871,7 +892,7 @@ function updateScheduleDisplay(dateTime) {
           price: "₪0",
           features: {
             "תזמון פוסטים": "❌",
-            "שימוש בצ'אט GPT ליצירת תמונות": "❌",
+            "שימוש בצ'אט GPT ליצירת תמונות": "✅",
             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
             "שימוש בהיסטוריית פוסטים": "✅",
             "פרסום ברשתות חברתיות": "לדף דמו בלבד"
@@ -973,6 +994,15 @@ html += `</tbody></table>`;
 
       //On Submit
       document.getElementById('postForm').addEventListener('submit', async function (event) {
+         Swal.fire({
+          title: 'מעדכן סטטוס...',
+          text: 'אנא המתן',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
         event.preventDefault();
         const publisherId = $("#password").val();
         const publisherMail = $("#email").val();
@@ -998,16 +1028,7 @@ html += `</tbody></table>`;
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 100000);
 
-        Swal.fire({
-          title: 'מעדכן סטטוס...',
-          text: 'אנא המתן',
-          allowOutsideClick: false,
-          showConfirmButton: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
-        });
-
+       
         // Begin the fetch
         if($("#selectedDateTime").html()=='')
           endpoint = "https://mediapublisherbackend.onrender.com/";
