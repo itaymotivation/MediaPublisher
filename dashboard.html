@@ -40,6 +40,15 @@ function deletePost(timingId) {
         cancelButtonText: 'ביטול'
       }).then((result) => {
         if (result.isConfirmed) {
+          Swal.fire({
+          title: 'מעדכן סטטוס...',
+          text: 'אנא המתן',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
           endpoint = "https://mediapublisherbackend.onrender.com/deleteTiming";
           const jsonToSend = {
             guid: crypto.randomUUID(),
@@ -56,13 +65,22 @@ function deletePost(timingId) {
             })
             .then(async (response) => {
               const result = await response.json();
-              const card = document.querySelector(`[data-id="${timingId}"]`);
-              if (card) card.remove();
-              Swal.fire(
-                'נמחק!',
-                'התזמון הוסר בהצלחה.',
-                'success'
-              );
+              if(status.ok){
+                const card = document.querySelector(`[data-id="${timingId}"]`);
+                if (card) card.remove();
+                Swal.fire(
+                  'נמחק!',
+                  'התזמון הוסר בהצלחה.',
+                  'success'
+                );
+              }else{
+                 Swal.fire({
+                icon: 'error',
+                title: '❌ שגיאה',
+                text: "",
+                confirmButtonText: 'סגור'
+            });
+              }
             })
         }
       });
@@ -90,9 +108,16 @@ $(document).ready(()=>{
     }
   }).then((result) => {
     if (result.isConfirmed) {
+      Swal.fire({
+          title: 'שולף נתונים...',
+          text: 'אנא המתן',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
       const { email, password } = result.value;
-      console.log("✉️ אימייל:", email);
-      console.log("🔐 סיסמה:", password);
       endpoint = "https://mediapublisherbackend.onrender.com/getTimings";
       const jsonToSend = {
         guid: crypto.randomUUID(),
@@ -109,7 +134,7 @@ $(document).ready(()=>{
         .then(async (response) => {
           const result = await response.json();
           const container = document.getElementById('postsContainer');
-
+          if (result.results && result.results.length > 0) {
           result.results.forEach(post => {
             const card = document.createElement('div');
             card.className = 'post-card';
@@ -131,7 +156,10 @@ $(document).ready(()=>{
 
             container.appendChild(card);
           });
-
+        }else{
+          const container = document.getElementById('postsContainer');
+          container.innerHTML = '<div style="text-align:center; color: #888;">אין תזמונים להצגה</div>';
+        }
         })
         }
   });
