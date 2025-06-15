@@ -73,8 +73,8 @@ $(document).ready(()=>{
   Swal.fire({
     title: 'כניסה לחשבון',
     html:
-      '<input type="email" id="swal-input-email" class="swal2-input" placeholder="אימייל">' +
-      '<input type="password" id="swal-input-password" class="swal2-input" placeholder="סיסמה">',
+      '<input type="email" id="swal-input-email" placeholder="אימייל">' +
+      '<input type="password" id="swal-input-password" placeholder="קוד משתמש">',
     icon: 'info',
     confirmButtonText: 'התחבר',
     showCancelButton: true,
@@ -111,7 +111,7 @@ $(document).ready(()=>{
           const result = await response.json();
           const container = document.getElementById('postsContainer');
 
-          result.forEach(post => {
+          result.results.forEach(post => {
             const card = document.createElement('div');
             card.className = 'post-card';
             card.setAttribute('data-id', post.timingId);
