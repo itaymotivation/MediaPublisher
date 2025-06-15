@@ -306,6 +306,7 @@ input#telegram:checked + label.telegram::after {
 /* Individual Messages */
 .message {
   margin-bottom: 10px;
+  font-size: large;
 }
 .user-message {
   text-align: right;
