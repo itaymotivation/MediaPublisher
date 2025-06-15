@@ -55,10 +55,9 @@ function deletePost(timingId) {
               body: JSON.stringify(jsonToSend)
             })
             .then(async (response) => {
-
+              const result = await response.json();
               const card = document.querySelector(`[data-id="${timingId}"]`);
               if (card) card.remove();
-      
               Swal.fire(
                 'נמחק!',
                 'התזמון הוסר בהצלחה.',
