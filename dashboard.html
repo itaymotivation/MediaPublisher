@@ -90,8 +90,10 @@ $(document).ready(()=>{
   Swal.fire({
     title: 'כניסה לחשבון',
     html:
-      '<input type="email" id="swal-input-email" class="swal2-input" placeholder="אימייל">' +
-      '<input type="password" id="swal-input-password" class="swal2-input" placeholder="קוד משתמש">',
+    '<div id="dashContainer">'+
+      '<input type="text" id="swal-input-email" class="swal2-input" placeholder="אימייל">' +
+      '<input type="password" id="swal-input-password" class="swal2-input" placeholder="קוד משתמש">'+
+      '</div>',
     icon: 'info',
     confirmButtonText: 'התחבר',
     showCancelButton: true,

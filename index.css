@@ -666,3 +666,7 @@ textarea {
     .delete-button:hover {
       background-color: #c82333;
     }
+    #dashContainer{
+      text-align: center;
+      width: 100px;
+    }
