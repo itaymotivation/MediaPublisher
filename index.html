@@ -120,13 +120,17 @@
 
     function PublishAsGuest(){
       $("#password").val("111");
+      $("#email").val("111");
       $('#postForm button[type="submit"]').click();
       $("#password").val("");
+      $("#email").val("");
     }
     function UnsplashAsGuest(){
       $("#password").val("111");
+      $("#email").val("111");
       generateImageNew();
       $("#password").val("");
+      $("#email").val("");
     }
 
     function Validation(selectedPlatforms){
@@ -479,7 +483,7 @@ async function CreateImagesByTerm(searchTerm) {
             Swal.fire({
               icon: 'error',
               title: data.error,
-              text: "האם תרצה לפרסם כאורח?",
+              text: "האם תרצה ליצור את המדיה כאורח?",
               showCancelButton: true,
               confirmButtonText: 'כן',
               cancelButtonText: 'לא'
