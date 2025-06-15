@@ -148,8 +148,8 @@ $(document).ready(()=>{
             card.setAttribute('data-id', post.timingId);
 
             const files = post.filesLink.split(';').map(file => file.trim()).filter(Boolean);
-            const filesHTML = `<button onclick="GetPostMedia(this)" id="${post.timingId}">שלוף את קבצי הפוסט</button>`;
-
+            //const filesHTML = `<button onclick="GetPostMedia(this)" id="${post.timingId}">שלוף את קבצי הפוסט</button>`;
+            const filesHTML ="";
             card.innerHTML = `
               <div class="post-title">🗓 תזמון פרסום</div>
               <div class="post-detail"><strong>תוכן:</strong> ${post.content}</div>
