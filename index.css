@@ -578,10 +578,6 @@ textarea {
       padding: 10px 8px;
       font-size: 0.9rem;
     }
-     #dashContainer{
-      text-align: center;
-      width: 220px;
-    }
   }
 
   .swal-popup-rtl {
@@ -674,3 +670,9 @@ textarea {
       text-align: center;
       width: 400px;
     }
+@media(max-width: 700px) {
+     #dashContainer{
+      text-align: center;
+      width: 220px;
+    }
+  }
