@@ -157,6 +157,11 @@ $(document).ready(()=>{
             container.appendChild(card);
           });
         }else{
+           Swal.fire(
+                  'אין תזמונים להצגה!',
+                  '',
+                  'success'
+                );
           const container = document.getElementById('postsContainer');
           container.innerHTML = '<div style="text-align:center; color: #888;">אין תזמונים להצגה</div>';
         }
