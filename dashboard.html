@@ -44,16 +44,31 @@ function deletePost(timingId) {
         cancelButtonText: 'ביטול'
       }).then((result) => {
         if (result.isConfirmed) {
-          const card = document.querySelector(`[data-id="${timingId}"]`);
-          if (card) card.remove();
+          endpoint = "https://mediapublisherbackend.onrender.com/deleteTiming";
+          const jsonToSend = {
+            guid: crypto.randomUUID(),
+            id: document.getElementById('swal-input-password').value,
+            mail: document.getElementById('swal-input-email').value,
+            timingId: timingId
+          }
+          fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(jsonToSend)
+            })
+            .then(async (response) => {
 
-          Swal.fire(
-            'נמחק!',
-            'התזמון הוסר בהצלחה.',
-            'success'
-          );
-
-          // כאן תוכל גם לשלוח בקשת DELETE לשרת אם יש API
+              const card = document.querySelector(`[data-id="${timingId}"]`);
+              if (card) card.remove();
+      
+              Swal.fire(
+                'נמחק!',
+                'התזמון הוסר בהצלחה.',
+                'success'
+              );
+            })
         }
       });
     }
