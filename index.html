@@ -990,15 +990,7 @@ html += `</tbody></table>`;
 
       //On Submit
       document.getElementById('postForm').addEventListener('submit', async function (event) {
-         Swal.fire({
-          title: 'מעדכן סטטוס...',
-          text: 'אנא המתן',
-          allowOutsideClick: false,
-          showConfirmButton: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
-        });
+         
         event.preventDefault();
         const publisherId = $("#password").val();
         const publisherMail = $("#email").val();
@@ -1007,6 +999,15 @@ html += `</tbody></table>`;
 
         isValid=Validation(selectedPlatforms);
         if (isValid!=0) return;
+        Swal.fire({
+          title: 'מעדכן סטטוס...',
+          text: 'אנא המתן',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
         const uploadedUrls = await GetTempFilesUrl();
         
         const [publishDate, publishTime] = $("#selectedDateTime").html().split(', ');
