@@ -560,7 +560,7 @@ function createVideoModal(videoUrls) {
         try {
           const response = await fetch(video.src);
           const blob = await response.blob();
-          const filename = video.src.split('/').pop().split('?')[0] + '.mp4';
+          const filename = video.src.split('/').pop().split('?')[0];
           const file = new File([blob], filename, { type: blob.type });
 
           selectedFiles.push(file);
