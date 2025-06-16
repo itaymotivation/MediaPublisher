@@ -423,7 +423,7 @@ function useLastGPTResponse() {
 
 async function CreateVideosByTerm() {
   prom = document.getElementById("imagePrompt").value.trim();
-  const translationPrompt = "sum the subject of the prompt to 1 word and translate the word to english and return just the word without more explanations: " + prom;
+  const translationPrompt = "sum the subject of the prompt to 2 words and translate the words to english and return just the words without more explanations: " + prom;
   let translatedSearchTerm;
   try {
        Swal.fire({
