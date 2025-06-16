@@ -491,7 +491,7 @@ async function CreateVideoByTerm(searchTerm) {
           cancelButtonText: 'לא'
         }).then((result) => {
           if (result.isConfirmed) {
-            PexelsVideoAsGuest(); // Create this guest fallback if needed
+            PexelsVideoAsGuest();
           } else {
             console.log("User declined guest publishing.");
           }
@@ -531,8 +531,8 @@ function createVideoModal(videoUrls) {
     const video = document.createElement('video');
     video.src = url;
     video.controls = true;
-    video.style.width = '160px';
-    video.style.height = '120px';
+    video.style.width = '190px';
+    video.style.height = '150px';
     video.style.objectFit = 'cover';
     video.style.cursor = 'pointer';
     video.style.border = '1px solid #ccc';
