@@ -134,6 +134,14 @@
         $("#email").val("");
       });
     }
+    function PexelsVideoAsGuest(){
+       $("#password").val("111");
+      $("#email").val("111");
+      CreateVideosByTerm().then(()=>{
+        $("#password").val("");
+        $("#email").val("");
+      });
+    }
 
     function Validation(selectedPlatforms){
       if (selectedPlatforms.length === 0) {
@@ -411,6 +419,168 @@ function useLastGPTResponse() {
       text: 'לא ניתן למצוא את מלל הפוסט.'
     });
   }
+}
+
+async function CreateVideosByTerm() {
+  prom = document.getElementById("imagePrompt").value.trim();
+  const translationPrompt = "sum the subject of the prompt to 1 word and translate the word to english and return just the word without more explanations: " + prom;
+  let translatedSearchTerm;
+  try {
+       Swal.fire({
+            title: '🎨 יוצר סרטון...',
+            text: 'אנא המתן מספר שניות',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        const chatResponse = await puter.ai.chat(translationPrompt);
+
+        if (!chatResponse || !chatResponse.message) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'חסר תיאור',
+                text: 'אנא הזן תיאור לסרטון.'
+            });
+            return;
+        }
+        translatedSearchTerm = chatResponse.message.content;
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: 'אירעה שגיאה בתרגום התיאור. אנא נסה שוב.'
+        });
+        console.error("Error during translation with puter.ai.chat:", error);
+        return;
+    }
+
+    videosFromServer = CreateVideoByTerm(translatedSearchTerm);
+}
+
+async function CreateVideoByTerm(searchTerm) {
+
+ try {
+    const response = await fetch('https://mediapublisherbackend.onrender.com/videos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: $("#password").val(),
+        mail: $("#email").val(),
+        search_term: searchTerm
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('✅ Video URLs received:', data.message);
+      createVideoModal(data.message);
+    } else {
+      if (data.error.includes("המפרסם")) {
+        Swal.fire({
+          icon: 'error',
+          title: data.error,
+          text: "האם תרצה ליצור את המדיה כאורח?",
+          showCancelButton: true,
+          confirmButtonText: 'כן',
+          cancelButtonText: 'לא'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            PexelsVideoAsGuest(); // Create this guest fallback if needed
+          } else {
+            console.log("User declined guest publishing.");
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'שגיאה',
+          text: data.error || 'אירעה שגיאה לא ידועה מהשרת.'
+        });
+        console.error('❌ Server responded with error:', data.error);
+      }
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'שגיאה',
+      text: 'אירעה שגיאת רשת או שגיאת עיבוד.'
+    });
+    console.error('❌ Network or parsing error:', error);
+  }
+}
+
+function createVideoModal(videoUrls) {
+  const tempContainer = document.createElement('div');
+  tempContainer.style.display = 'flex';
+  tempContainer.style.flexWrap = 'wrap';
+  tempContainer.style.gap = '10px';
+  tempContainer.style.justifyContent = 'center';
+
+  videoUrls.forEach(url => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.style.display = 'inline-block';
+
+    const video = document.createElement('video');
+    video.src = url;
+    video.controls = true;
+    video.style.width = '160px';
+    video.style.height = '120px';
+    video.style.objectFit = 'cover';
+    video.style.cursor = 'pointer';
+    video.style.border = '1px solid #ccc';
+    video.style.borderRadius = '4px';
+    video.style.backgroundColor = '#000';
+    video.setAttribute('preload', 'metadata');
+
+    link.appendChild(video);
+    tempContainer.appendChild(link);
+  });
+
+  const videoHTML = tempContainer.innerHTML;
+
+  Swal.fire({
+    title: '🎬 סרטונים שנוצרו',
+    html: `<div id="modalVideoContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">${videoHTML}</div>`,
+    showCancelButton: true,
+    confirmButtonText: '📥 העבר סרטונים לפוסט',
+    cancelButtonText: 'ביטול',
+    preConfirm: async () => {
+      const container = document.getElementById('modalVideoContainer');
+      const videos = container.querySelectorAll('video');
+
+      for (const video of videos) {
+        try {
+          const response = await fetch(video.src);
+          const blob = await response.blob();
+          const filename = video.src.split('/').pop().split('?')[0] + '.mp4';
+          const file = new File([blob], filename, { type: blob.type });
+
+          selectedFiles.push(file);
+        } catch (e) {
+          console.error('❌ Failed to fetch video:', video.src, e);
+        }
+      }
+
+      syncFileInput();
+      renderMedia();
+      closeImageModal(); 
+      Swal.fire({
+        icon: 'success',
+        title: "הסרטונים הועברו לפוסט",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
+    }
+  });
 }
 
 
@@ -1197,6 +1367,7 @@ html += `</tbody></table>`;
 
         <button onclick="useLastGPTResponse()">צור תמונה ישר מהפוסט</button>
         <button onclick="generateImage()">🚀 צור תמונה מהתיאור למעלה</button>
+        <button onclick="CreateVideosByTerm()">🚀 צור סרטון מהתיאור למעלה</button>
       </div>
     </div>
   </div>
