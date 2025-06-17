@@ -891,8 +891,18 @@ function updateScheduleDisplay(dateTime) {
       $("#TimingButton").click(()=>{ 
           Swal.fire({
           title: 'בחר תאריך ושעה לפרסום',
-          html: `
-              <input id="flatpickrInput" class="swal2-input" placeholder="בחר תאריך ושעה">
+           html: `
+            <input id="flatpickrInput" class="swal2-input" placeholder="בחר תאריך ושעה">
+            <div style="font-size: 0.9em; color: #444; text-align: right; margin-top: 10px; direction: rtl;">
+              🗓️ <strong>המלצה:</strong> לפרסום שמייצר לידים, מומלץ לבחור ימים ושעות עם מעורבות גבוהה:
+              <ul style="text-align: right; padding-right: 1em;">
+                <li><strong>ראשון–חמישי</strong></li>
+                <li>🕗 בוקר: <strong>08:00–10:00</strong></li>
+                <li>☀️ צהריים (הפסקת עבודה): <strong>12:00–14:00</strong></li>
+                <li>🌙 ערב: <strong>18:00–20:00</strong></li>
+              </ul>
+              ⚠️ שישי–שבת פחות מומלצים לחשיפה עסקית.
+            </div>
           `,
           didOpen: () => {
               const jewishHolidays = [
