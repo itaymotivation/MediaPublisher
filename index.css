@@ -477,7 +477,7 @@ input#telegram:checked + label.telegram::after {
 
 /* Mobile styles */
 @media (max-width: 600px) {
-  .BTNS {
+  .BTNS:not(#clipButton) {
     display: none;
     flex-direction: column;
     align-items: stretch;
