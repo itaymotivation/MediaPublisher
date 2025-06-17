@@ -494,7 +494,7 @@ async function CreateVideoByTerm(searchTerm) {
     const data = await response.json();
 
     if (response.ok) {
-      console.log('✅ Video URLs received:', data.message);
+      //console.log('✅ Video URLs received:', data.message);
       createVideoModal(data.message);
     } else {
         Swal.fire({
@@ -637,7 +637,7 @@ async function CreateImagesByTerm(searchTerm) {
         const data = await response.json();
 
         if (response.ok) {
-            console.log('✅ Image URLs received:', data.message);
+            //console.log('✅ Image URLs received:', data.message);
             createImageModal(data.message);
         } else {
             Swal.fire({
