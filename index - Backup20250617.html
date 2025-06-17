@@ -79,12 +79,13 @@
   // }
 // })();
 
-    // function CheckShabat() {
-    //   if (new Date().getDay() == 5 || new Date().getDay() == 6)
-    //     window.location.replace('https://itaymotivation.github.io/MediaPublisher/shabat.html');
-    // }
 
 
+
+    function CheckShabat() {
+      if (new Date().getDay() == 5 || new Date().getDay() == 6)
+        window.location.replace('https://itaymotivation.github.io/MediaPublisher/shabat.html');
+    }
     function PingServer(guid=101) {
       const intervalId = setInterval(async () => {
           const response = await fetch(`https://mediapublisherbackend.onrender.com/status/${guid}`);
@@ -116,27 +117,6 @@
       const history = JSON.parse(localStorage.getItem("postHistory") || "[]");
       history.unshift(formData); // Add latest at the top
       localStorage.setItem("postHistory", JSON.stringify(history.slice(0, 4))); // Keep only 10 entries
-    }
-
-    function IsGuest(){
-      Swal.fire({
-        title: 'הזדהות',
-        text: 'בחר אופן פרסום',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'פרסם כמשתמש רשום',
-        cancelButtonText: 'פרסם כאורח',
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          isGuest=false;
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          isGuest=true;
-          $("#email").val("111");
-          $("#password").val("111");
-          $("#publisherDetails").hide();
-        }
-      });
     }
 
     function PublishAsGuest(){
@@ -501,12 +481,29 @@ async function CreateVideoByTerm(searchTerm) {
       console.log('✅ Video URLs received:', data.message);
       createVideoModal(data.message);
     } else {
+      if (data.error.includes("המפרסם")) {
+        Swal.fire({
+          icon: 'error',
+          title: data.error,
+          text: "האם תרצה ליצור את המדיה כאורח?",
+          showCancelButton: true,
+          confirmButtonText: 'כן',
+          cancelButtonText: 'לא'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            PexelsVideoAsGuest();
+          } else {
+            console.log("User declined guest publishing.");
+          }
+        });
+      } else {
         Swal.fire({
           icon: 'error',
           title: 'שגיאה',
           text: data.error || 'אירעה שגיאה לא ידועה מהשרת.'
         });
         console.error('❌ Server responded with error:', data.error);
+      }
     }
   } catch (error) {
     Swal.fire({
@@ -644,6 +641,23 @@ async function CreateImagesByTerm(searchTerm) {
             console.log('✅ Image URLs received:', data.message);
             createImageModal(data.message);
         } else {
+            if(data.error.includes("המפרסם")){
+            Swal.fire({
+              icon: 'error',
+              title: data.error,
+              text: "האם תרצה ליצור את המדיה כאורח?",
+              showCancelButton: true,
+              confirmButtonText: 'כן',
+              cancelButtonText: 'לא'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  UnsplashAsGuest();
+                } else {
+                  console.log("User declined guest publishing.");
+                }
+              })
+            }
+          else{
             Swal.fire({
               icon: 'error',
               title: 'שגיאה',
@@ -651,6 +665,7 @@ async function CreateImagesByTerm(searchTerm) {
             });
             console.error('❌ Server responded with error:', data.error);
           }
+      }
     } catch (error) {
         Swal.fire({
             icon: 'error',
@@ -786,7 +801,6 @@ function updateScheduleDisplay(dateTime) {
 
     $(document).ready(function () {
       //CheckShabat();
-      IsGuest();
       PingServer();
       document.getElementById("closeChatModal").addEventListener("click", function () {
       document.getElementById("chatModal").style.display = "none";
@@ -1214,8 +1228,25 @@ html += `</tbody></table>`;
                 confirmButtonText: 'סגור'
               });
             }
+
             SaveDataToLS();
 
+          }else if(status.includes("שגיאה")){
+            if(status.includes("המפרסם")){
+            Swal.fire({
+              icon: 'error',
+              title: status,
+              text: "האם תרצה לפרסם כאורח?",
+              showCancelButton: true,
+              confirmButtonText: 'כן',
+              cancelButtonText: 'לא'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                PublishAsGuest();
+              } else {
+                console.log("User declined guest publishing.");
+              }
+            });
           }else{
             Swal.fire({
               icon: 'error',
@@ -1223,7 +1254,7 @@ html += `</tbody></table>`;
               text: status,
               confirmButtonText: 'סגור'
             });
-          }
+          }}
         })
         .catch(error => {
           if (error.name === 'AbortError') {
@@ -1276,13 +1307,12 @@ html += `</tbody></table>`;
         <button type="button" id="deleteSchedule" style="padding:6px 12px; cursor:pointer; background:#e74c3c; color:#fff; border:none; border-radius:4px;">מחק</button>     
       </div>
     </div>
-    <div id="publisherDetails">
       <label for="email">אימייל:</label>
       <input type="text" id="email" name="email" required />
 
       <label for="password">קוד משתמש:</label>
       <input type="password" id="password" name="password" />
-    </div>
+
       <label for="content">תוכן פוסט:</label>
       <textarea id="content" name="content" required rows="7"></textarea>
       <div style="display: flex; flex-direction: row; justify-content: space-between;">
@@ -1306,8 +1336,9 @@ html += `</tbody></table>`;
   <input type="checkbox" id="telegram" name="platforms" value="telegram">
   <label for="telegram" class="telegram"><i class="fab fa-telegram-plane"></i> טלגרם</label>
 </div>
-      <button type="submit" class="button">פרסם</button>
-</form>
+      <button type="submit" class="button">פרסם כמשתמש רשום</button>
+      <button type="button" onclick="PublishAsGuest()" class="button">פרסם כאורח</button>
+    </form>
 
     <!-- Chat Modal -->
 <div id="chatModal" class="modal" style="padding: 0px 5px 0px 0px;">
