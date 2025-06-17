@@ -139,29 +139,22 @@
       });
     }
 
-    function PublishAsGuest(){
-      $("#password").val("111");
-      $("#email").val("111");
-      $('#postForm button[type="submit"]').click();
-      $("#password").val("");
-      $("#email").val("");
+   
+    function TwitterCheck() {
+      const textarea = document.getElementById('content');
+      const currentLength = textarea.value.length;
+      const twitterCheckbox = document.getElementById('twitter');
+      if (twitterCheckbox.checked && currentLength >= 230) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'טוויטר לא מאפשרת יותר מ-230 תווים מפוסט',
+          text: '',
+        });
+        return true;
+      }
+      return false;
     }
-    function UnsplashAsGuest(){
-      $("#password").val("111");
-      $("#email").val("111");
-      generateImage().then(()=>{
-        $("#password").val("");
-        $("#email").val("");
-      });
-    }
-    function PexelsVideoAsGuest(){
-       $("#password").val("111");
-      $("#email").val("111");
-      CreateVideosByTerm().then(()=>{
-        $("#password").val("");
-        $("#email").val("");
-      });
-    }
+
 
     function Validation(selectedPlatforms){
       if (selectedPlatforms.length === 0) {
@@ -173,6 +166,9 @@
           });
           return -1;
         }
+
+        if(TwitterCheck())
+          return -1;
 
         const fileInput = document.getElementById('media');
         files = fileInput.files;
