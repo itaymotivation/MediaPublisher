@@ -888,11 +888,11 @@ function updateScheduleDisplay(dateTime) {
 
       });
 
-      document.addEventListener('contextmenu', function(e) {
-        if (isGuest && (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO')) {
-          e.preventDefault();
-        }
-      });
+      // document.addEventListener('contextmenu', function(e) {
+      //   if (isGuest && (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO')) {
+      //     e.preventDefault();
+      //   }
+      // });
 
       $("#clipButton").click(()=>{
         window.open("video.mp4", "_blank");
