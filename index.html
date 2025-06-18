@@ -522,28 +522,33 @@ function createVideoModal(videoUrls) {
   tempContainer.style.justifyContent = 'center';
 
   videoUrls.forEach(url => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.style.display = 'inline-block';
-
     const video = document.createElement('video');
     video.src = url;
     video.controls = true;
     video.style.width = '300px';
     video.style.height = '150px';
     video.style.objectFit = 'cover';
-    video.style.cursor = 'pointer';
+    video.style.cursor = isGuest ? 'not-allowed' : 'pointer';
     video.style.border = '1px solid #ccc';
     video.style.borderRadius = '4px';
     video.style.backgroundColor = '#000';
     video.setAttribute('preload', 'metadata');
+    video.title = isGuest ? 'כניסה נדרשת לצפייה במסך מלא' : '';
 
-    link.appendChild(video);
-    tempContainer.appendChild(link);
+    if (isGuest) {
+      tempContainer.appendChild(video);
+    } else {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.style.display = 'inline-block';
+      link.appendChild(video);
+      tempContainer.appendChild(link);
+    }
   });
 
   const videoHTML = tempContainer.innerHTML;
+
 
   Swal.fire({
     title: '🎬 סרטונים שנוצרו',
@@ -666,26 +671,31 @@ function createImageModal(imageUrls) {
   tempContainer.style.justifyContent = 'center';
 
   imageUrls.forEach(url => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.style.display = 'inline-block';
-
     const img = document.createElement('img');
     img.src = url;
     img.style.width = '120px';
     img.style.height = '120px';
     img.style.objectFit = 'cover';
-    img.style.cursor = 'pointer';
+    img.style.cursor = isGuest ? 'not-allowed' : 'pointer';
     img.style.border = '1px solid #ccc';
     img.style.borderRadius = '4px';
     img.alt = 'Image preview';
+    img.title = isGuest ? 'כניסה נדרשת לצפייה בתמונה מלאה' : '';
 
-    link.appendChild(img);
-    tempContainer.appendChild(link);
+    if (isGuest) {
+      tempContainer.appendChild(img);
+    } else {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.style.display = 'inline-block';
+      link.appendChild(img);
+      tempContainer.appendChild(link);
+    }
   });
 
   const imageHTML = tempContainer.innerHTML;
+
 
   Swal.fire({
     title: '🎨 תמונות שנוצרו',
@@ -710,12 +720,12 @@ function createImageModal(imageUrls) {
       renderMedia();
       closeImageModal();
       Swal.fire({
-                icon: 'success',
-                title: "התמונות הועברו לפוסט",
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true
-              });
+        icon: 'success',
+        title: "התמונות הועברו לפוסט",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
     }
   });
 }
@@ -878,25 +888,8 @@ function updateScheduleDisplay(dateTime) {
       });
 
       $("#clipButton").click(()=>{
-         Swal.fire({
-          title: 'סרטון הסבר על המערכת',
-          html: `
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-              <iframe 
-                src="video.mp4" 
-                frameborder="0" 
-                allowfullscreen 
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-              </iframe>
-            </div>
-          `,
-          width: 700,
-          padding: '1em',
-          showCloseButton: true,
-          showConfirmButton: false,
-        });
-
-      })
+        window.open("video.mp4", "_blank");
+      });
 
       $("#ClearButton").click(()=>$("#content").val(''));
       $("#SaveButton").click(()=>{
@@ -1071,8 +1064,8 @@ function updateScheduleDisplay(dateTime) {
           name: "אורח",
           price: "₪0",
           features: {
-            "תזמון פוסטים": "❌",
-            "שימוש בצ'אט GPT ליצירת תמונות": "✅",
+            "תזמון פוסטים": "✅",
+            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
             "שימוש בהיסטוריית פוסטים": "✅",
             "פרסום ברשתות חברתיות": "לדף דמו בלבד"
@@ -1083,7 +1076,7 @@ function updateScheduleDisplay(dateTime) {
           price: "₪60",
           features: {
             "תזמון פוסטים": "❌",
-            "שימוש בצ'אט GPT ליצירת תמונות": "❌",
+            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "❌",
             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
             "שימוש בהיסטוריית פוסטים": "✅",
             "פרסום ברשתות חברתיות": "לרשת אחת בלבד"
@@ -1094,7 +1087,7 @@ function updateScheduleDisplay(dateTime) {
           price: "₪90",
           features: {
             "תזמון פוסטים": "❌",
-            "שימוש בצ'אט GPT ליצירת תמונות": "✅",
+            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
             "שימוש בהיסטוריית פוסטים": "✅",
             "פרסום ברשתות חברתיות": "2 רשתות בלבד"
@@ -1105,7 +1098,7 @@ function updateScheduleDisplay(dateTime) {
           price: "₪130",
           features: {
             "תזמון פוסטים": "✅",
-            "שימוש בצ'אט GPT ליצירת תמונות": "✅",
+            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
             "שימוש בהיסטוריית פוסטים": "✅",
             "פרסום ברשתות חברתיות": "לכל הרשתות"
@@ -1282,10 +1275,8 @@ html += `</tbody></table>`;
 
 <!-- Collapsible menu for mobile -->
 <div class="BTNS" id="actionButtons">
-  <button type="button" id="clipButton">סרטון הסבר על המערכת</button>
-  <button type="button" class="info-btn" id="infoButton">
-    <i class="fas fa-info-circle" aria-hidden="true"></i> תנאים
-  </button>
+  <button type="button" id="clipButton"><i class="fas fa-info-circle" aria-hidden="true"></i> סרטון הסבר על המערכת</button>
+  <button type="button" class="info-btn" id="infoButton">תנאים</button>
   <button type="button" class="dashboard-button" onclick='window.open("https://itaymotivation.github.io/MediaPublisher/dashboard.html", "_blank")'>לוח בקרה ותזמונים</button>
   <button type="button" class="money-btn" id="money">מחירון והרשמה</button>
   <button type="button" class="LS-btn" id="localStorageButton">הסטוריית שימוש</button>
