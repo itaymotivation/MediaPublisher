@@ -534,9 +534,7 @@ function createVideoModal(videoUrls) {
     video.style.backgroundColor = '#000';
     video.setAttribute('preload', 'metadata');
     video.setAttribute('controlsList', 'nodownload');
-    video.oncontextmenu = e => e.preventDefault();
-    video.controls = !isGuest;
-    video.title = isGuest ? 'כניסה נדרשת לצפייה במסך מלא' : '';
+    video.title = isGuest ? 'רק מפרסמים יכולים להוריד את הסרטון' : '';
 
     if (isGuest) {
       tempContainer.appendChild(video);
@@ -683,9 +681,7 @@ function createImageModal(imageUrls) {
     img.style.border = '1px solid #ccc';
     img.style.borderRadius = '4px';
     img.alt = 'Image preview';
-    img.title = isGuest ? 'כניסה נדרשת לצפייה בתמונה מלאה' : '';
-    img.draggable = false;
-    img.oncontextmenu = e => e.preventDefault();
+    img.title = isGuest ? 'רק מפרסמים יכולים להוריד את התמונה' : '';
 
     if (isGuest) {
       tempContainer.appendChild(img);
