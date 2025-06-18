@@ -533,6 +533,9 @@ function createVideoModal(videoUrls) {
     video.style.borderRadius = '4px';
     video.style.backgroundColor = '#000';
     video.setAttribute('preload', 'metadata');
+    video.setAttribute('controlsList', 'nodownload');
+    video.oncontextmenu = e => e.preventDefault();
+    video.controls = !isGuest;
     video.title = isGuest ? 'כניסה נדרשת לצפייה במסך מלא' : '';
 
     if (isGuest) {
@@ -681,6 +684,8 @@ function createImageModal(imageUrls) {
     img.style.borderRadius = '4px';
     img.alt = 'Image preview';
     img.title = isGuest ? 'כניסה נדרשת לצפייה בתמונה מלאה' : '';
+    img.draggable = false;
+    img.oncontextmenu = e => e.preventDefault();
 
     if (isGuest) {
       tempContainer.appendChild(img);
