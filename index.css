@@ -465,6 +465,41 @@ input#telegram:checked + label.telegram::after {
   padding: 10px;
 }
 
+.hamburger {
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  border: none;
+  color: #0d47a1;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(160, 100, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.hamburger::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+  transform: skewX(-25deg);
+  transition: all 0.5s ease;
+}
+
+.hamburger:hover::before {
+  left: 100%;
+}
+
+.hamburger:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 30px rgba(160, 100, 255, 0.5);
+}
 /* Hamburger hidden on desktop */
 .hamburger {
   display: none;
