@@ -809,6 +809,11 @@ function updateScheduleDisplay(dateTime) {
         $(close).hide();
       }
 
+      const footnote = puterDialog.shadowRoot.querySelector('.launch-auth-popup-footnote');
+      if(footnote){
+        $(footnote).hide();
+      }
+
       const launchButton = puterDialog.shadowRoot.querySelector('#launch-auth-popup');
       if (launchButton) {
         launchButton.innerHTML = "גישה למערכת";
