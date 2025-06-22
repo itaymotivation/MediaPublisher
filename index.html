@@ -198,11 +198,7 @@
       function AutoPost(){
         post = GetAutoPostFromLS();
         if (Object.keys(post).length === 0) {
-          Swal.fire({
-            icon: 'info',
-            title: 'ממתין לשליחת פוסט ראשוני',
-            showCancelButton: false
-          });
+          return;
         }
         post.content = post.content.replace(/\n/g, "<br/>");
         const postContent = {

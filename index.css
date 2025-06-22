@@ -503,7 +503,7 @@ input#telegram:checked + label.telegram::after {
 /* Hamburger hidden on desktop */
 .hamburger {
   display: none;
-  font-size: 28px;
+  font-size: 21px;
   background: none;
   border: none;
   cursor: pointer;
