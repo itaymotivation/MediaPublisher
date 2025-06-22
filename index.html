@@ -253,6 +253,7 @@
       popup: 'swal-popup'
     },
     preConfirm: () => {
+      $("#content").val(postContent.message);
       const selectedFiles = [];
       const container = document.getElementById('AutoPostImageContainer');
       const imgs = container.querySelectorAll('img');
@@ -277,16 +278,7 @@
 
       return selectedFiles;  // Returning selected files to the result object
     }
-  }).then((result) => {
-    // Handle the confirmed action here
-    if (result.isConfirmed) {
-      console.log("Post confirmed");
-      console.log(result.value);  // The selected files returned from preConfirm
-      $("#content").val(postContent.content);  // Add logic for updating content if needed
-    } else if (result.isDismissed) {
-      console.log("User clicked Cancel");
-    }
-  });
+  })
 }
 
 
