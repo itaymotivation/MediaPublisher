@@ -1252,88 +1252,6 @@ function updateScheduleDisplay(dateTime) {
 
 
        $("#money").click(() => {
-       const packages = [
-        {
-          name: "אורח",
-          price: "₪0",
-          features: {
-            "תזמון פוסטים": "✅",
-            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
-            "שימוש בצ'אט GPT ליצירת פוסט": "✅",
-            "שימוש בהיסטוריית פוסטים": "✅",
-            "פרסום ברשתות חברתיות": "לדף דמו בלבד"
-          }
-        },
-        {
-          name: "בסיסי",
-          price: "₪60",
-          features: {
-            "תזמון פוסטים": "❌",
-            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "❌",
-            "שימוש בצ'אט GPT ליצירת פוסט": "✅",
-            "שימוש בהיסטוריית פוסטים": "✅",
-            "פרסום ברשתות חברתיות": "לרשת אחת בלבד"
-          }
-        },
-        {
-          name: "מתקדם",
-          price: "₪90",
-          features: {
-            "תזמון פוסטים": "❌",
-            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
-            "שימוש בצ'אט GPT ליצירת פוסט": "✅",
-            "שימוש בהיסטוריית פוסטים": "✅",
-            "פרסום ברשתות חברתיות": "2 רשתות בלבד"
-          }
-        },
-        {
-          name: "עסקי",
-          price: "₪130",
-          features: {
-            "תזמון פוסטים": "✅",
-            "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
-            "שימוש בצ'אט GPT ליצירת פוסט": "✅",
-            "שימוש בהיסטוריית פוסטים": "✅",
-            "פרסום ברשתות חברתיות": "לכל הרשתות"
-          }
-        }
-      ];
-
-// חילוץ כל שמות הפיצ'רים
-const allFeatures = Object.keys(packages[0].features);
-
-// בניית טבלת HTML
-let html = `
-  <table class="features-table" dir="rtl">
-    <thead>
-      <tr style="background:#4a90e2; color:white;">
-        <th>פיצ'ר</th>
-        ${packages.map(pkg => `<th>${pkg.name}<br><span style="font-weight:normal;">${pkg.price}</span></th>`).join('')}
-      </tr>
-    </thead>
-    <tbody>
-`;
-
-allFeatures.forEach(feature => {
-  html += `
-    <tr style="border-bottom:1px solid #ddd;">
-      <td>${feature}</td>
-      ${packages.map(pkg => `<td>${pkg.features[feature]}</td>`).join('')}
-    </tr>
-  `;
-});
-
-html += `</tbody></table>`;
-
-    Swal.fire({
-      title: 'פיצ\'רים ועלויות חודשיות למשתמשים',
-      html: html,
-      width: '600px',
-      confirmButtonText: 'הרשמה',
-      cancelButtonText: 'יציאה',
-      showCancelButton:true
-    }).then((result) => {
-      if (result.isConfirmed) {
         Swal.fire({
         title: 'מעוניין להצטרף כמפרסם?',
         html: `
@@ -1344,8 +1262,100 @@ html += `</tbody></table>`;
         `,
         confirmButtonText: 'סגור',
       });
-      }
-    })
+//        const packages = [
+//         {
+//           name: "אורח",
+//           price: "₪0",
+//           features: {
+//             "תזמון פוסטים": "✅",
+//             "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
+//             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
+//             "שימוש בהיסטוריית פוסטים": "✅",
+//             "פרסום ברשתות חברתיות": "לדף דמו בלבד"
+//           }
+//         },
+//         {
+//           name: "בסיסי",
+//           price: "₪60",
+//           features: {
+//             "תזמון פוסטים": "❌",
+//             "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "❌",
+//             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
+//             "שימוש בהיסטוריית פוסטים": "✅",
+//             "פרסום ברשתות חברתיות": "לרשת אחת בלבד"
+//           }
+//         },
+//         {
+//           name: "מתקדם",
+//           price: "₪90",
+//           features: {
+//             "תזמון פוסטים": "❌",
+//             "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
+//             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
+//             "שימוש בהיסטוריית פוסטים": "✅",
+//             "פרסום ברשתות חברתיות": "2 רשתות בלבד"
+//           }
+//         },
+//         {
+//           name: "עסקי",
+//           price: "₪130",
+//           features: {
+//             "תזמון פוסטים": "✅",
+//             "שימוש בצ'אט GPT ליצירת תמונות וסרטונים": "✅",
+//             "שימוש בצ'אט GPT ליצירת פוסט": "✅",
+//             "שימוש בהיסטוריית פוסטים": "✅",
+//             "פרסום ברשתות חברתיות": "לכל הרשתות"
+//           }
+//         }
+//       ];
+
+// // חילוץ כל שמות הפיצ'רים
+// const allFeatures = Object.keys(packages[0].features);
+
+// // בניית טבלת HTML
+// let html = `
+//   <table class="features-table" dir="rtl">
+//     <thead>
+//       <tr style="background:#4a90e2; color:white;">
+//         <th>פיצ'ר</th>
+//         ${packages.map(pkg => `<th>${pkg.name}<br><span style="font-weight:normal;">${pkg.price}</span></th>`).join('')}
+//       </tr>
+//     </thead>
+//     <tbody>
+// `;
+
+// allFeatures.forEach(feature => {
+//   html += `
+//     <tr style="border-bottom:1px solid #ddd;">
+//       <td>${feature}</td>
+//       ${packages.map(pkg => `<td>${pkg.features[feature]}</td>`).join('')}
+//     </tr>
+//   `;
+// });
+
+// html += `</tbody></table>`;
+
+//     Swal.fire({
+//       title: 'פיצ\'רים ועלויות חודשיות למשתמשים',
+//       html: html,
+//       width: '600px',
+//       confirmButtonText: 'הרשמה',
+//       cancelButtonText: 'יציאה',
+//       showCancelButton:true
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         Swal.fire({
+//         title: 'מעוניין להצטרף כמפרסם?',
+//         html: `
+//           <p>לחץ על הכפתור למטה לשליחת הודעה מוכנה בווצאפ:</p>
+//           <a href="https://wa.me/972545547237?text=אני%20רוצה%20לקבל%20עוד%20פרטים%20על%20שירות%20הפרסום" target="_blank" class="whatsapp-btn">
+//             📲 שלח הודעה בוואטסאפ
+//           </a>
+//         `,
+//         confirmButtonText: 'סגור',
+//       });
+//       }
+//     })
   });
 
       // Preview uploads
@@ -1474,7 +1484,7 @@ html += `</tbody></table>`;
   <button type="button" id="clipButton"><i class="fas fa-info-circle" aria-hidden="true"></i> סרטון הסבר על המערכת</button>
   <button type="button" class="info-btn" id="infoButton">תנאים</button>
   <button type="button" class="dashboard-button" onclick='window.open("https://itaymotivation.github.io/MediaPublisher/dashboard.html", "_blank")'>לוח בקרה ותזמונים</button>
-  <button type="button" class="money-btn" id="money">מחירון והרשמה</button>
+  <button type="button" class="money-btn" id="money">הצטרפ.י כמפרסמ.ת</button>
   <button type="button" class="LS-btn" id="localStorageButton">הסטוריית שימוש</button>
   <button type="button" class="Timing-btn" id="TimingButton">תזמון פוסט</button>
   <button type="button" onclick="openChatModal()" class="gpt-btn" id="gpt">בינה מלכותית לניסוח פוסט</button>
