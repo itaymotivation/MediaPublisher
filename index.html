@@ -252,31 +252,31 @@
     customClass: {
       popup: 'swal-popup'
     },
-    preConfirm: () => {
+    preConfirm: async () => {
       $("#content").val(postContent.message);
       const selectedFiles = [];
       const container = document.getElementById('AutoPostImageContainer');
       const imgs = container.querySelectorAll('img');
 
-      // Fetch each image and prepare files
-      imgs.forEach((img) => {
-        fetch(img.src)
-          .then((response) => response.blob())
-          .then((blob) => {
-            const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
-            const file = new File([blob], filename, { type: blob.type });
-            selectedFiles.push(file);
-          })
-          .catch((error) => {
-            console.error('Error fetching image:', error);
-          });
-      });
+      // Loop over all images and fetch them one by one
+      for (const img of imgs) {
+        try {
+          const response = await fetch(img.src);
+          const blob = await response.blob();
+          const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
+          const file = new File([blob], filename, { type: blob.type });
+          selectedFiles.push(file);
+        } catch (error) {
+          console.error('Error fetching image:', error);
+        }
+      }
 
-      // Sync files (as needed)
+      // Sync files and render media after all images are processed
       syncFileInput(selectedFiles);  // Ensure this function works properly
       renderMedia();  // Ensure this function works properly
 
-      return selectedFiles;  // Returning selected files to the result object
+      return selectedFiles;  // Return selected files to the result object
+    
     }
   })
 }
