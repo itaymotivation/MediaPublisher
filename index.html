@@ -195,7 +195,7 @@
       });
     }
 
-      async function AutoPost() {
+     async function AutoPost() {
   const post = GetAutoPostFromLS();
   if (Object.keys(post).length === 0) {
     return;
@@ -216,7 +216,7 @@
   });
 
   // Display SweetAlert with multiple images
-  const result = await Swal.fire({
+  Swal.fire({
     title: `<strong>${postContent.title}</strong>`,
     html: `
       <p style="text-align: right;"><strong>תוכן הפוסט:</strong></p>
@@ -232,13 +232,18 @@
     cancelButtonText: 'סגור',
     confirmButtonColor: '#28a745',
     cancelButtonColor: '#dc3545',
-    preConfirm: async () => {
+    reverseButtons: true,
+    customClass: {
+      popup: 'swal-popup'
+    }
+  }).then(async (result) => {
+    // Handle the confirmed action here
+    if (result.isConfirmed) {
       const selectedFiles = [];
       const container = document.getElementById('AutoPostImageContainer');
-
-      // Wait for images to load before proceeding
       const imgs = container.querySelectorAll('img');
 
+      // Fetch each image and prepare files
       for (const img of imgs) {
         const response = await fetch(img.src);
         const blob = await response.blob();
@@ -251,19 +256,16 @@
       syncFileInput(selectedFiles);  // Make sure this function works properly
       renderMedia();  // Make sure this function works properly
 
-      return selectedFiles;  // Return selected files for further use
+      // Proceed after confirmation
+      console.log("Post confirmed");
+      console.log(selectedFiles);  // The selected files returned from fetching images
+      $("#content").val(postContent.content);  // Add logic for updating content if needed
+    } else if (result.isDismissed) {
+      console.log("User clicked Cancel");
     }
   });
-
-  // After the Swal.fire promise is resolved, check the result
-  if (result.isConfirmed) {
-    console.log("Post confirmed");
-    console.log(result.value);  // The selected files returned from preConfirm
-    $("#content").val(postContent.content);  // Add logic for updating content if needed
-  } else if (result.isDismissed) {
-    console.log("User clicked Cancel");
-  }
 }
+
 
    
     function TwitterCheck() {
