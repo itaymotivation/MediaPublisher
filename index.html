@@ -134,6 +134,7 @@
           isGuest=true;
           $("#email").val("111");
           $("#password").val("111");
+          $("#submitBtn").html("פרסם לדף דמו");
           $("#publisherDetails").hide();
         }
       });
@@ -828,11 +829,8 @@ function updateScheduleDisplay(dateTime) {
   });
 };
     $(document).ready(function () {
-      //CheckShabat();
-    const chatResponsea = puter.ai.chat("test");
-     
+      //const test = puter.ai.chat("test");
       observePopupAndClickButton();
-
       IsGuest();
       PingServer();
       document.getElementById("closeChatModal").addEventListener("click", function () {
@@ -1372,7 +1370,7 @@ html += `</tbody></table>`;
   <input type="checkbox" id="telegram" name="platforms" value="telegram">
   <label for="telegram" class="telegram"><i class="fab fa-telegram-plane"></i> טלגרם</label>
 </div>
-      <button type="submit" class="button">פרסם</button>
+      <button type="submit" id="submitBtn" class="button">פרסם</button>
 </form>
 
     <!-- Chat Modal -->
