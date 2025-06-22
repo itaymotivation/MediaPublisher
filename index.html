@@ -1005,15 +1005,19 @@ function updateScheduleDisplay(dateTime) {
     // Create HTML content for images
     let imagesHtml = '';
     postContent.images.forEach(image => {
-      imagesHtml += `<img src="${image}" alt="Post Image" style="max-width: 150px; max-height: 150px; margin-top: 10px; border-radius: 8px;">`;
+      imagesHtml += `<img src="${image}" alt="Post Image" style="width: 120px; height: 120px; margin-top: 10px; border-radius: 8px;">`;
     });
 
     // Display SweetAlert with multiple images
     Swal.fire({
       title: `<strong>${postContent.title}</strong>`,
       html: `
-        <p>${postContent.message}</p>
-        ${imagesHtml} <!-- This will display all the images -->
+        <p style="text-align: right;"><strong>תוכן הפוסט:</strong></p>
+        <p style="text-align: right;">${postContent.message}</p>
+        <p style="text-align: right;"><strong>מדיה הפוסט:</strong></p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+        ${imagesHtml}
+      </div>
       `,
       icon: 'success',
       showCancelButton: true,
