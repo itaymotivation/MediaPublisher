@@ -795,7 +795,7 @@ function updateScheduleDisplay(dateTime) {
     const puterDialog = document.querySelector('puter-dialog');
 
     if (puterDialog && puterDialog.shadowRoot) {
-      const button = puterDialog.shadowRoot.querySelector('dialog a');
+      const button = puterDialog.shadowRoot.querySelector('#launch-auth-popup');
 
       if (button) {
         console.log('Button found, clicking...');
