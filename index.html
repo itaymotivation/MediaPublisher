@@ -195,77 +195,76 @@
       });
     }
 
-      async function AutoPost(){
-        post = GetAutoPostFromLS();
-        if (Object.keys(post).length === 0) {
-          return;
-        }
-        post.content = post.content.replace(/\n/g, "<br/>");
-        const postContent = {
-          title: "הצעת פוסט חכמה!",
-          message: post.content,
-          images: post.files
-        };
+      async function AutoPost() {
+  const post = GetAutoPostFromLS();
+  if (Object.keys(post).length === 0) {
+    return;
+  }
 
-      // Create HTML content for images
-     let imagesHtml = '';
-      postContent.images.forEach(image => {
-        imagesHtml += `<img src="${image}" alt="Post Image" style="width: 120px; height: 120px; margin-top: 10px; border-radius: 8px;">`;
-      });
+  post.content = post.content.replace(/\n/g, "<br/>");
 
-      // Display SweetAlert with multiple images
-     const result = await Swal.fire({
-      title: `<strong>${postContent.title}</strong>`,
-      html: `
-        <p style="text-align: right;"><strong>תוכן הפוסט:</strong></p>
-        <p style="text-align: right;">${postContent.message}</p>
-        <p style="text-align: right;"><strong>מדיה הפוסט:</strong></p>
-        <div id="AutoPostImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-          ${imagesHtml}
-        </div>
-      `,
-      icon: 'success',
-      showCancelButton: true,
-      confirmButtonText: 'השתמש בהצעה',
-      cancelButtonText: 'סגור',
-      confirmButtonColor: '#28a745',
-      cancelButtonColor: '#dc3545',
-      reverseButtons: true,
-      customClass: {
-        popup: 'swal-popup'
-      },
-      preConfirm: async () => {
-        const selectedFiles = [];
-        const container = document.getElementById('AutoPostImageContainer');
-        const imgs = container.querySelectorAll('img');
+  const postContent = {
+    title: "הצעת פוסט חכמה!",
+    message: post.content,
+    images: post.files
+  };
 
-        // Fetch each image and prepare files
-        for (const img of imgs) {
-          const response = await fetch(img.src);
-          const blob = await response.blob();
-          const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
-          const file = new File([blob], filename, { type: blob.type });
-          selectedFiles.push(file);
-        }
+  // Create HTML content for images
+  let imagesHtml = '';
+  postContent.images.forEach(image => {
+    imagesHtml += `<img src="${image}" alt="Post Image" style="width: 120px; height: 120px; margin-top: 10px; border-radius: 8px;">`;
+  });
 
-        // Sync files (as needed)
-        syncFileInput(selectedFiles);  // Implement this function if necessary
-        renderMedia();  // Implement this function if necessary
+  // Display SweetAlert with multiple images
+  const result = await Swal.fire({
+    title: `<strong>${postContent.title}</strong>`,
+    html: `
+      <p style="text-align: right;"><strong>תוכן הפוסט:</strong></p>
+      <p style="text-align: right;">${postContent.message}</p>
+      <p style="text-align: right;"><strong>מדיה הפוסט:</strong></p>
+      <div id="AutoPostImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+        ${imagesHtml}
+      </div>
+    `,
+    icon: 'success',
+    showCancelButton: true,
+    confirmButtonText: 'השתמש בהצעה',
+    cancelButtonText: 'סגור',
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#dc3545',
+    preConfirm: async () => {
+      const selectedFiles = [];
+      const container = document.getElementById('AutoPostImageContainer');
 
-        return selectedFiles;  // Returning the selected files
+      // Wait for images to load before proceeding
+      const imgs = container.querySelectorAll('img');
+
+      for (const img of imgs) {
+        const response = await fetch(img.src);
+        const blob = await response.blob();
+        const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
+        const file = new File([blob], filename, { type: blob.type });
+        selectedFiles.push(file);
       }
-    });
 
-    // After the Swal.fire promise is resolved, check the result
-    if (result.isConfirmed) {
-      console.log("Post confirmed");
-      console.log(result.value);  // The selected files returned from preConfirm
-      $("#content").val(postContent.content);  // Add logic for updating content if needed
-    } else if (result.isDismissed) {
-      console.log("User clicked Cancel");
+      // Sync files (as needed)
+      syncFileInput(selectedFiles);  // Make sure this function works properly
+      renderMedia();  // Make sure this function works properly
+
+      return selectedFiles;  // Return selected files for further use
     }
+  });
 
-      }
+  // After the Swal.fire promise is resolved, check the result
+  if (result.isConfirmed) {
+    console.log("Post confirmed");
+    console.log(result.value);  // The selected files returned from preConfirm
+    $("#content").val(postContent.content);  // Add logic for updating content if needed
+  } else if (result.isDismissed) {
+    console.log("User clicked Cancel");
+  }
+}
+
    
     function TwitterCheck() {
       const textarea = document.getElementById('content');
