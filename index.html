@@ -795,12 +795,24 @@ function updateScheduleDisplay(dateTime) {
     const puterDialog = document.querySelector('puter-dialog');
 
     if (puterDialog && puterDialog.shadowRoot) {
-      const button = puterDialog.shadowRoot.querySelector('#launch-auth-popup');
+      const about = puterDialog.shadowRoot.querySelector('.about')
+      if (about) {
+        $(about).html("<strong>אל תפספס את ההזדמנות!</strong><br/> יש לך גישה למערכת שמתעדכנת כל הזמן עם הכלים הכי חדשים והפיצ'רים המובילים בתחום.");
+      }
+      const cancel = puterDialog.shadowRoot.querySelector('#launch-auth-popup-cancel');
+      if(cancel){
+        $(cancel).hide();
+      }
 
-      if (button) {
-        console.log('Button found, clicking...');
-        button.click();
-        observer.disconnect(); // Stop observing once the button is clicked
+      const close = puterDialog.shadowRoot.querySelector('.close-btn');
+      if(close){
+        $(close).hide();
+      }
+
+      const launchButton = puterDialog.shadowRoot.querySelector('#launch-auth-popup');
+      if (launchButton) {
+        launchButton.innerHTML = "גישה למערכת";
+        observer.disconnect();
       }
     }
   });
