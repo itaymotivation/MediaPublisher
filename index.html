@@ -988,14 +988,9 @@ function updateScheduleDisplay(dateTime) {
       $('#flying-button').click(function() {
       post = GetAutoPostFromLS();
       const postContent = {
-        title: "Amazing Day at the Beach!",
-        message: "Had a wonderful time at the beach with friends. The weather was perfect and the waves were amazing! #BeachVibes",
-        images: [
-          "https://example.com/beach-photo1.jpg", // Replace with your image URL
-          "https://example.com/beach-photo2.jpg", // Replace with your image URL
-          "https://example.com/beach-photo3.jpg", // Replace with your image URL
-          "https://example.com/beach-photo4.jpg"  // Replace with your image URL
-        ]
+        title: "הצעת פוסט חכמה!",
+        message: post.content,
+        images: post.files
       };
 
     // Create HTML content for images
