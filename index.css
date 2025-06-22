@@ -470,7 +470,7 @@ input#telegram:checked + label.telegram::after {
   border: none;
   color: #0d47a1;
   padding: 14px 28px;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
   border-radius: 50px;
   cursor: pointer;
