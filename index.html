@@ -263,7 +263,7 @@
         try {
           const response = await fetch(img.src);
           const blob = await response.blob();
-          const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
+          const filename = img.src.split('/').pop().split('?')[0] || 'generated-image.png';
           const file = new File([blob], filename, { type: blob.type });
           selectedFiles.push(file);
         } catch (error) {
