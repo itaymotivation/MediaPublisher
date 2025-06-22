@@ -987,6 +987,14 @@ function updateScheduleDisplay(dateTime) {
 
       $('#flying-button').click(function() {
       post = GetAutoPostFromLS();
+      if (Object.keys(savedAutoPost).length === 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'ממתין לשליחת פוסט ראשוני',
+          showCancelButton: false
+        });
+      }
+      post.content = post.content.replace(/\n/g, "<br/>");
       const postContent = {
         title: "הצעת פוסט חכמה!",
         message: post.content,
@@ -996,7 +1004,7 @@ function updateScheduleDisplay(dateTime) {
     // Create HTML content for images
     let imagesHtml = '';
     postContent.images.forEach(image => {
-      imagesHtml += `<img src="${image}" alt="Post Image" style="width: 100%; max-width: 300px; margin-top: 10px; border-radius: 8px;">`;
+      imagesHtml += `<img src="${image}" alt="Post Image" style="max-width: 150px; max-height: 150px; margin-top: 10px; border-radius: 8px;">`;
     });
 
     // Display SweetAlert with multiple images
@@ -1005,17 +1013,16 @@ function updateScheduleDisplay(dateTime) {
       html: `
         <p>${postContent.message}</p>
         ${imagesHtml} <!-- This will display all the images -->
-        <p><a href="${postContent.link}" target="_blank" style="color: #007bff;">Read more on Facebook</a></p>
       `,
-      icon: 'info',
+      icon: 'success',
       showCancelButton: true,
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'השתמש בהצעה',
+      cancelButtonText: 'סגור',
       confirmButtonColor: '#28a745',
       cancelButtonColor: '#dc3545',
       reverseButtons: true,
       customClass: {
-        popup: 'swal-popup' // Custom class for further styling (if needed)
+        popup: 'swal-popup'
       }
     }).then((result) => {
       if (result.isConfirmed) {
