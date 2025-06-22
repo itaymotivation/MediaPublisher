@@ -499,6 +499,7 @@ function addMessage(msg, isUser) {
   messageDiv.classList.add("message");
   if (isUser) messageDiv.classList.add("user-message");
   messageDiv.textContent = msg;
+  messageDiv.innerText=messageDiv.innerHTML;
   messagesDiv.appendChild(messageDiv);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
