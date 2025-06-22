@@ -209,13 +209,29 @@
     images: post.files
   };
 
-  // Create HTML content for images
-  let imagesHtml = '';
+  // Create image elements dynamically
+  const tempContainer = document.createElement('div');
+  tempContainer.style.display = 'flex';
+  tempContainer.style.flexWrap = 'wrap';
+  tempContainer.style.gap = '10px';
+  tempContainer.style.justifyContent = 'center';
+
   postContent.images.forEach(image => {
-    imagesHtml += `<img src="${image}" alt="Post Image" style="width: 120px; height: 120px; margin-top: 10px; border-radius: 8px;">`;
+    const img = document.createElement('img');
+    img.src = image;
+    img.style.width = '120px';
+    img.style.height = '120px';
+    img.style.objectFit = 'cover';
+    img.style.border = '1px solid #ccc';
+    img.style.borderRadius = '8px';
+    img.alt = 'Post Image';
+
+    tempContainer.appendChild(img);
   });
 
-  // Display SweetAlert with multiple images
+  const imageHTML = tempContainer.innerHTML;
+
+  // Display SweetAlert with dynamically created images
   Swal.fire({
     title: `<strong>${postContent.title}</strong>`,
     html: `
@@ -223,7 +239,7 @@
       <p style="text-align: right;">${postContent.message}</p>
       <p style="text-align: right;"><strong>מדיה הפוסט:</strong></p>
       <div id="AutoPostImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-        ${imagesHtml}
+        ${imageHTML}
       </div>
     `,
     icon: 'success',
@@ -235,36 +251,44 @@
     reverseButtons: true,
     customClass: {
       popup: 'swal-popup'
-    }
-  }).then(async (result) => {
-    // Handle the confirmed action here
-    if (result.isConfirmed) {
+    },
+    preConfirm: () => {
       const selectedFiles = [];
       const container = document.getElementById('AutoPostImageContainer');
       const imgs = container.querySelectorAll('img');
 
       // Fetch each image and prepare files
-      for (const img of imgs) {
-        const response = await fetch(img.src);
-        const blob = await response.blob();
-        const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
-        const file = new File([blob], filename, { type: blob.type });
-        selectedFiles.push(file);
-      }
+      imgs.forEach((img) => {
+        fetch(img.src)
+          .then((response) => response.blob())
+          .then((blob) => {
+            const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
+            const file = new File([blob], filename, { type: blob.type });
+            selectedFiles.push(file);
+          })
+          .catch((error) => {
+            console.error('Error fetching image:', error);
+          });
+      });
 
       // Sync files (as needed)
-      syncFileInput(selectedFiles);  // Make sure this function works properly
-      renderMedia();  // Make sure this function works properly
+      syncFileInput(selectedFiles);  // Ensure this function works properly
+      renderMedia();  // Ensure this function works properly
 
-      // Proceed after confirmation
+      return selectedFiles;  // Returning selected files to the result object
+    }
+  }).then((result) => {
+    // Handle the confirmed action here
+    if (result.isConfirmed) {
       console.log("Post confirmed");
-      console.log(selectedFiles);  // The selected files returned from fetching images
+      console.log(result.value);  // The selected files returned from preConfirm
       $("#content").val(postContent.content);  // Add logic for updating content if needed
     } else if (result.isDismissed) {
       console.log("User clicked Cancel");
     }
   });
 }
+
 
 
    
