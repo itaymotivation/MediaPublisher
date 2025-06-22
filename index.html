@@ -253,7 +253,7 @@
       popup: 'swal-popup'
     },
     preConfirm: async () => {
-      postContent.message = postContent.message.replace("<br/>","\n");
+      postContent.message = postContent.message.replace(/<br\s*\/?>/gi, "\n");
 
       $("#content").val(postContent.message);
       const container = document.getElementById('AutoPostImageContainer');
