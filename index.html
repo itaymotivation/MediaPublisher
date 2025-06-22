@@ -195,7 +195,7 @@
       });
     }
 
-      function AutoPost(){
+      async function AutoPost(){
         post = GetAutoPostFromLS();
         if (Object.keys(post).length === 0) {
           return;
@@ -214,55 +214,57 @@
       });
 
       // Display SweetAlert with multiple images
-      Swal.fire({
-        title: `<strong>${postContent.title}</strong>`,
-        html: `
-          <p style="text-align: right;"><strong>תוכן הפוסט:</strong></p>
-          <p style="text-align: right;">${postContent.message}</p>
-          <p style="text-align: right;"><strong>מדיה הפוסט:</strong></p>
-          <div id="AutoPostImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-            ${imagesHtml}
-          </div>
-        `,
-        icon: 'success',
-        showCancelButton: true,
-        confirmButtonText: 'השתמש בהצעה',
-        cancelButtonText: 'סגור',
-        confirmButtonColor: '#28a745',
-        cancelButtonColor: '#dc3545',
-        reverseButtons: true,
-        customClass: {
-          popup: 'swal-popup'
-        },
-        preConfirm: async () => {
-          const selectedFiles = [];
-          const container = document.getElementById('AutoPostImageContainer');
-          const imgs = container.querySelectorAll('img');
+     const result = await Swal.fire({
+      title: `<strong>${postContent.title}</strong>`,
+      html: `
+        <p style="text-align: right;"><strong>תוכן הפוסט:</strong></p>
+        <p style="text-align: right;">${postContent.message}</p>
+        <p style="text-align: right;"><strong>מדיה הפוסט:</strong></p>
+        <div id="AutoPostImageContainer" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+          ${imagesHtml}
+        </div>
+      `,
+      icon: 'success',
+      showCancelButton: true,
+      confirmButtonText: 'השתמש בהצעה',
+      cancelButtonText: 'סגור',
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#dc3545',
+      reverseButtons: true,
+      customClass: {
+        popup: 'swal-popup'
+      },
+      preConfirm: async () => {
+        const selectedFiles = [];
+        const container = document.getElementById('AutoPostImageContainer');
+        const imgs = container.querySelectorAll('img');
 
-          for (const img of imgs) {
-            const response = await fetch(img.src);
-            const blob = await response.blob();
-            const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
-            const file = new File([blob], filename, { type: blob.type });
-
-            selectedFiles.push(file);
-          }
-
-          // Optionally, handle the file input or sync it to a form input
-          syncFileInput(selectedFiles);  // Implement this function to sync files as needed
-          renderMedia();  // Implement this function to handle the rendering of media
-
-          return selectedFiles;  // Returning the selected files from preConfirm
+        // Fetch each image and prepare files
+        for (const img of imgs) {
+          const response = await fetch(img.src);
+          const blob = await response.blob();
+          const filename = img.src.split('/').pop().split('?')[0] + '.jpg' || 'generated-image.png';
+          const file = new File([blob], filename, { type: blob.type });
+          selectedFiles.push(file);
         }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          $("#content").val(post.content);  // Add logic for updating content if needed
-          console.log("Post confirmed");
-          console.log(result.value);  // This contains the selected files from preConfirm
-        } else if (result.isDismissed) {
-          console.log("User clicked Cancel");
-        }
-      });
+
+        // Sync files (as needed)
+        syncFileInput(selectedFiles);  // Implement this function if necessary
+        renderMedia();  // Implement this function if necessary
+
+        return selectedFiles;  // Returning the selected files
+      }
+    });
+
+    // After the Swal.fire promise is resolved, check the result
+    if (result.isConfirmed) {
+      console.log("Post confirmed");
+      console.log(result.value);  // The selected files returned from preConfirm
+      $("#content").val(postContent.content);  // Add logic for updating content if needed
+    } else if (result.isDismissed) {
+      console.log("User clicked Cancel");
+    }
+
       }
    
     function TwitterCheck() {
