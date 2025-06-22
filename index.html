@@ -102,6 +102,15 @@
       }
     }
 
+     function GetAutoPostFromLS(){
+      const savedAutoPost = JSON.parse(localStorage.getItem("autoPost")|| "{}");
+      if (savedAutoPost) {
+          return savedAutoPost;
+      } 
+    }
+
+    
+
     function SaveDataToLS(){
       const email = $("#email").val();
       const content = $("#content").val();
@@ -117,6 +126,51 @@
       history.unshift(formData); // Add latest at the top
       localStorage.setItem("postHistory", JSON.stringify(history.slice(0, 4))); // Keep only 10 entries
     }
+
+    async function SaveAutoPostToLS(){
+      const content = $("#content").val();
+      const newPrompt = "תן לי מלל דומה למלל הנוכחי: " + content;
+      
+      const ImagePrompt = "use the hashtages if exist, sum the subject of the prompt to 2 words and translate the words to english and return just the words without more explanations: " + newPrompt;
+      
+      const chatResponse = await puter.ai.chat(newPrompt);
+      const chatImgResponse = await puter.ai.chat(ImagePrompt);
+
+      if (!chatResponse || !chatResponse.message ||!chatImgResponse || !chatImgResponse.message) {
+          Swal.fire({
+              icon: 'warning',
+              title: 'פוסט אוטומטי',
+              text: 'הסטוריית פוסטים חסרה.'
+          });
+          return;
+      }
+      newPromptTerm = chatResponse.message.content;
+      newImagePromptTerm = chatImgResponse.message.content;
+
+      try {
+        const response = await fetch('https://mediapublisherbackend.onrender.com/images', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: $("#password").val(), mail:$("#email").val(), search_term: newImagePromptTerm })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          const formData = {
+          content: newPromptTerm,
+          files: data.message
+          };
+          localStorage.setItem("autoPost",  JSON.stringify(formData));
+        }
+        }
+        catch (error) {
+            console.error('❌ Network or parsing error:', error);
+        }
+    }
+
 
     function IsGuest(){
       Swal.fire({
@@ -931,6 +985,52 @@ function updateScheduleDisplay(dateTime) {
       //   }
       // });
 
+      $('#flying-button').click(function() {
+      post = GetAutoPostFromLS();
+      const postContent = {
+        title: "Amazing Day at the Beach!",
+        message: "Had a wonderful time at the beach with friends. The weather was perfect and the waves were amazing! #BeachVibes",
+        images: [
+          "https://example.com/beach-photo1.jpg", // Replace with your image URL
+          "https://example.com/beach-photo2.jpg", // Replace with your image URL
+          "https://example.com/beach-photo3.jpg", // Replace with your image URL
+          "https://example.com/beach-photo4.jpg"  // Replace with your image URL
+        ]
+      };
+
+    // Create HTML content for images
+    let imagesHtml = '';
+    postContent.images.forEach(image => {
+      imagesHtml += `<img src="${image}" alt="Post Image" style="width: 100%; max-width: 300px; margin-top: 10px; border-radius: 8px;">`;
+    });
+
+    // Display SweetAlert with multiple images
+    Swal.fire({
+      title: `<strong>${postContent.title}</strong>`,
+      html: `
+        <p>${postContent.message}</p>
+        ${imagesHtml} <!-- This will display all the images -->
+        <p><a href="${postContent.link}" target="_blank" style="color: #007bff;">Read more on Facebook</a></p>
+      `,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#dc3545',
+      reverseButtons: true,
+      customClass: {
+        popup: 'swal-popup' // Custom class for further styling (if needed)
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("User clicked OK");
+      } else if (result.isDismissed) {
+        console.log("User clicked Cancel");
+      }
+    });
+  });
+
       $("#clipButton").click(()=>{
         window.open("video.mp4", "_blank");
       });
@@ -1246,6 +1346,7 @@ html += `</tbody></table>`;
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 100000);
 
+        SaveAutoPostToLS();
        
         // Begin the fetch
         if($("#selectedDateTime").html()=='')
@@ -1312,6 +1413,8 @@ html += `</tbody></table>`;
 <body>
   <h2 style="text-align: center;">דף שומר שבת ולא יהיה זמין בשבתות וחגים</h2>
   <div class="container">
+    <button type="button" id="flying-button" class="flying-button">פוסט אוטומטי</button>
+
    <!-- Hamburger Button for Mobile -->
 <button class="BTNS hamburger" id="hamburgerMenu" aria-label="תפריט ניווט">
   לחץ כאן
