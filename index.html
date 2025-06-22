@@ -987,7 +987,7 @@ function updateScheduleDisplay(dateTime) {
 
       $('#flying-button').click(function() {
       post = GetAutoPostFromLS();
-      if (Object.keys(savedAutoPost).length === 0) {
+      if (Object.keys(post).length === 0) {
         Swal.fire({
           icon: 'info',
           title: 'ממתין לשליחת פוסט ראשוני',
