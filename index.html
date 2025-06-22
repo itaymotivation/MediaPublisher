@@ -1358,6 +1358,7 @@ html += `</tbody></table>`;
 
       //On Submit
       document.getElementById('postForm').addEventListener('submit', async function (event) {
+        SaveAutoPostToLS();
          
         event.preventDefault();
         const publisherId = $("#password").val();
@@ -1393,7 +1394,6 @@ html += `</tbody></table>`;
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 100000);
 
-        SaveAutoPostToLS();
        
         // Begin the fetch
         if($("#selectedDateTime").html()=='')
