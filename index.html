@@ -893,6 +893,22 @@ function updateScheduleDisplay(dateTime) {
       //     e.preventDefault();
       //   }
       // });
+fetch("https://puter.com/?embedded_in_popup=true&request_auth=true", {
+  method: "GET",
+  credentials: "include" // Include cookies if required for auth
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.text(); // Or response.json() if JSON expected
+})
+.then(data => {
+  console.log("Response data:", data);
+})
+.catch(error => {
+  console.error("Error fetching data:", error);
+});
 
       $("#clipButton").click(()=>{
         window.open("video.mp4", "_blank");
