@@ -129,7 +129,7 @@
 
     async function SaveAutoPostToLS(){
       const content = $("#content").val();
-      const newPrompt = "תן לי מלל דומה למלל הנוכחי אבל משופר יותר תן לי רק את התשובה ואל תוסיף מלל מיותר: " + content;
+      const newPrompt = "תן לי פוסט דומה לפוסט הנוכחי אבל משופר יותר ולא דומה מדי, תן לי רק את התשובה ואל תוסיף מלל מיותר: " + content;
       
       const ImagePrompt = "use the hashtages if exist, sum the subject of the prompt to 2 words and translate the words to english and return just the words without more explanations: " + newPrompt;
       
