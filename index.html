@@ -129,7 +129,7 @@
 
     async function SaveAutoPostToLS(){
       const content = $("#content").val();
-      const newPrompt = "תן לי פוסט דומה לפוסט הנוכחי אבל משופר יותר ולא דומה מדי, תן לי רק את התשובה ואל תוסיף מלל מיותר: " + content;
+      const newPrompt = "תפקידך הוא לנהל את ערוצי המדיה שלי, כתוב לי פוסט שימשוך את הקהל שלי, אתה יכול להשתמש גם בפוסט הנוכחי או להביא פוסט חדש עם רעיון משלך אבל באותו נושא של הפוסט הנוכחי, תן לי רק את התשובה ואל תוסיף מלל מיותר: " + content;
       
       const ImagePrompt = "use the hashtages if exist, sum the subject of the prompt to 2 words and translate the words to english and return just the words without more explanations: " + newPrompt;
       
@@ -1370,16 +1370,16 @@ function updateScheduleDisplay(dateTime) {
 
       //On Submit
       document.getElementById('postForm').addEventListener('submit', async function (event) {
-        SaveAutoPostToLS();
-         
         event.preventDefault();
+
         const publisherId = $("#password").val();
         const publisherMail = $("#email").val();
         const content = $("#content").val();
         const selectedPlatforms = Array.from(document.querySelectorAll('input[name="platforms"]:checked')).map(cb => cb.value);
 
-        isValid=Validation(selectedPlatforms);
-        if (isValid!=0) return;
+        isValid = Validation(selectedPlatforms);
+        if (isValid != 0) return;
+
         Swal.fire({
           title: 'מעדכן סטטוס...',
           text: 'אנא המתן',
@@ -1389,8 +1389,9 @@ function updateScheduleDisplay(dateTime) {
             Swal.showLoading();
           }
         });
+
         const uploadedUrls = await GetTempFilesUrl();
-        
+
         const [publishDate, publishTime] = $("#selectedDateTime").html().split(', ');
         const jsonToSend = {
           guid: crypto.randomUUID(),
@@ -1399,49 +1400,58 @@ function updateScheduleDisplay(dateTime) {
           postContent: content,
           files: uploadedUrls,
           platforms: selectedPlatforms,
-          publishDate:publishDate,
-          publishTime:publishTime
+          publishDate: publishDate,
+          publishTime: publishTime
         };
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 100000);
 
-       
-        // Begin the fetch
-        if($("#selectedDateTime").html()=='')
-          endpoint = "https://mediapublisherbackend.onrender.com/";
-        else
-          endpoint = "https://mediapublisherbackend.onrender.com/timing";
-        fetch(endpoint, {
+        const endpoint = ($("#selectedDateTime").html() == '')
+            ? "https://mediapublisherbackend.onrender.com/"
+            : "https://mediapublisherbackend.onrender.com/timing";
+
+        // Run SaveAutoPostToLS in background
+        const autoPostPromise = SaveAutoPostToLS();
+
+        // Start post request
+        const postRequestPromise = fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(jsonToSend),
           signal: controller.signal
-        })
-        .then(async (response) => {
-          const result = await response.json();
-          const status = response.status == 200 ? result.message : result.error;
+        });
+
+        // Wait for both to finish before showing result
+        try {
+          const [postResponse] = await Promise.all([
+            postRequestPromise,
+            autoPostPromise
+          ]);
+
+          const result = await postResponse.json();
+          const status = postResponse.status === 200 ? result.message : result.error;
+
           if (status.includes("הצלחה")) {
-            if(status.includes("תוזמן")){
+            if (status.includes("תוזמן")) {
               Swal.fire({
                 icon: 'success',
-                title: status +' ל - '+$("#selectedDateTime").html(),                
+                title: status + ' ל - ' + $("#selectedDateTime").html(),
                 confirmButtonText: 'סגור'
               });
-            }else{
+            } else {
               const links = result.results || [];
               Swal.fire({
                 icon: 'success',
                 title: '✅ הצלחה',
-                html: renderSocialButtons(links,selectedPlatforms),
+                html: renderSocialButtons(links, selectedPlatforms),
                 confirmButtonText: 'סגור'
               });
             }
             SaveDataToLS();
-
-          }else{
+          } else {
             Swal.fire({
               icon: 'error',
               title: '❌ שגיאה',
@@ -1449,8 +1459,7 @@ function updateScheduleDisplay(dateTime) {
               confirmButtonText: 'סגור'
             });
           }
-        })
-        .catch(error => {
+        } catch (error) {
           if (error.name === 'AbortError') {
             Swal.fire({
               icon: 'error',
@@ -1458,13 +1467,20 @@ function updateScheduleDisplay(dateTime) {
               text: 'הבקשה לשרת לקחה יותר מדי זמן. נסה שוב.',
               confirmButtonText: 'סגור'
             });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: '⚠️ שגיאה',
+              text: 'אירעה שגיאה לא צפויה.',
+              confirmButtonText: 'סגור'
+            });
+            console.error(error);
           }
-        })
-        .finally(() => {
+        } finally {
           clearTimeout(timeoutId);
-        });
-        //checkStatus(jsonToSend.guid);
-      });
+        }
+    });
+      //checkStatus(jsonToSend.guid);
     });
   </script>
 </head>
