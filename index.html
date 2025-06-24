@@ -1557,11 +1557,11 @@ function updateScheduleDisplay(dateTime) {
     <span class="close" id="closeChatModal">&times;</span>
    <div class="chat-body">
   <div id="messages" class="messages-container"></div>
-  <textarea type="text" id="input-message" placeholder="כתוב לי פוסט מושך לידים על..."></textarea>
+  <textarea type="text" id="input-message" style="font-size: 20px;" placeholder="כתוב לי פוסט מושך לידים על..."></textarea>
 </div>
 <div class="modal-footer">
-  <button onclick="sendMessage()">שלח בקשה לבוט</button>
-  <button onclick="moveToPost()">העבר את תשובת הבוט לפוסט</button>
+  <button style="font-size: 19px;" onclick="sendMessage()">שלח בקשה לבוט</button>
+  <button style="font-size: 19px;" onclick="moveToPost()">העבר את תשובת הבוט לפוסט</button>
 </div>
   </div>
 </div>
@@ -1571,14 +1571,14 @@ function updateScheduleDisplay(dateTime) {
   <div id="imageModal" class="modal" style="padding: 0px 5px 0px 0px;">
     <div class="modal-content">
       <span class="close" onclick="closeImageModal()">&times;</span>
-      <h3>🎨 יצירת תמונה עם בינה מלכותית</h3>
+      <h2>🎨 יצירת תמונה עם בינה מלכותית</h2>
       <h4 style="font-size: 20px;">כמה שפחות מלל כך הבוט פועל יותר טוב</h4>
-      <textarea id="imagePrompt" placeholder="כתוב כאן תיאור למדיה..." rows="7" style="width: -webkit-fill-available;margin-bottom: 15px;font-size: 22px;"></textarea>
+      <textarea id="imagePrompt" placeholder="כתוב כאן תיאור למדיה..." rows="7" style="width: -webkit-fill-available;margin-bottom: 15px;font-size: 20px;"></textarea>
       <div class="modal-footer">
 
         <!-- <button onclick="useLastGPTResponse()">🚀 צור תמונה ישר מהפוסט</button> -->
-        <button style="font-size: 22px;" onclick="generateImage()">🖼️ צור תמונה מהתיאור למעלה</button>
-        <button style="font-size: 22px;" onclick="CreateVideosByTerm()">🎥 צור סרטון מהתיאור למעלה</button>
+        <button style="font-size: 19px;" onclick="generateImage()">🖼️ צור תמונה מהתיאור למעלה</button>
+        <button style="font-size: 19px;" onclick="CreateVideosByTerm()">🎥 צור סרטון מהתיאור למעלה</button>
       </div>
     </div>
   </div>
