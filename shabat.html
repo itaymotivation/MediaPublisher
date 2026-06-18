@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>תהילים לזיווג הגון - מזמור ק'</title>
+    <title>נרשמתם בהצלחה למאגר השידוכים</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
@@ -16,6 +15,7 @@
             --btn-bg: #4F46E5;
             --btn-text: #FFFFFF;
             --accent-color: #3730A3;
+            --success-color: #059669;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,48 +36,120 @@
             background: #ffffff;
             max-width: 600px;
             width: 100%;
-            padding: 40px 30px;
+            padding: 35px 25px;
             border-radius: 24px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
             text-align: center;
             border: 1px solid #e2e8f0;
         }
 
+        .bsd {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            text-align: left;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
         .badge {
             display: inline-block;
             font-size: 0.875rem;
             font-weight: 600;
-            color: var(--accent-color);
-            background-color: #e0e7ff;
+            color: var(--success-color);
+            background-color: #ecfdf5;
             padding: 6px 16px;
             border-radius: 9999px;
             margin-bottom: 20px;
             letter-spacing: 0.5px;
         }
 
-        h1 { font-size: 2.25rem; font-weight: 700; color: var(--accent-color); margin-bottom: 8px; line-height: 1.2; }
+        h1 { font-size: 2rem; font-weight: 700; color: var(--accent-color); margin-bottom: 8px; line-height: 1.2; }
 
-        .subtitle { font-size: 1.25rem; color: #64748b; margin-bottom: 35px; font-weight: 400; }
+        .subtitle { font-size: 1.15rem; color: #475569; margin-bottom: 25px; font-weight: 400; }
+
+        /* תיבת שלבי ההמשך מההסבר המקורי והחדש */
+        .next-steps {
+            text-align: right;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .next-steps h3 {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            padding-right: 0;
+        }
+
+        .next-steps li {
+            position: relative;
+            padding-right: 25px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #334155;
+        }
+
+        .next-steps li::before {
+            content: "✓";
+            position: absolute;
+            right: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        /* פסקת אהבה ואמונה */
+        .faith-statement {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #475569;
+            margin: 25px 0;
+            padding: 0 10px;
+            line-height: 1.5;
+        }
+
+        .psalm-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
 
         .psalm-container {
             background-color: #f1f5f9;
-            padding: 35px 25px;
+            padding: 25px 20px;
             border-radius: 16px;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             border-right: 5px solid var(--accent-color);
         }
 
         .psalm-text {
             font-family: 'Frank Ruhl Libre', serif;
-            font-size: 1.55rem;
-            line-height: 2.3;
+            font-size: 1.4rem;
+            line-height: 2.1;
             color: var(--text-color);
             text-align: justify;
             text-align-last: center;
-            word-spacing: 2px;
+            word-spacing: 1px;
         }
 
-        .verse-num { color: var(--accent-color); font-weight: bold; font-size: 1.1rem; margin-left: 4px; user-select: none; }
+        .verse-num { color: var(--accent-color); font-weight: bold; font-size: 1rem; margin-left: 4px; user-select: none; }
+
+        .share-box {
+            background-color: #f0fdf4;
+            border: 1px dashed #bbf7d0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
 
         .button-group { display: flex; flex-direction: column; gap: 12px; justify-content: center; }
 
@@ -91,7 +163,7 @@
             color: var(--btn-text);
             font-weight: 600;
             font-size: 1rem;
-            padding: 14px 30px;
+            padding: 12px 24px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -102,45 +174,71 @@
 
         .btn:hover { background-color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
 
+        .btn-whatsapp { background-color: #25D366; color: white; box-shadow: 0 4px 6px -1px rgba(37, 211, 102, 0.2); }
+        .btn-whatsapp:hover { background-color: #128C7E; box-shadow: 0 10px 15px -3px rgba(37, 211, 102, 0.3); }
+
         .btn-outline { background-color: transparent; color: var(--text-color); border: 2px solid #e2e8f0; box-shadow: none; }
         .btn-outline:hover { background-color: #f1f5f9; border-color: #cbd5e1; }
 
-        footer { margin-top: 35px; font-size: 0.875rem; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 20px; }
+        footer { margin-top: 30px; font-size: 0.875rem; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <span class="badge">נרשמתם בהצלחה למאגר</span>
-        <h1>תהילים לזיווג הגון</h1>
-        <p class="subtitle">מזמור ק' – מזמור לתודה</p>
+        <div class="bsd">בס"ד</div>
+        <span class="badge">הפרטים נשמרו בהצלחה!</span>
+        <h1>ברוכים הבאים למאגר</h1>
+        <p class="subtitle">השלמתם את הרישום למאגר השידוכים האזורי</p>
 
+        <!-- מה קורה עכשיו - פירוט שלבי ההמשך המקוריים בצורה סרוקה וקלה -->
+        <div class="next-steps">
+            <h3>מה קורה עכשיו? 📋</h3>
+            <ul>
+                <li><strong>אבטחה מלאה:</strong> כלל הנתונים נשמרים תחת אבטחה מחמירה, חסויים לחלוטין ונגישים אך ורק לצוות השדכנים המורשה.</li>
+                <li><strong>הקצאת שדכן/ית:</strong> המערכת תקצה עבורכם שדכן מקצועי מהצוות שיבחן את הנתונים לעומק כדי לדייק את ההצעות.</li>
+                <li><strong>יצירת קשר:</strong> ברגע שנמצא התאמה שעונה על הדרישות שלכם, השדכן יפנה אליכם ישירות בווטסאפ או במייל 💌</li>
+                <li><strong>מודל הצלחה:</strong> ההרשמה والשימוש במאגר ללא עלות – התשלום לשדכנים מתבצע רק בסגירת ווארט!</li>
+            </ul>
+        </div>
+
+        <!-- פסקת האמונה המקורית שלך -->
+        <p class="faith-statement">
+            "אני מאמין באמונה שלמה שזו רק השתדלות ושרק מלך מלכי המלכים הקדוש ברוך הוא ישלח לי את הזיווג שלי" 🙏
+        </p>
+
+        <h4 class="psalm-title">מזמור ק' – מזמור לתודה</h4>
         <div class="psalm-container">
             <p class="psalm-text">
                 <span class="verse-num">[א]</span> מִזְמוֹר לְתוֹדָה: הָרִיעוּ לַיהוָה, כָּל-הָאָרֶץ. 
-                <span class="verse-num">[ב]</span> עִבְדוּ אֶת-יְהוָה בְּשִׂמְחָה; בֹּאוּ לְפָנָיו, בִּרְנָנָה. 
-                <span class="verse-num">[ג]</span> דְּעוּ כִּי יְהוָה הוּא אֱלֹהִים: הוּא-עָשָׂנוּ וְלוֹ אֲנַחְנוּ, עַמּוֹ וְצֹאן מַרְעִיתוֹ. 
+                <span class="verse-num">[ב]</span> עִבְדוּ אֶת-יְהוָה בְּשִׂמְחָה; בֹּאוּ לְפָנָיו, bִרְנָנָה. 
+                <span class="verse-num">[ג]</span> דְּעוּ כִּי יְהוָה הוּא אֱלֹהִים: הוּא-עָשָׂנוּ וְלוֹ אֲנัחְנוּ, עַמּוֹ וְצֹאן מַרְעִיתוֹ. 
                 <span class="verse-num">[ד]</span> בֹּאוּ שְׁעָרָיו בְּתוֹדָה, חֲצֵרֹתָיו בִּתְהִלָּה; הוֹדוּ-לוֹ, בָּרְכוּ שְׁמוֹ. 
                 <span class="verse-num">[ה]</span> כִּי-טוֹב יְהוָה, לְעוֹלָם חַסְדּוֹ; וְעַד-דֹּר וָדֹר, אֱמוּנָתוֹ.
             </p>
         </div>
 
+        <!-- תיבת שיתוף ויראלית כדי להביא עוד לידים -->
+        <div class="share-box">
+            📢 <strong>עזרו לנו להרחיב את המאגר:</strong> נשמח אם תשלחו את קישור ההרשמה לעוד חברים שמעוניינים להכיר את שורש נשמתם!
+        </div>
+
         <div class="button-group">
-            <button class="btn" onclick="copyPsalm()">העתקת המזמור</button>
-            <!-- הקישור המעודכן עם כל המזמור -->
-            <a href="https://api.whatsapp.com/send?text=תהילים%20לזיווג%20הגון%20-%20מזמור%20ק'%0A%0Aמִזְמוֹר%20לְתוֹדָה:%20הָרִיעוּ%20לַיהוָה,%20כָּל-הָאָרֶץ.%0Aעִבְדוּ%20אֶת-יְהוָה%20בְּשִׂמְחָה;%20בֹּאוּ%20לְפָנָיו,%20בִּרְנָנָה.%0Aדְּעוּ%20כִּי%20יְהוָה%20הוּא%20אֱלֹהִים:%20הוּא-עָשָׂנוּ%20וְלוֹ%20אֲנַחְנוּ,%20עַמּוֹ%20וְצֹאן%20מַרְעִיתוֹ.%0Aבֹּאוּ%20שְׁעָרָיו%20בְּתוֹדָה,%20חֲצֵרֹתָיו%20בִּתְהִלָּה;%20הוֹדוּ-לוֹ,%20בָּרְכוּ%20שְׁמוֹ.%0Aכִּי-טוֹב%20יְהוָה,%20לְעוֹלָם%20חַסְדּוֹ;%20וְעַד-דֹּר%20וָדֹר,%20אֱמוּנָתוֹ." target="_blank" class="btn btn-outline">שיתוף בוואטסאפ</a>
+            <button class="btn btn-outline" onclick="copyLink()">העתקת קישור להרשמה</button>
+            <!-- כפתור שיתוף המאגר בוואטסאפ עם הטקסט השיווקי והקישור של Tally -->
+            <a href="https://api.whatsapp.com/send?text=%D7%94%D7%99%D7%99%2C%20%D7%A8%D7%A6%D7%99%D7%AA%D7%99%20%D7%9C%D7%A9%D7%AA%D7%A3%20%D7%90%D7%95%D7%AA%D7%9A%20%D7%91%D7%9E%D7%90%D7%92%D7%A8%20%D7%94%D7%A9%D7%99%D7%93%D7%95%D7%9B%D7%99%D7%9D%20%D7%94%D7%90%D7%96%D7%95%D7%A8%D7%99%20%F0%9F%92%8D%20%D7%94%D7%A4%D7%A8%D7%A5%D7%99%D7%9D%20%D7%A0%D7%A9%D7%9E%D7%A8%D7%99%D7%9D%20%D7%91%D7%90%D7%91%D7%97%D7%95%D7%94%20%D7%9E%D7%97%D7%9E%D7%99%D7%A8%D7%94%20%D7%95%D7%97%D7%A1%D7%95%D7%99%D7%99%D7%9D%20%D7%9C%D7%91%D7%91%D7%99%D7%93%D7%8C%20%D7%95%D7%94%D7%AA%D7%A9%D7%9C%D7%95%D7%9D%20%D7%A8%D7%A7%20%D7%91%D7%A1%D7%92%D7%99%D7%A8%D7%AA%20%D7%95%D7%95%D7%90%D7%A8%D7%A2!%20%D7%9B%D7%93%D7%90%D7%99%20%D7%9C%D7%94%D7%99%D7%99%D7%9B%D7%A0%D7%A1%20%D7%95%D7%9C%D7%94%D7%99%D7%A8%D7%A9%D7%9D%3A%20https%3A%2F%2Ftally.so%2Fr%2FVLDrNj" target="_blank" class="btn btn-whatsapp">שיתוף המאגר בוואטסאפ</a>
         </div>
 
         <footer>
-            <p>יהי רצון שימלא השם כל משאלות לבכם לטובה בקרוב</p>
+            <p>יהי רצון שימלא השם כל משאלות לבכם לטובה בקרוב בקלות ובשמחה</p>
         </footer>
     </div>
 
     <script>
-        function copyPsalm() {
-            const text = "מִזְמוֹר לְתוֹדָה: הָרִיעוּ לַיהוָה, כָּל-הָאָרֶץ. עִבְדוּ אֶת-יְהוָה בְּשִׂמְחָה; בֹּאוּ לְפָנָיו, בִּרְנָנָה. דְּעוּ כִּי יְהוָה הוּא אֱלֹהִים: הוּא-עָשָׂנוּ וְלוֹ אֲנַחְנוּ, עַמּוֹ וְצֹאן מַרְעִיתוֹ. בֹּאוּ שְׁעָרָיו בְּתוֹדָה, חֲצֵרֹתָיו בִּתְהִלָּה; הוֹדוּ-לוֹ, בָּרְכוּ שְׁמוֹ. כִּי-טוֹב יְהוָה, לְעוֹלָם חַסְדּוֹ; וְעַד-דֹּר וָדֹר, אֱמוּנָתוֹ.";
-            navigator.clipboard.writeText(text).then(() => {
-                alert("המזמור הועתק בהצלחה ללוח!");
+        function copyLink() {
+            const link = "https://tally.so/r/VLDrNj";
+            navigator.clipboard.writeText(link).then(() => {
+                alert("קישור ההרשמה למאגר הועתק בהצלחה! מוזמנים לשתף עם חברים.");
             });
         }
     </script>
