@@ -3,42 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס דינמי עם תמונה</title>
+    <title>דף מועמד</title>
     <style>
-        /* הגדרות בסיסיות למסך מלא */
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            font-family: Arial, sans-serif; 
-        }
+        body, html { margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; font-family: sans-serif; }
         
-        /* אזור התמונה */
-        #candidate-header {
+        /* אזור הכותרת הכולל את התמונה והפרטים */
+        #header-container {
             width: 100%;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            padding: 15px 0;
-            background-color: #f4f4f4; /* רקע עדין */
-            border-bottom: 1px solid #ddd;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #eee;
+            text-align: center;
         }
 
         #candidate-image {
             width: 120px;
             height: 120px;
-            border-radius: 50%; /* תמונה עגולה */
-            object-fit: cover; /* מתיחת התמונה בצורה יפה */
-            border: 3px solid #007bff; /* מסגרת כחולה */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* צל עדין */
-            display: none; /* מסתיר את התמונה אם אין מקור */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #007bff;
+            margin-bottom: 10px;
+            display: none; /* מוסתר כברירת מחדל */
         }
 
-        /* אזור ה-iframe - תופס את יתרת הגובה */
+        #candidate-details {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+        }
+
         #tally-iframe { 
-            flex-grow: 1; /* לוקח את כל הגובה הנותר */
+            flex-grow: 1; 
             width: 100%; 
             border: none; 
         }
@@ -46,53 +44,40 @@
 </head>
 <body>
 
-    <div id="candidate-header">
+    <div id="header-container">
         <img id="candidate-image" alt="תמונת מועמד">
+       
     </div>
 
     <iframe id="tally-iframe"></iframe>
 
     <script>
-        // 1. קבלת המידע מה-URL (של דף האב)
         const urlParams = new URLSearchParams(window.location.search);
         
-        // --- קטע חדש: טיפול בתמונה --- //
+        // 1. טיפול בתמונה
         const candidateImg = document.getElementById('candidate-image');
-        
-        // בדיקה האם קיים פרמטר 'src' עבור התמונה
         if (urlParams.has('src')) {
-            // פענוח של כתובת התמונה (במידה והיא מקודדת ב-URL)
-            const decodedImgUrl = decodeURIComponent(urlParams.get('src'));
-            
-            // הגדרת כתובת התמונה והצגת האלמנט
-            candidateImg.src = decodedImgUrl;
+            candidateImg.src = decodeURIComponent(urlParams.get('src'));
             candidateImg.style.display = 'block'; 
         }
-        // ------------------------------ //
 
-        const tallyParams = new URLSearchParams();
-
-        // העברת הפרמטרים ממה שהגיע ל-URL לתוך הטופס (עם מיפוי השמות הנכון לטאלי)
-        if (urlParams.has('src')) tallyParams.set('image_url', urlParams.get('src'));
-        if (urlParams.has('candidateName')) tallyParams.set('candidateName', urlParams.get('candidateName'));
-        if (urlParams.has('suggestionName')) tallyParams.set('suggestionName', urlParams.get('suggestionName'));
-        if (urlParams.has('meetingNum')) tallyParams.set('meetingNum', urlParams.get('meetingNum'));
-        if (urlParams.has('matchId')) tallyParams.set('matchId', urlParams.get('matchId'));
-        if (urlParams.has('suggestionTelegramPost')) tallyParams.set('suggestionTelegramPost', urlParams.get('suggestionTelegramPost'));
-        
-        // 2. הגדרת הלינק הבסיסי של הטופס שלך
-        const formId = "RGj87K"; // החלף כאן ב-ID של הטופס
-        const tallyBaseUrl = `https://tally.so/r/${formId}`;
-        
-        const iframe = document.getElementById('tally-iframe');
-
-        // 3. בניה של הלינק הסופי עם הפרמטר (אם הוא קיים)
-        // שים לב: תנאי המקור המקורי נשמר
-        if (urlParams.has('suggestionTelegramPost')) {
-            iframe.src = `${tallyBaseUrl}?${tallyParams.toString()}`;
-        } else {
-            iframe.src = tallyBaseUrl;
+        // 2. טיפול בפרטים (שם המועמד וכו')
+        const detailsContainer = document.getElementById('candidate-details');
+        const name = urlParams.get('candidateName');
+        if (name) {
+            detailsContainer.innerText = decodeURIComponent(name);
         }
+
+        // 3. הגדרת ה-Iframe
+        const tallyParams = new URLSearchParams();
+        // העתקת כל הפרמטרים לטאלי
+        urlParams.forEach((value, key) => {
+            tallyParams.set(key, value);
+        });
+        
+        const formId = "RGj87K";
+        const iframe = document.getElementById('tally-iframe');
+        iframe.src = `https://tally.so/r/${formId}?${tallyParams.toString()}`;
     </script>
 </body>
 </html>
