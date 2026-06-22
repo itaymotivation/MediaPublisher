@@ -1,93 +1,201 @@
 <!DOCTYPE html> 
+
 <html lang="he" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
+
+    <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>הצעה לשידוך</title>
+
     <style>
-        /* עיצוב כללי */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            text-align: center; 
-            padding: 20px; 
-            background-color: #f4f4f9; 
-            margin: 0;
-        }
-        
-        .wrapper { 
-            max-width: 600px; 
-            margin: 0 auto; 
-            background: white; 
-            padding: 20px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+
+        * {
+
+            box-sizing: border-box;
+
         }
 
-        /* עיצוב התמונה - ברירת מחדל (פלאפון) */
-        .photo-frame { 
-            width: 100%;           
-            max-height: 400px; 
-            object-fit: cover; 
-            border-radius: 8px; /* מלבני עם פינות מעוגלות בפלאפון */
-            margin-bottom: 20px; 
-            border: 2px solid #ddd; 
-            display: none; /* מוסתר בהתחלה עד שנטען */
-        }
 
-        /* עיצוב התמונה - מחשב */
-        @media (min-width: 768px) {
-            .photo-frame {
-                width: 200px;         /* גודל קטן במחשב */
-                height: 200px;        /* ריבוע */
-                border-radius: 50%;   /* עיגול מושלם */
-                margin: 0 auto 20px;  /* מרכוז */
-                display: block;       /* מציג את התמונה */
-            }
-        }
 
-        /* עיצוב ה-iframe */
-        #tally-iframe { 
+        body, html { 
+
+            margin: 0; 
+
+            padding: 0; 
+
             width: 100%; 
-            border: none; 
-            min-height: 800px; /* גובה התחלתי לטופס */
+
+            height: 100%; 
+
+            display: flex; 
+
+            flex-direction: column; 
+
+            font-family: sans-serif; 
+
+            overflow-x: hidden; 
+
         }
+
+        
+
+        /* אזור הכותרת מוצמד לראש הדף */
+
+        #header-container {
+
+            position: sticky; /* שומר על הכותרת למעלה */
+
+            top: 0;
+
+            z-index: 100; /* מוודא שזה מעל הכל */
+
+            width: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            background-color: #f9f9f9;
+
+            border-bottom: 2px solid #4f46e5; /* קו הפרדה בצבע החדש */
+
+            text-align: center;
+
+            flex-shrink: 0;
+
+            padding-bottom: 10px;
+
+        }
+
+
+
+        #candidate-image {
+
+            width: 100%; /* תופס את כל הרוחב */
+
+            height: 250px; /* גובה קבוע לבאנר (אפשר לשנות) */
+
+            object-fit: cover; /* פורס את התמונה יפה בלי עיוות */
+
+            border-radius: 0; /* מלבני */
+
+            border-bottom: 4px solid #4f46e5; /* מסגרת תחתונה בלבד או מסגרת מלאה */
+
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+            display: none; 
+
+        }
+
+
+
+        #candidate-details {
+
+            font-size: 1.1rem;
+
+            color: #333;
+
+            font-weight: bold;
+
+            margin-top: 10px;
+
+        }
+
+
+
+        #tally-iframe { 
+
+            flex-grow: 1; 
+
+            width: 100%; 
+
+            border: none;
+
+            display: block; 
+
+        }
+
     </style>
+
 </head>
+
 <body>
 
+
+
     <div id="header-container">
+
         <img id="candidate-image" alt="תמונת מועמד">
+
         <div id="candidate-details"></div>
+
     </div>
+
+
 
     <iframe id="tally-iframe"></iframe>
 
+
+
     <script>
+
         const urlParams = new URLSearchParams(window.location.search);
+
         
+
         const candidateImg = document.getElementById('candidate-image');
+
         const detailsContainer = document.getElementById('candidate-details');
+
         const suggestionName = urlParams.get('suggestionName');
+
         
-        // טעינת תמונה
+
+        // טיפול בתמונה - עכשיו כבאנר
+
         if (urlParams.has('src')) {
+
             candidateImg.src = decodeURIComponent(urlParams.get('src'));
+
             candidateImg.style.display = 'block'; 
+
             
+
             if (suggestionName) {
-                detailsContainer.innerText = "תמונת ההצעה ☝🏻";
+
+                detailsContainer.innerText = "תמונת ההצעה: " + decodeURIComponent(suggestionName);
+
             }
+
         }
 
-        // טעינת הטופס
+
+
+        // הגדרת ה-Iframe
+
         const tallyParams = new URLSearchParams();
+
         urlParams.forEach((value, key) => {
+
             tallyParams.set(key, value);
+
         });
+
         
+
         const formId = "RGj87K";
+
         const iframe = document.getElementById('tally-iframe');
+
         iframe.src = `https://tally.so/r/${formId}?${tallyParams.toString()}`;
+
     </script>
+
 </body>
+
 </html>
