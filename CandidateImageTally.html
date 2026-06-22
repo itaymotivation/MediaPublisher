@@ -3,51 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Image Loader</title>
+    <title>טופס דינמי</title>
     <style>
-        /* איפוס הגדרות ברירת מחדל כדי שהתמונה תתפוס את כל המסך */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #ffffff; /* רקע לבן, ניתן לשנות לכל צבע */
-        }
-
-        /* הגדרת התמונה כך שתמיד תתאים לגודל המסגרת */
-        #dynamic-image {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain; /* שומר על פרופורציות מבלי לעוות */
-        }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+        #tally-iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <img id="dynamic-image" src="" alt="Dynamic Content">
+    <iframe id="tally-iframe"></iframe>
 
     <script>
-        // פונקציה לשליפת ערך מתוך ה-URL לפי שם הפרמטר
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+        // 1. קבלת המידע מה-URL (למשל: דף.html?src=https://link.com)
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageSrc = urlParams.get('src'); // שם הפרמטר ב-URL הוא 'src'
 
-        // שליפת הלינק מהפרמטר בשם 'src'
-        const imageUrl = getQueryParam('src');
+        // 2. הגדרת הלינק הבסיסי של הטופס שלך
+        const formId = "YOUR_FORM_ID"; // החלף כאן ב-ID של הטופס
+        const tallyBaseUrl = `https://tally.so/r/${formId}`;
         
-        // אם נמצא לינק, מעדכנים את מקור התמונה
-        if (imageUrl) {
-            const imgElement = document.getElementById('dynamic-image');
-            imgElement.src = imageUrl;
+        const iframe = document.getElementById('tally-iframe');
+
+        // 3. בניה של הלינק הסופי עם הפרמטר (אם הוא קיים)
+        // שים לב: 'image_url' זה שם ה-Hidden Field שיצרת בטאלי
+        if (imageSrc) {
+            iframe.src = `${tallyBaseUrl}?image_url=${encodeURIComponent(imageSrc)}`;
         } else {
-            console.error("לא נמצא פרמטר 'src' ב-URL.");
+            iframe.src = tallyBaseUrl;
         }
     </script>
 </body>
