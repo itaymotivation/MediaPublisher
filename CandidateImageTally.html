@@ -88,10 +88,11 @@
         if (urlParams.has('src')) {
             candidateImg.src = decodeURIComponent(urlParams.get('src'));
             candidateImg.style.display = 'block'; 
-        }
-         if (suggestionName) {
+            if (suggestionName) {
             detailsContainer.innerText = "תמונת ההצעה ☝🏻";
+            }
         }
+         
 
         // 3. Iframe setup
         const tallyParams = new URLSearchParams();
