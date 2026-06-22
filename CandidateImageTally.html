@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דף מועמד</title>
     <style>
-        /* FIX: Reset margins and force borders to be included in width calculation */
         * {
             box-sizing: border-box;
         }
@@ -18,53 +17,47 @@
             display: flex; 
             flex-direction: column; 
             font-family: sans-serif; 
-            overflow-x: hidden; /* Prevents horizontal scrollbar */
+            overflow-x: hidden; 
         }
         
+        /* אזור הכותרת מוצמד לראש הדף */
         #header-container {
+            position: sticky; /* שומר על הכותרת למעלה */
+            top: 0;
+            z-index: 100; /* מוודא שזה מעל הכל */
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
             background-color: #f9f9f9;
-            border-bottom: 1px solid #eee;
+            border-bottom: 2px solid #4f46e5; /* קו הפרדה בצבע החדש */
             text-align: center;
-            flex-shrink: 0; /* Ensures the header doesn't get squashed */
+            flex-shrink: 0;
+            padding-bottom: 10px;
         }
 
-       #candidate-image {
-            /* Increased dimensions for a larger, wider presence */
-            width: 180px;
-            height: 180px;
-            
-            /* Rounded to maintain the circle */
-            border-radius: 50%;
-            
-            /* Maintains aspect ratio without distortion */
-            object-fit: cover;
-            
-            /* Thicker border for better definition */
-            border: 4px solid #007bff;
-            
-            /* Added drop shadow for depth and better visual "clearness" */
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            
-            margin-bottom: 15px;
+        #candidate-image {
+            width: 100%; /* תופס את כל הרוחב */
+            height: 250px; /* גובה קבוע לבאנר (אפשר לשנות) */
+            object-fit: cover; /* פורס את התמונה יפה בלי עיוות */
+            border-radius: 0; /* מלבני */
+            border-bottom: 4px solid #4f46e5; /* מסגרת תחתונה בלבד או מסגרת מלאה */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             display: none; 
         }
 
         #candidate-details {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #333;
             font-weight: bold;
+            margin-top: 10px;
         }
 
         #tally-iframe { 
             flex-grow: 1; 
             width: 100%; 
             border: none;
-            display: block; /* Prevents ghost gaps under images/iframes */
+            display: block; 
         }
     </style>
 </head>
@@ -80,21 +73,21 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         
-        // 1. Image handling
         const candidateImg = document.getElementById('candidate-image');
         const detailsContainer = document.getElementById('candidate-details');
         const suggestionName = urlParams.get('suggestionName');
         
+        // טיפול בתמונה - עכשיו כבאנר
         if (urlParams.has('src')) {
             candidateImg.src = decodeURIComponent(urlParams.get('src'));
             candidateImg.style.display = 'block'; 
+            
             if (suggestionName) {
-            detailsContainer.innerText = "תמונת ההצעה ☝🏻";
+                detailsContainer.innerText = "תמונת ההצעה: " + decodeURIComponent(suggestionName);
             }
         }
-         
 
-        // 3. Iframe setup
+        // הגדרת ה-Iframe
         const tallyParams = new URLSearchParams();
         urlParams.forEach((value, key) => {
             tallyParams.set(key, value);
