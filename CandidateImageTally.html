@@ -65,6 +65,30 @@
             #header-container { padding-bottom: 5px; }
             #candidate-details { font-size: 1rem; }
         }
+
+        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f4f4f9; }
+    .wrapper { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    
+    /* הגדרות התמונה */
+    .photo-frame { 
+        width: 100%;           /* בפלאפון: תתפרס על כל הרוחב */
+        max-height: 400px; 
+        object-fit: cover; 
+        border-radius: 8px; 
+        margin-bottom: 20px; 
+        border: 2px solid #ddd; 
+    }
+
+    /* הגדרות למחשב בלבד */
+    @media (min-width: 768px) {
+        .photo-frame {
+            max-width: 300px;   /* במחשב: אל תעבור את ה-300 פיקסלים */
+            margin: 0 auto;     /* במחשב: מרכז את התמונה */
+            display: block;     /* מבטיח שהמרכוז יעבוד */
+        }
+    }
+
+    iframe { width: 100%; border: none; min-height: 600px; }
     </style>
 </head>
 <body>
@@ -89,7 +113,7 @@
             candidateImg.style.display = 'block'; 
             
             if (suggestionName) {
-                detailsContainer.innerText = "תמונת ההצעה: " + decodeURIComponent(suggestionName);
+                detailsContainer.innerText = "תמונת ההצעה ☝🏻";
             }
         }
 
