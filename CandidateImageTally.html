@@ -3,19 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>טופס דינמי</title>
+    <title>טופס דינמי עם תמונה</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }
-        #tally-iframe { width: 100%; height: 100%; border: none; }
+        /* הגדרות בסיסיות למסך מלא */
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            font-family: Arial, sans-serif; 
+        }
+        
+        /* אזור התמונה */
+        #candidate-header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 0;
+            background-color: #f4f4f4; /* רקע עדין */
+            border-bottom: 1px solid #ddd;
+        }
+
+        #candidate-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* תמונה עגולה */
+            object-fit: cover; /* מתיחת התמונה בצורה יפה */
+            border: 3px solid #007bff; /* מסגרת כחולה */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* צל עדין */
+            display: none; /* מסתיר את התמונה אם אין מקור */
+        }
+
+        /* אזור ה-iframe - תופס את יתרת הגובה */
+        #tally-iframe { 
+            flex-grow: 1; /* לוקח את כל הגובה הנותר */
+            width: 100%; 
+            border: none; 
+        }
     </style>
 </head>
 <body>
 
+    <div id="candidate-header">
+        <img id="candidate-image" alt="תמונת מועמד">
+    </div>
+
     <iframe id="tally-iframe"></iframe>
 
     <script>
-        // 1. קבלת המידע מה-URL (למשל: דף.html?src=https://link.com)
+        // 1. קבלת המידע מה-URL (של דף האב)
         const urlParams = new URLSearchParams(window.location.search);
+        
+        // --- קטע חדש: טיפול בתמונה --- //
+        const candidateImg = document.getElementById('candidate-image');
+        
+        // בדיקה האם קיים פרמטר 'src' עבור התמונה
+        if (urlParams.has('src')) {
+            // פענוח של כתובת התמונה (במידה והיא מקודדת ב-URL)
+            const decodedImgUrl = decodeURIComponent(urlParams.get('src'));
+            
+            // הגדרת כתובת התמונה והצגת האלמנט
+            candidateImg.src = decodedImgUrl;
+            candidateImg.style.display = 'block'; 
+        }
+        // ------------------------------ //
+
         const tallyParams = new URLSearchParams();
 
         // העברת הפרמטרים ממה שהגיע ל-URL לתוך הטופס (עם מיפוי השמות הנכון לטאלי)
@@ -33,37 +87,12 @@
         const iframe = document.getElementById('tally-iframe');
 
         // 3. בניה של הלינק הסופי עם הפרמטר (אם הוא קיים)
-        // שים לב: 'image_url' זה שם ה-Hidden Field שיצרת בטאלי
+        // שים לב: תנאי המקור המקורי נשמר
         if (urlParams.has('suggestionTelegramPost')) {
             iframe.src = `${tallyBaseUrl}?${tallyParams.toString()}`;
         } else {
             iframe.src = tallyBaseUrl;
         }
-
-        iframe.addEventListener('load', () => {
-    try {
-      // 1. Attempt to access the contentDocument
-      const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-      
-      console.log("Iframe loaded. Attempting to observe...");
-
-      // 2. Setup the Observer
-      const observer = new MutationObserver((mutations) => {
-        console.log("Changes detected inside iframe:", mutations);
-      });
-
-      // 3. This is the line that will throw the Security Error
-      observer.observe(innerDoc.body, {
-        childList: true,
-        subtree: true
-      });
-
-    } catch (e) {
-      // The browser will catch the SecurityError here
-      console.error("CRITICAL: Access Denied due to Same-Origin Policy.");
-      console.error("The browser prevented access to:", e.message);
-    }
-  });
     </script>
 </body>
 </html>
