@@ -5,20 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דף מועמד</title>
     <style>
-        * { box-sizing: border-box; }
-
-        /* שינוי: במקום height 100% ו-hidden, נשתמש ב-min-height ואוטומטי */
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            min-height: 100%; 
-            width: 100%;
-            font-family: sans-serif; 
-            overflow-y: auto; /* מאפשר גלילה לדף */
-        }
+        body, html { margin: 0; padding: 0; min-height: 100%; width: 100%; font-family: sans-serif; }
         
         #header-container {
-            /* הסרנו את ה-sticky */
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -33,25 +22,13 @@
             width: 100%; 
             height: 250px; 
             object-fit: cover; 
-            border-radius: 0; 
-            border-bottom: 4px solid #4f46e5;
             display: none; 
         }
 
-        #candidate-details {
-            font-size: 1.1rem;
-            color: #333;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        /* הגדרת גובה קבוע ל-iframe כדי שהדף יוכל לגלול אותו */
-        #tally-iframe { 
-            width: 100%; 
-            height: 800px; /* גובה רצוי שניתן לגלול בתוכו */
-            border: none;
-            display: block; 
-        }
+        #candidate-details { font-size: 1.1rem; color: #333; font-weight: bold; margin-top: 10px; }
+        
+        /* הסגנון של ה-Tally Embed */
+        [data-tally-src] { width: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -61,11 +38,14 @@
         <div id="candidate-details"></div>
     </div>
 
-    <iframe id="tally-iframe"></iframe>
+    <div id="tally-form-container" data-tally-src="https://tally.so/r/RGj87K" data-tally-width="100%" data-tally-align="left" data-tally-overlay="0"></div>
+
+    <script async src="https://tally.so/widgets/embed.js"></script>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         
+        // 1. הגדרת התמונה והפרטים (כמו קודם)
         const candidateImg = document.getElementById('candidate-image');
         const detailsContainer = document.getElementById('candidate-details');
         const suggestionName = urlParams.get('suggestionName');
@@ -73,20 +53,18 @@
         if (urlParams.has('src')) {
             candidateImg.src = decodeURIComponent(urlParams.get('src'));
             candidateImg.style.display = 'block'; 
-            
             if (suggestionName) {
-                detailsContainer.innerText = "תמונת ההצעה ☝🏻";
+                detailsContainer.innerText = "תמונת ההצעה: " + decodeURIComponent(suggestionName);
             }
         }
 
-        const tallyParams = new URLSearchParams();
-        urlParams.forEach((value, key) => {
-            tallyParams.set(key, value);
-        });
+        // 2. הזרקת הפרמטרים לסקריפט של Tally בצורה אוטומטית
+        // אנחנו בונים את ה-URL המלא ומעדכנים את ה-Attribute של ה-div
+        const container = document.getElementById('tally-form-container');
+        const tallyParams = new URLSearchParams(urlParams);
         
-        const formId = "RGj87K";
-        const iframe = document.getElementById('tally-iframe');
-        iframe.src = `https://tally.so/r/${formId}?${tallyParams.toString()}`;
+        // עדכון ה-src עם הפרמטרים
+        container.setAttribute('data-tally-src', `https://tally.so/r/RGj87K?${tallyParams.toString()}`);
     </script>
 </body>
 </html>
