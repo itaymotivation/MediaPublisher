@@ -39,6 +39,31 @@
         } else {
             iframe.src = tallyBaseUrl;
         }
+
+        iframe.addEventListener('load', () => {
+    try {
+      // 1. Attempt to access the contentDocument
+      const innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+      
+      console.log("Iframe loaded. Attempting to observe...");
+
+      // 2. Setup the Observer
+      const observer = new MutationObserver((mutations) => {
+        console.log("Changes detected inside iframe:", mutations);
+      });
+
+      // 3. This is the line that will throw the Security Error
+      observer.observe(innerDoc.body, {
+        childList: true,
+        subtree: true
+      });
+
+    } catch (e) {
+      // The browser will catch the SecurityError here
+      console.error("CRITICAL: Access Denied due to Same-Origin Policy.");
+      console.error("The browser prevented access to:", e.message);
+    }
+  });
     </script>
 </body>
 </html>
