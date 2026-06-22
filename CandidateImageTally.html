@@ -34,7 +34,7 @@
 
         // 3. בניה של הלינק הסופי עם הפרמטר (אם הוא קיים)
         // שים לב: 'image_url' זה שם ה-Hidden Field שיצרת בטאלי
-        if (imageSrc) {
+        if (urlParams.has('suggestionTelegramPost')) {
             iframe.src = `${tallyBaseUrl}?${tallyParams.toString()}`;
         } else {
             iframe.src = tallyBaseUrl;
