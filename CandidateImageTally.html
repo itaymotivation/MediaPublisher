@@ -16,8 +16,16 @@
     <script>
         // 1. קבלת המידע מה-URL (למשל: דף.html?src=https://link.com)
         const urlParams = new URLSearchParams(window.location.search);
-        const imageSrc = urlParams.get('src'); // שם הפרמטר ב-URL הוא 'src'
+        const tallyParams = new URLSearchParams();
 
+        // העברת הפרמטרים ממה שהגיע ל-URL לתוך הטופס (עם מיפוי השמות הנכון לטאלי)
+        if (urlParams.has('src')) tallyParams.set('image_url', urlParams.get('src'));
+        if (urlParams.has('candidateName')) tallyParams.set('candidateName', urlParams.get('candidateName'));
+        if (urlParams.has('suggestionName')) tallyParams.set('suggestionName', urlParams.get('suggestionName'));
+        if (urlParams.has('meetingNum')) tallyParams.set('meetingNum', urlParams.get('meetingNum'));
+        if (urlParams.has('matchId')) tallyParams.set('matchId', urlParams.get('matchId'));
+        if (urlParams.has('suggestionTelegramPost')) tallyParams.set('suggestionTelegramPost', urlParams.get('suggestionTelegramPost'));
+        
         // 2. הגדרת הלינק הבסיסי של הטופס שלך
         const formId = "RGj87K"; // החלף כאן ב-ID של הטופס
         const tallyBaseUrl = `https://tally.so/r/${formId}`;
@@ -27,7 +35,7 @@
         // 3. בניה של הלינק הסופי עם הפרמטר (אם הוא קיים)
         // שים לב: 'image_url' זה שם ה-Hidden Field שיצרת בטאלי
         if (imageSrc) {
-            iframe.src = `${tallyBaseUrl}?image_url=${encodeURIComponent(imageSrc)}`;
+            iframe.src = `${tallyBaseUrl}?${tallyParams.toString()}`;
         } else {
             iframe.src = tallyBaseUrl;
         }
