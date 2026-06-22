@@ -5,44 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דף מועמד</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
+        /* שינוי: במקום height 100% ו-hidden, נשתמש ב-min-height ואוטומטי */
         body, html { 
             margin: 0; 
             padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
+            min-height: 100%; 
+            width: 100%;
             font-family: sans-serif; 
-            overflow-x: hidden; 
+            overflow-y: auto; /* מאפשר גלילה לדף */
         }
         
-        /* אזור הכותרת מוצמד לראש הדף */
         #header-container {
-            position: sticky; /* שומר על הכותרת למעלה */
-            top: 0;
-            z-index: 100; /* מוודא שזה מעל הכל */
+            /* הסרנו את ה-sticky */
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             background-color: #f9f9f9;
-            border-bottom: 2px solid #4f46e5; /* קו הפרדה בצבע החדש */
+            border-bottom: 2px solid #4f46e5;
             text-align: center;
-            flex-shrink: 0;
             padding-bottom: 10px;
         }
 
         #candidate-image {
-            width: 100%; /* תופס את כל הרוחב */
-            height: 250px; /* גובה קבוע לבאנר (אפשר לשנות) */
-            object-fit: cover; /* פורס את התמונה יפה בלי עיוות */
-            border-radius: 0; /* מלבני */
-            border-bottom: 4px solid #4f46e5; /* מסגרת תחתונה בלבד או מסגרת מלאה */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%; 
+            height: 250px; 
+            object-fit: cover; 
+            border-radius: 0; 
+            border-bottom: 4px solid #4f46e5;
             display: none; 
         }
 
@@ -53,9 +45,10 @@
             margin-top: 10px;
         }
 
+        /* הגדרת גובה קבוע ל-iframe כדי שהדף יוכל לגלול אותו */
         #tally-iframe { 
-            flex-grow: 1; 
             width: 100%; 
+            height: 800px; /* גובה רצוי שניתן לגלול בתוכו */
             border: none;
             display: block; 
         }
@@ -77,17 +70,15 @@
         const detailsContainer = document.getElementById('candidate-details');
         const suggestionName = urlParams.get('suggestionName');
         
-        // טיפול בתמונה - עכשיו כבאנר
         if (urlParams.has('src')) {
             candidateImg.src = decodeURIComponent(urlParams.get('src'));
             candidateImg.style.display = 'block'; 
             
             if (suggestionName) {
-                detailsContainer.innerText = "תמונת ההצעה: " + decodeURIComponent(suggestionName);
+                detailsContainer.innerText = "☝🏻 תמונת ההצעה";
             }
         }
 
-        // הגדרת ה-Iframe
         const tallyParams = new URLSearchParams();
         urlParams.forEach((value, key) => {
             tallyParams.set(key, value);
