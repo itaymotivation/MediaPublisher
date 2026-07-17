@@ -216,11 +216,22 @@ script.src =
     + "&callback=receiveMatchData";
 
 
-script.onerror = function() {
-    console.error("שגיאה בקריאת השירות");
-    document.body.innerHTML =
-        "<h2 style='text-align:center'>אירעה שגיאה בטעינת ההצעה.</h2>";
+window.addEventListener("error", function(e) {
+    console.error("Global JS Error:");
+    console.error("Message:", e.message);
+    console.error("File:", e.filename);
+    console.error("Line:", e.lineno);
+    console.error("Column:", e.colno);
+    console.error("Error object:", e.error);
+});
+
+
+script.onload = function() {
+    console.log("Apps Script loaded successfully");
 };
+
+
+console.log("Loading Apps Script URL:", script.src);
 
 
 // הפעלת הקריאה
