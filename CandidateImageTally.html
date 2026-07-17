@@ -140,54 +140,55 @@
 
     <script>
 
-        const urlParams = new URLSearchParams(window.location.search);
+   const urlParams = new URLSearchParams(window.location.search);
 
-        const candidateImg = document.getElementById('candidate-image');
+const candidateImg = document.getElementById("candidate-image");
+const iframe = document.getElementById("tally-iframe");
 
-        const detailsContainer = document.getElementById('candidate-details');
-
-        const suggestionName = urlParams.get('suggestionName');
-
+const matchId = urlParams.get("matchId");
+const gender = urlParams.get("gender");
         
+if (!matchId) {
+    document.body.innerHTML = "<h2 style='text-align:center'>חסר MatchId</h2>";
+    throw new Error("Missing matchId");
+}
 
-        // טיפול בתמונה - עכשיו כבאנר
+const api = new URL(
+  "https://script.google.com/macros/s/AKfycbzZ9nRxN3hl8VaUGT_RyYg0hhdD0S_3uKh9HMtw1mjGH4sliE6MchY_bTnaOmD30JMJ/exec"
+);
 
-        if (urlParams.has('src')) {
+api.searchParams.set("action", "getMatchData");
+api.searchParams.set("matchId", matchId);
+api.searchParams.set("gender", gender);
 
-            candidateImg.src = decodeURIComponent(urlParams.get('src'));
+fetch(api)
+    .then(r => r.json())
+    .then(data => {
 
-            candidateImg.style.display = 'block'; 
-
-            
-
-            if (suggestionName) {
-
-                //detailsContainer.innerText = "תמונת ההצעה ☝🏻";
-
-            }
-
+        if (data.src) {
+            candidateImg.src = data.src;
+            candidateImg.style.display = "block";
         }
-
-
-
-        // הגדרת ה-Iframe
 
         const tallyParams = new URLSearchParams();
 
-        urlParams.forEach((value, key) => {
+        tallyParams.set("candidateName", data.candidateName);
+        tallyParams.set("suggestionName", data.suggestionName);
+        tallyParams.set("meetingNum", data.meetingNum || "0");
+        tallyParams.set("matchId", data.matchId);
+        tallyParams.set("suggestionTelegramPost", data.suggestionTelegramPost);
 
-            tallyParams.set(key, value);
+        if (data.src)
+            tallyParams.set("src", data.src);
 
-        });
-
-        
-
-        const formId = "RGj87K";
-
-        const iframe = document.getElementById('tally-iframe');
-
-        iframe.src = `https://tally.so/r/${formId}?${tallyParams.toString()}`;
-
+        iframe.src =
+            `https://tally.so/r/RGj87K?${tallyParams.toString()}`;
+    })
+    .catch(err => {
+        console.error(err);
+        document.body.innerHTML =
+            "<h2 style='text-align:center'>אירעה שגיאה בטעינת ההצעה.</h2>";
+    });
     </script>
 
 </body>
