@@ -210,7 +210,8 @@ const script = document.createElement("script");
 
 script.src =
     "https://script.google.com/macros/s/AKfycbzZ9nRxN3hl8VaUGT_RyYg0hhdD0S_3uKh9HMtw1mjGH4sliE6MchY_bTnaOmD30JMJ/exec"
-    + "?matchId=" + encodeURIComponent(matchId)
+    + "?action=doGet"
+    + "&matchId=" + encodeURIComponent(matchId)
     + "&gender=" + encodeURIComponent(gender)
     + "&callback=receiveMatchData";
 
