@@ -138,59 +138,96 @@
 
 
 
-    <script>
+  <script>
 
-   const urlParams = new URLSearchParams(window.location.search);
+const urlParams = new URLSearchParams(window.location.search);
 
 const candidateImg = document.getElementById("candidate-image");
 const iframe = document.getElementById("tally-iframe");
 
 const matchId = urlParams.get("matchId");
 const gender = urlParams.get("gender");
-        
+
 if (!matchId) {
     document.body.innerHTML = "<h2 style='text-align:center'>חסר MatchId</h2>";
     throw new Error("Missing matchId");
 }
 
-const api = new URL(
-  "https://script.google.com/macros/s/AKfycbzZ9nRxN3hl8VaUGT_RyYg0hhdD0S_3uKh9HMtw1mjGH4sliE6MchY_bTnaOmD30JMJ/exec"
-);
+if (!gender) {
+    document.body.innerHTML = "<h2 style='text-align:center'>חסר gender</h2>";
+    throw new Error("Missing gender");
+}
 
-api.searchParams.set("action", "getMatchData");
-api.searchParams.set("matchId", matchId);
-api.searchParams.set("gender", gender);
 
-fetch(api)
-    .then(r => r.json())
-    .then(data => {
+// פונקציית callback שאליה Apps Script יחזיר את הנתונים
+window.receiveMatchData = function(data) {
 
-        if (data.src) {
-            candidateImg.src = data.src;
-            candidateImg.style.display = "block";
-        }
+    console.log("Match data:", data);
 
-        const tallyParams = new URLSearchParams();
-
-        tallyParams.set("candidateName", data.candidateName);
-        tallyParams.set("suggestionName", data.suggestionName);
-        tallyParams.set("meetingNum", data.meetingNum || "0");
-        tallyParams.set("matchId", data.matchId);
-        tallyParams.set("suggestionTelegramPost", data.suggestionTelegramPost);
-
-        if (data.src)
-            tallyParams.set("src", data.src);
-
-        iframe.src =
-            `https://tally.so/r/RGj87K?${tallyParams.toString()}`;
-    })
-    .catch(err => {
-        console.error(err);
+    if (!data.success) {
         document.body.innerHTML =
-            "<h2 style='text-align:center'>אירעה שגיאה בטעינת ההצעה.</h2>";
-    });
-    </script>
+            "<h2 style='text-align:center'>לא נמצאה הצעה.</h2>";
+        return;
+    }
 
+
+    // הצגת תמונה
+    if (data.src && data.src.trim() !== "") {
+        candidateImg.src = data.src;
+        candidateImg.style.display = "block";
+    }
+
+
+    // בניית פרמטרים ל-Tally
+    const tallyParams = new URLSearchParams();
+
+    tallyParams.set("candidateName", data.candidateName || "");
+    tallyParams.set("suggestionName", data.suggestionName || "");
+    tallyParams.set("meetingNum", data.meetingNum || "0");
+    tallyParams.set("matchId", data.matchId || "");
+    tallyParams.set(
+        "suggestionTelegramPost",
+        data.suggestionTelegramPost || ""
+    );
+
+    if (data.src) {
+        tallyParams.set("src", data.src);
+    }
+
+
+    // טעינת הטופס
+    iframe.src =
+        "https://tally.so/r/RGj87K?" + tallyParams.toString();
+
+
+    // ניקוי
+    delete window.receiveMatchData;
+};
+
+
+// יצירת script חיצוני (JSONP)
+const script = document.createElement("script");
+
+script.src =
+    "https://script.google.com/macros/s/AKfycbzZ9nRxN3hl8VaUGT_RyYg0hhdD0S_3uKh9HMtw1mjGH4sliE6MchY_bTnaOmD30JMJ/exec"
+    + "?action=getMatchData"
+    + "&matchId=" + encodeURIComponent(matchId)
+    + "&gender=" + encodeURIComponent(gender)
+    + "&callback=receiveMatchData";
+
+
+script.onerror = function() {
+    console.error("שגיאה בקריאת השירות");
+    document.body.innerHTML =
+        "<h2 style='text-align:center'>אירעה שגיאה בטעינת ההצעה.</h2>";
+};
+
+
+// הפעלת הקריאה
+document.body.appendChild(script);
+
+
+</script>
 </body>
 
 </html>
