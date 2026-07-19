@@ -140,105 +140,202 @@
 
   <script>
 
+
 const urlParams = new URLSearchParams(window.location.search);
 
 const candidateImg = document.getElementById("candidate-image");
+
 const iframe = document.getElementById("tally-iframe");
 
+
 const matchId = urlParams.get("matchId");
+
 const gender = urlParams.get("gender");
 
+
+
 if (!matchId) {
-    document.body.innerHTML = "<h2 style='text-align:center'>חסר MatchId</h2>";
+
+    document.body.innerHTML =
+    "<h2 style='text-align:center'>חסר MatchId</h2>";
+
     throw new Error("Missing matchId");
+
 }
+
 
 if (!gender) {
-    document.body.innerHTML = "<h2 style='text-align:center'>חסר gender</h2>";
+
+    document.body.innerHTML =
+    "<h2 style='text-align:center'>חסר gender</h2>";
+
     throw new Error("Missing gender");
+
 }
 
 
-// פונקציית callback שאליה Apps Script יחזיר את הנתונים
+
+// Apps Script JSONP callback
+
 window.receiveMatchData = function(data) {
+
 
     console.log("Match data:", data);
 
+
     if (!data.success) {
+
         document.body.innerHTML =
-            "<h2 style='text-align:center'>לא נמצאה הצעה.</h2>";
+        "<h2 style='text-align:center'>לא נמצאה הצעה.</h2>";
+
         return;
+
     }
 
 
-    // הצגת תמונה
+
+    // תמונה
+
     if (data.src && data.src.trim() !== "") {
+
         candidateImg.src = data.src;
+
         candidateImg.style.display = "block";
+
     }
 
 
-    // בניית פרמטרים ל-Tally
+
+    console.log(
+        "Telegram post text:",
+        data.telegramPostText
+    );
+
+
+
     const tallyParams = new URLSearchParams();
 
-    tallyParams.set("candidateName", data.candidateName || "");
-    tallyParams.set("suggestionName", data.suggestionName || "");
-    tallyParams.set("meetingNum", data.meetingNum || "0");
-    tallyParams.set("matchId", data.matchId || "");
+
+
+    tallyParams.set(
+        "candidateName",
+        data.candidateName || ""
+    );
+
+
+    tallyParams.set(
+        "suggestionName",
+        data.suggestionName || ""
+    );
+
+
+    tallyParams.set(
+        "meetingNum",
+        data.meetingNum || "0"
+    );
+
+
+    tallyParams.set(
+        "matchId",
+        data.matchId || ""
+    );
+
+
     tallyParams.set(
         "suggestionTelegramPost",
         data.suggestionTelegramPost || ""
     );
 
+
+    // NEW - Telegram text from Google Sheet
+
+    tallyParams.set(
+        "telegramPostText",
+        data.telegramPostText || ""
+    );
+
+
+
     if (data.src) {
-        tallyParams.set("src", data.src);
+
+        tallyParams.set(
+            "src",
+            data.src
+        );
+
     }
 
 
-    // טעינת הטופס
+
     iframe.src =
-        "https://tally.so/r/RGj87K?" + tallyParams.toString();
+    "https://tally.so/r/RGj87K?" +
+    tallyParams.toString();
 
 
-    // ניקוי
+
     delete window.receiveMatchData;
+
+
 };
 
 
-// יצירת script חיצוני (JSONP)
+
+
+// JSONP call to Apps Script
+
 const script = document.createElement("script");
 
+
 script.src =
-    "https://script.google.com/macros/s/AKfycbzZ9nRxN3hl8VaUGT_RyYg0hhdD0S_3uKh9HMtw1mjGH4sliE6MchY_bTnaOmD30JMJ/exec"
-    + "?action=doGet"
-    + "&matchId=" + encodeURIComponent(matchId)
-    + "&gender=" + encodeURIComponent(gender)
-    + "&callback=receiveMatchData";
+
+"https://script.google.com/macros/s/AKfycbzZ9nRxN3hl8VaUGT_RyYg0hhdD0S_3uKh9HMtw1mjGH4sliE6MchY_bTnaOmD30JMJ/exec"
+
++ "?action=doGet"
+
++ "&matchId=" + encodeURIComponent(matchId)
+
++ "&gender=" + encodeURIComponent(gender)
+
++ "&callback=receiveMatchData";
 
 
-window.addEventListener("error", function(e) {
-    console.error("Global JS Error:");
-    console.error("Message:", e.message);
-    console.error("File:", e.filename);
-    console.error("Line:", e.lineno);
-    console.error("Column:", e.colno);
-    console.error("Error object:", e.error);
-});
 
 
-script.onload = function() {
-    console.log("Apps Script loaded successfully");
+script.onload = function(){
+
+    console.log(
+        "Apps Script loaded successfully"
+    );
+
 };
 
 
-console.log("Loading Apps Script URL:", script.src);
+
+script.onerror = function(){
+
+    console.error(
+        "Failed loading Apps Script"
+    );
+
+};
 
 
-// הפעלת הקריאה
+
+console.log(
+    "Loading Apps Script URL:",
+    script.src
+);
+
+
+
+// start request
+
 document.body.appendChild(script);
 
 
+
 </script>
+
 </body>
 
 </html>
