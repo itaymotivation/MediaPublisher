@@ -192,27 +192,6 @@ window.receiveMatchData = function(data) {
 
     }
 
-
-
-    // תמונה
-
-    if (src && src.trim() !== "") {
-
-        candidateImg.src = src;
-
-        candidateImg.style.display = "block";
-
-    }
-
-
-
-    console.log(
-        "Telegram post text:",
-        data.telegramPostText
-    );
-
-
-
     const tallyParams = new URLSearchParams();
 
     var candidateName="";
@@ -274,13 +253,16 @@ window.receiveMatchData = function(data) {
 
 
 
-    if (src) {
+    if (src && src.trim() !== "") {
 
         tallyParams.set(
             "src",
             src
         );
+   
+        candidateImg.src = src;
 
+        candidateImg.style.display = "block";
     }
 
 
