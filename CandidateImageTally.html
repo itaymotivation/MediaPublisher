@@ -215,35 +215,53 @@ window.receiveMatchData = function(data) {
 
     const tallyParams = new URLSearchParams();
 
-
-
+    var candidateName="";
+    var suggestionName="";
+    var meetingNum="";
+    var suggestionTelegramPost="";
+    var telegramPostText="";
+    var src="";
+    
+    if(gender=="man"){
+        candidateName = data.man.name;
+        suggestionName = data.woman.name;
+        suggestionTelegramPost = data.woman.telegramPost;
+        src = data.woman.image;
+    }else{
+         candidateName = data.woman.name;
+         suggestionName = data.man.name;
+         suggestionTelegramPost =  data.man.telegramPost;
+         src = data.man.image;
+    }
+    meetingNum = data.man.meetingNum;
+    
     tallyParams.set(
         "candidateName",
-        data.candidateName || ""
+        candidateName || ""
     );
 
 
     tallyParams.set(
         "suggestionName",
-        data.suggestionName || ""
+        suggestionName || ""
     );
 
 
     tallyParams.set(
         "meetingNum",
-        data.meetingNum || "0"
+        meetingNum || "0"
     );
 
 
     tallyParams.set(
         "matchId",
-        data.matchId || ""
+        matchId || ""
     );
 
 
     tallyParams.set(
         "suggestionTelegramPost",
-        data.suggestionTelegramPost || ""
+        suggestionTelegramPost || ""
     );
 
 
@@ -251,12 +269,12 @@ window.receiveMatchData = function(data) {
 
     tallyParams.set(
         "telegramPostText",
-        data.telegramPostText || ""
+        telegramPostText || ""
     );
 
 
 
-    if (data.src) {
+    if (src) {
 
         tallyParams.set(
             "src",
