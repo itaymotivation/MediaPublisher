@@ -196,9 +196,9 @@ window.receiveMatchData = function(data) {
 
     // תמונה
 
-    if (data.src && data.src.trim() !== "") {
+    if (src && src.trim() !== "") {
 
-        candidateImg.src = data.src;
+        candidateImg.src = src;
 
         candidateImg.style.display = "block";
 
@@ -278,7 +278,7 @@ window.receiveMatchData = function(data) {
 
         tallyParams.set(
             "src",
-            data.src
+            src
         );
 
     }
