@@ -131,7 +131,7 @@
         word-break: break-word;
     }
     p{text-align: right;}
-        
+    #innerdiv{padding: 15px;}    
     @media (max-width: 480px) {
         #candidate-image {  object-fit: cover; border-radius: 0px 0px 25% 25%}
         #candidate-details { font-size: 1rem; }
@@ -148,8 +148,10 @@
     <div id="header-container">
         <h1>טופס אישור והתקדמות הצעה</h1>
         <img id="candidate-image" alt="תמונת מועמד">
-        <p id="candidate-name" alt="שם מועמד"></p>
-        <p id="suggestion-name" alt="שם הצעה"></p>
+        <div id="innerdiv">
+            <p id="candidate-name" alt="שם מועמד"></p>
+            <p id="suggestion-name" alt="שם הצעה"></p>
+        </div>  
         <p id="candidate-telegramPost" alt="פרטי מועמד"></p>
         <iframe id="tally-iframe"></iframe>
     </div>
