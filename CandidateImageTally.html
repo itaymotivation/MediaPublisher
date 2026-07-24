@@ -239,10 +239,15 @@ window.receiveMatchData = function(data) {
     document.getElementById("candidate-name").innerHTML= `${candidateName} שלום רב, בהמשך לתהליך השידוכים שלכם בנוגע להצעה.`;
     document.getElementById("suggestion-name").innerHTML= `שם ההצעה: ${suggestionName}`;
     meetingNum = data.man.meetingNum;
+
+    tallyParams.set(
+        "suggestionName",
+        suggestionName || ""
+    );
     
     tallyParams.set(
-        "candidateName",
-        candidateName || ""
+        "gender",
+        gender || ""
     );
 
 
