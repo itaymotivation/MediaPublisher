@@ -117,7 +117,6 @@
 
         #candidate-telegramPost {
         white-space: pre-wrap;
-        text-align: right;
         direction: rtl;
         width: min(800px, 95%);
         padding: 16px;
@@ -130,11 +129,12 @@
         line-height: 1.8;
         word-break: break-word;
     }
-
-        @media (max-width: 480px) {
-            #candidate-image {  object-fit: cover; border-radius: 0px 0px 25% 25%}
-            #candidate-details { font-size: 1rem; }
-        }
+    p{text-align: right;}
+        
+    @media (max-width: 480px) {
+        #candidate-image {  object-fit: cover; border-radius: 0px 0px 25% 25%}
+        #candidate-details { font-size: 1rem; }
+    }
 
     </style>
 
