@@ -115,6 +115,22 @@
 
         }
 
+        #candidate-telegramPost {
+        white-space: pre-wrap;
+        text-align: right;
+        direction: rtl;
+        width: min(800px, 95%);
+        padding: 16px;
+        margin: 12px 0;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        font-size: 1rem;
+        line-height: 1.8;
+        word-break: break-word;
+    }
+
         @media (max-width: 480px) {
             #candidate-image {  object-fit: cover; border-radius: 0px 0px 25% 25%}
             #candidate-details { font-size: 1rem; }
@@ -216,7 +232,7 @@ window.receiveMatchData = function(data) {
          src = data.man.image;
          document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost;
     }
-    document.getElementById("candidate-telegramPost").innerHTML=suggestionTelegramPost;
+    document.getElementById("candidate-telegramPost").textContent=suggestionTelegramPost;
     document.getElementById("candidate-name").innerHTML= `${candidateName} שלום רב, בהמשך לתהליך השידוכים שלכם בנוגע להצעה.`;
     document.getElementById("suggestion-name").innerHTML= `שם ההצעה: ${suggestionName}`;
     meetingNum = data.man.meetingNum;
