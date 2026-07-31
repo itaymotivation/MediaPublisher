@@ -71,22 +71,25 @@
 
 
 
-        #candidate-image {
+        /* כפתור חדש לצפייה בתמונה */
+        #view-image-btn {
+            display: none; /* מוצג רק אם קיימת תמונה */
+            margin: 10px 0;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #b37b2d, #d4af37);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(179, 123, 45, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-            width: 100%; /* תופס את כל הרוחב */
-
-            height: 250px; /* גובה קבוע לבאנר (אפשר לשנות) */
-
-            object-fit: contain; /* פורס את התמונה יפה בלי עיוות */
-
-            border-radius: 50%; /* מלבני */
-
-            border-bottom: 4px solid #b37b2d; /* מסגרת תחתונה בלבד או מסגרת מלאה */
-
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-
-            display: none; 
-
+        #view-image-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(179, 123, 45, 0.4);
         }
 
 
@@ -149,7 +152,7 @@
 
     <div id="header-container">
         <h1>טופס אישור והתקדמות הצעה</h1>
-        <img id="candidate-image" alt="תמונת מועמד">
+        <button id="view-image-btn" type="button">📷 צפה בתמונת השידוך</button>
         <div id="innerdiv">
             <p id="candidate-name" alt="שם מועמד"></p>
             <p id="suggestion-name" alt="שם הצעה"></p>
@@ -174,7 +177,7 @@ Swal.fire({
     });
 
 const urlParams = new URLSearchParams(window.location.search);
-
+const viewImageBtn = document.getElementById("view-image-btn");
 const candidateImg = document.getElementById("candidate-image");
 
 const iframe = document.getElementById("tally-iframe");
@@ -279,9 +282,22 @@ Swal.close(); // Close the loader
     );
     
     if (src && src.trim() !== "") {
-        candidateImg.src = src;
-        candidateImg.style.display = "block";
-    }
+                viewImageBtn.style.display = "inline-block";
+                
+                // אירוע לחיצה לפתיחת התמונה ב-SweetAlert2
+                viewImageBtn.addEventListener("click", function () {
+                    Swal.fire({
+                        title: `תמונת ${suggestionName}`,
+                        imageUrl: src,
+                        imageAlt: `תמונת ${suggestionName}`,
+                        confirmButtonText: 'סגור',
+                        confirmButtonColor: '#b37b2d',
+                        customClass: {
+                            popup: 'rtl-swal'
+                        }
+                    });
+                });
+            }
 
 
 
