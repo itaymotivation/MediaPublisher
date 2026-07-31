@@ -282,23 +282,23 @@ Swal.close(); // Close the loader
     );
     
     if (src && src.trim() !== "") {
-                viewImageBtn.style.display = "inline-block";
-                
-                // אירוע לחיצה לפתיחת התמונה ב-SweetAlert2
-                viewImageBtn.addEventListener("click", function () {
-                    Swal.fire({
-                        title: `תמונת ${suggestionName}`,
-                        imageUrl: src,
-                        imageAlt: `תמונת ${suggestionName}`,
-                        confirmButtonText: 'סגור',
-                        confirmButtonColor: '#b37b2d',
-                        customClass: {
-                            popup: 'rtl-swal'
-                        }
-                    });
-                });
-            }
+    // 1. Preload image silently in background
+    const imgPreload = new Image();
+    imgPreload.src = src;
 
+    viewImageBtn.style.display = "inline-block";
+
+    // 2. Click handler displays cached image instantly
+    viewImageBtn.addEventListener("click", function () {
+        Swal.fire({
+            title: `תמונת ${suggestionName}`,
+            imageUrl: src,
+            imageAlt: `תמונת ${suggestionName}`,
+            confirmButtonText: 'סגור',
+            confirmButtonColor: '#b37b2d'
+        });
+    });
+}
 
 
     iframe.src =
