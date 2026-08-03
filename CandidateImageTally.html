@@ -187,7 +187,7 @@ const matchId = urlParams.get("matchId");
 
 const gender = urlParams.get("gender");
 
-      const meetingNumber = urlParams.get("meetingNumber");
+      var meetingNum = urlParams.get("meetingNum");
 
 
 if (!matchId) {
@@ -329,7 +329,7 @@ script.src =
 
 + "&matchId=" + encodeURIComponent(matchId)
 
-+ "&meetingNumber=" + encodeURIComponent(meetingNumber)
++ "&meetingNum=" + encodeURIComponent(meetingNum)
 
 + "&callback=receiveMatchData";
 
