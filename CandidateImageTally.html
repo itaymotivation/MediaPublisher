@@ -242,7 +242,7 @@ Swal.close(); // Close the loader
     if(gender=="man"){
         candidateName = data.man.name;
         suggestionName = data.woman.name;
-        suggestionTelegramPost = data.woman.telegramPost;
+        suggestionTelegramPost = data.woman.telegramPost.replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
         src = data.woman.image;
         womanImage = data.woman.image;
         manImage = data.man.image;
@@ -255,7 +255,7 @@ Swal.close(); // Close the loader
     }else{
          candidateName = data.woman.name;
          suggestionName = data.man.name;
-         suggestionTelegramPost =  data.man.telegramPost;
+         suggestionTelegramPost =  data.man.telegramPost.replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
          src = data.man.image;
         womanImage = data.woman.image;
         manImage = data.man.image;
@@ -265,7 +265,7 @@ Swal.close(); // Close the loader
         if(manImage!=""){
             isManImageExist="1";
         }
-         document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost;
+         document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost.replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
     }
     document.getElementById("candidate-telegramPost").textContent=suggestionTelegramPost;
     document.getElementById("candidate-name").innerHTML= `${candidateName} שלום רב, בהמשך לתהליך השידוכים שלכם בנוגע להצעה.`;
