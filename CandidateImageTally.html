@@ -187,7 +187,7 @@ const matchId = urlParams.get("matchId");
 
 const gender = urlParams.get("gender");
 
-      var meetingNum = urlParams.get("meetingNum");
+var meetingNum = urlParams.get("meetingNum");
 
 
 if (!matchId) {
@@ -236,17 +236,35 @@ Swal.close(); // Close the loader
     var suggestionTelegramPost="";
     var telegramPostText="";
     var src="";
+    var isWomanImageExist="0";
+    var isManImageExist="0";
     
     if(gender=="man"){
         candidateName = data.man.name;
         suggestionName = data.woman.name;
         suggestionTelegramPost = data.woman.telegramPost;
         src = data.woman.image;
+        womanImage = data.woman.image;
+        manImage = data.man.image;
+        if(womanImage!=""){
+            isWomanImageExist="1";
+        }
+        if(manImage!=""){
+            isManImageExist="1";
+        }
     }else{
          candidateName = data.woman.name;
          suggestionName = data.man.name;
          suggestionTelegramPost =  data.man.telegramPost;
          src = data.man.image;
+        womanImage = data.woman.image;
+        manImage = data.man.image;
+        if(womanImage!=""){
+            isWomanImageExist="1";
+        }
+        if(manImage!=""){
+            isManImageExist="1";
+        }
          document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost;
     }
     document.getElementById("candidate-telegramPost").textContent=suggestionTelegramPost;
@@ -280,6 +298,16 @@ Swal.close(); // Close the loader
     tallyParams.set(
         "matchId",
         matchId || ""
+    );
+
+    tallyParams.set(
+        "isManImageExist",
+        isManImageExist || ""
+    );
+
+     tallyParams.set(
+        "isWomanImageExist",
+        isWomanImageExist || ""
     );
     
     if (src && src.trim() !== "") {
