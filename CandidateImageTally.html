@@ -255,7 +255,10 @@ Swal.close(); // Close the loader
     }else{
          candidateName = data.woman.name;
          suggestionName = data.man.name;
-         suggestionTelegramPost =  data.man.telegramPost.replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
+         suggestionTelegramPost =  data.man.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
+      .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
+      .replace(/\s+/g, " ") // Clean up double spaces left behind
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
          src = data.man.image;
         womanImage = data.woman.image;
         manImage = data.man.image;
@@ -265,9 +268,15 @@ Swal.close(); // Close the loader
         if(manImage!=""){
             isManImageExist="1";
         }
-         document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost.replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
+         document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
+      .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
+      .replace(/\s+/g, " ") // Clean up double spaces left behind
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
     }
-    document.getElementById("candidate-telegramPost").textContent=suggestionTelegramPost;
+    document.getElementById("candidate-telegramPost").textContent=suggestionTelegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
+      .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
+      .replace(/\s+/g, " ") // Clean up double spaces left behind
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
     document.getElementById("candidate-name").innerHTML= `${candidateName} שלום רב, בהמשך לתהליך השידוכים שלכם בנוגע להצעה.`;
     document.getElementById("suggestion-name").innerHTML= `שם ההצעה: ${suggestionName}`;
     meetingNum = data.man.meetingNumber;
