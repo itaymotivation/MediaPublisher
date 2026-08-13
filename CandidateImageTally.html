@@ -245,7 +245,7 @@ Swal.close(); // Close the loader
         suggestionTelegramPost = data.woman.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
       .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
       .replace(/\s+/g, " ") // Clean up double spaces left behind
-      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
         src = data.woman.image;
         womanImage = data.woman.image;
         manImage = data.man.image;
@@ -261,7 +261,7 @@ Swal.close(); // Close the loader
          suggestionTelegramPost =  data.man.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
       .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
       .replace(/\s+/g, " ") // Clean up double spaces left behind
-      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
          src = data.man.image;
         womanImage = data.woman.image;
         manImage = data.man.image;
@@ -274,7 +274,7 @@ Swal.close(); // Close the loader
          document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
       .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
       .replace(/\s+/g, " ") // Clean up double spaces left behind
-      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
     }
     document.getElementById("candidate-telegramPost").textContent=suggestionTelegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
       .replace(/\s+/g, " ") // Clean up double spaces left behind
