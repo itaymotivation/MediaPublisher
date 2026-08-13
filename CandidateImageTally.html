@@ -274,8 +274,7 @@ Swal.close(); // Close the loader
       .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
     }
     document.getElementById("candidate-telegramPost").textContent=suggestionTelegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
-      .replace(/\s+/g, " ") // Clean up double spaces left behind
-      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
     document.getElementById("candidate-name").innerHTML= `${candidateName} שלום רב, בהמשך לתהליך השידוכים שלכם בנוגע להצעה.`;
     document.getElementById("suggestion-name").innerHTML= `שם ההצעה: ${suggestionName}`;
     meetingNum = data.man.meetingNumber;
