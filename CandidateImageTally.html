@@ -242,7 +242,10 @@ Swal.close(); // Close the loader
     if(gender=="man"){
         candidateName = data.man.name;
         suggestionName = data.woman.name;
-        suggestionTelegramPost = data.woman.telegramPost.replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "");
+        suggestionTelegramPost = data.woman.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
+      .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
+      .replace(/\s+/g, " ") // Clean up double spaces left behind
+      .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
         src = data.woman.image;
         womanImage = data.woman.image;
         manImage = data.man.image;
@@ -256,6 +259,7 @@ Swal.close(); // Close the loader
          candidateName = data.woman.name;
          suggestionName = data.man.name;
          suggestionTelegramPost =  data.man.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
+      .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
       .replace(/\s+/g, " ") // Clean up double spaces left behind
       .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
          src = data.man.image;
@@ -268,6 +272,7 @@ Swal.close(); // Close the loader
             isManImageExist="1";
         }
          document.getElementById("candidate-telegramPost").innerHTML=data.man.telegramPost.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "") // Removes emails
+      .replace(/\b\(?0[23489]|05[0-9]\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}\b/g, "") // Removes phone numbers
       .replace(/\s+/g, " ") // Clean up double spaces left behind
       .replace(/👤 איש קשר:\s*\d+[\r\n]*/g, "").trim();
     }
