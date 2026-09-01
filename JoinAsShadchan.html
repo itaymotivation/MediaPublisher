@@ -1,0 +1,71 @@
+<!DOCTYPE html> <html lang="he" dir="rtl"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הצטרפות לשדכנים</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    body {
+        background-color: #f8fafc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: sans-serif;
+    }
+
+    #join-matchmakers-btn {
+        margin: 10px 0;
+        padding: 10px 22px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #fff;
+        background: linear-gradient(135deg, #b37b2d, #d4af37);
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(179, 123, 45, 0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    #join-matchmakers-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(179, 123, 45, 0.4);
+    }
+
+    #join-matchmakers-btn:active {
+        transform: translateY(0);
+    }
+</style>
+
+</head> <body>
+<button id="join-matchmakers-btn" type="button">
+    הצטרפות לשדכן
+</button>
+
+<script>
+    document.getElementById("join-matchmakers-btn").addEventListener("click", function () {
+
+        const phoneNumber = "972545547237";
+
+        const message = "שלום אני מעוניין להצטרף כשדכן למעגל השידוך הטוב";
+
+        const whatsappUrl =
+            "https://wa.me/" +
+            phoneNumber +
+            "?text=" +
+            encodeURIComponent(message);
+
+        window.location.href = whatsappUrl;
+    });
+</script>
+
+</body> </html>
